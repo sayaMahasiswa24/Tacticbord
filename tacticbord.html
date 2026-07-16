@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TacticBord — Football Tactics Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#070d16;--bg2:#0d1826;--bg3:#12203352;--card:#101b2a;--card2:#152438;
+  --border:#1d2f45;--border2:#28405c;
+  --txt:#e7eefc;--txt2:#8ea3c2;--txt3:#4f6padd;
+  --green:#16a34a;--green2:#22c55e;
+  --blue:#0ea5e9;--blue2:#38bdf8;
+  --amber:#d97706;--amber2:#fbbf24;
+  --purple:#7c3aed;--purple2:#a78bfa;
+  --red:#dc2626;--red2:#f87171;
+  --cyan:#0891b2;--orange:#ea580c;--indigo:#6366f1;
+  --r:8px;--r2:14px;
+  --shadow:0 8px 32px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--txt);font-size:13.5px;overflow:hidden}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ═══ LAYOUT SHELL ═══ */
+#app{display:flex;flex-direction:column;height:100vh}
+
+/* ═══ HEADER ═══ */
+.header{background:linear-gradient(120deg,var(--bg2),#0f1d2f);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-size:19px;font-weight:800;letter-spacing:-.4px;background:linear-gradient(90deg,var(--green2),var(--blue2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:10.5px;color:var(--txt3);margin-top:1px}
+.hactions{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.hbtn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--r);border:1px solid var(--border2);font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;background:var(--card2);color:var(--txt2);transition:all .15s}
+.hbtn:hover{border-color:var(--blue);color:var(--blue2)}
+.hbtn.primary{background:linear-gradient(135deg,var(--green),#0d9668);border:none;color:#fff}
+.hbtn.primary:hover{opacity:.9}
+
+/* ═══ PHASE TOOLBAR ═══ */
+.phasebar{background:var(--bg2);border-bottom:1px solid var(--border);padding:9px 18px;display:flex;gap:7px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.pb-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--txt3);font-weight:700;white-space:nowrap;margin-right:2px}
+.phbtn{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--r);border:1px solid var(--border2);font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;background:var(--card);color:var(--txt2);transition:all .18s;white-space:nowrap}
+.phbtn:hover{background:var(--card2)}
+.phbtn .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.phbtn.on-poss{background:#0a2942;border-color:var(--blue);color:var(--blue2)}
+.phbtn.on-tp{background:#2b1a02;border-color:var(--amber);color:var(--amber2)}
+.phbtn.on-tn{background:#1c1140;border-color:var(--purple);color:var(--purple2)}
+.phbtn.on-def{background:#2b0a0a;border-color:var(--red);color:var(--red2)}
+.pb-right{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mini-lbl{font-size:9.5px;color:var(--txt3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap}
+.spd{padding:4px 9px;border-radius:6px;border:1px solid var(--border2);font-size:11px;cursor:pointer;background:transparent;color:var(--txt3);font-family:'JetBrains Mono',monospace}
+.spd.on{background:var(--card2);color:var(--txt)}
+.ovbtn{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;border:1px solid var(--border2);font-size:11px;cursor:pointer;background:transparent;color:var(--txt3);font-family:inherit}
+.ovbtn.on{background:var(--card2);color:var(--txt)}
+.fsel{font-size:12px;padding:6px 9px;border-radius:var(--r);border:1px solid var(--border2);background:var(--card2);color:var(--txt);font-family:inherit}
+
+/* ═══ MAIN BODY ═══ */
+.main{flex:1;display:flex;overflow:hidden}
+.pitch-col{flex:1;display:flex;align-items:center;justify-content:center;padding:14px;overflow:hidden;position:relative}
+.pitch-wrap{position:relative;border-radius:var(--r2);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
+canvas#mc{display:block;width:100%;max-width:480px;touch-action:none;cursor:grab}
+.hint-bar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--txt3);background:rgba(7,13,22,.7);padding:4px 12px;border-radius:99px;white-space:nowrap;backdrop-filter:blur(4px)}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:272px;flex-shrink:0;border-left:1px solid var(--border);background:var(--bg2);display:flex;flex-direction:column;overflow:hidden}
+.sbtabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.sbtab{flex:1;padding:9px 4px;font-size:10.5px;font-weight:600;text-align:center;cursor:pointer;color:var(--txt3);background:var(--card);border-right:1px solid var(--border);transition:all .12s}
+.sbtab:last-child{border-right:none}
+.sbtab.active{background:var(--bg2);color:var(--txt)}
+.sbscroll{flex:1;overflow-y:auto;padding:11px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:9px}
+.sh{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:700;color:var(--txt3);padding:8px 11px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.sh i{font-size:13px}
+.sb{padding:10px 11px}
+.info-row{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;color:var(--txt2);margin-bottom:5px;line-height:1.45}
+.info-row:last-child{margin-bottom:0}
+.phase-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:4px 10px;border-radius:99px;font-weight:700;margin-bottom:8px;border:1px solid}
+.pbadge-base{background:rgba(255,255,255,.04);color:var(--txt3);border-color:var(--border2)}
+.pbadge-poss{background:rgba(14,165,233,.14);color:var(--blue2);border-color:var(--blue)}
+.pbadge-tp{background:rgba(217,119,6,.14);color:var(--amber2);border-color:var(--amber)}
+.pbadge-tn{background:rgba(124,58,237,.14);color:var(--purple2);border-color:var(--purple)}
+.pbadge-def{background:rgba(220,38,38,.14);color:var(--red2);border-color:var(--red)}
+.gw-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin:6px 0}
+.gw-fill{height:100%;border-radius:2px;transition:width .1s linear}
+.role-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.role-desc{font-size:11.5px;color:var(--txt2);line-height:1.55;margin-bottom:9px}
+.role-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700;border:1px solid;margin-right:4px;margin-bottom:4px}
+.attr-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.attr-item{background:var(--card2);border-radius:6px;padding:6px 8px}
+.attr-lbl{font-size:9.5px;color:var(--txt3);text-transform:uppercase;letter-spacing:.4px}
+.attr-val{font-size:12px;font-weight:700;color:var(--txt);margin-top:2px}
+.abtn{width:100%;text-align:left;font-size:11.5px;padding:7px 9px;border-radius:var(--r);border:1px solid var(--border);background:var(--card2);cursor:pointer;margin-bottom:5px;display:flex;align-items:center;gap:8px;color:var(--txt2);font-family:inherit;transition:all .12s}
+.abtn:last-child{margin-bottom:0}
+.abtn:hover{background:var(--bg3);color:var(--txt)}
+.abtn.aa{background:#12345088;color:var(--txt);border-color:var(--blue)}
+.a-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.a-step{font-size:9.5px;color:var(--txt3);margin-top:1px;font-family:'JetBrains Mono',monospace}
+.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--txt2);margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid rgba(29,47,69,.5)}
+.sum-row:last-child{border-bottom:none;margin-bottom:0}
+.sum-val{color:var(--txt);font-weight:700;font-family:'JetBrains Mono',monospace;font-size:11px}
+.sum-dot{width:8px;height:8px;border-radius:50%;margin-right:5px;flex-shrink:0}
+.pbar{height:3px;border-radius:2px;background:var(--border);margin-top:5px;overflow:hidden}
+.pfill{height:100%;border-radius:2px;background:var(--green2);transition:width .3s}
+.leg-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--txt2);margin-bottom:5px}
+.leg-item:last-child{margin-bottom:0}
+.ldot{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(0,0,0,.3)}
+.hint{font-size:11px;color:var(--txt2);line-height:1.6;padding:9px 10px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border)}
+.hint b{color:var(--txt)}
+.zone-bar{font-size:9.5px;padding:5px 9px;border-radius:6px;text-align:center;margin-bottom:3px;font-weight:700;border:1px solid transparent}
+
+/* ═══ ROLE BROWSER (list all 29 roles) ═══ */
+.rolelist-search{width:100%;padding:7px 10px;border-radius:var(--r);border:1px solid var(--border2);background:var(--card2);color:var(--txt);font-family:inherit;font-size:12px;margin-bottom:8px;outline:none}
+.rolelist-search:focus{border-color:var(--blue)}
+.rl-card{border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;margin-bottom:6px;background:var(--card2);cursor:pointer;transition:all .12s}
+.rl-card:hover{border-color:var(--border2)}
+.rl-head{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.rl-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;color:#fff;flex-shrink:0}
+.rl-name{font-size:12px;font-weight:600;color:var(--txt)}
+.rl-pos{font-size:9.5px;color:var(--txt3);margin-left:auto}
+.rl-desc{font-size:10.5px;color:var(--txt2);line-height:1.4}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);padding:9px 17px;font-size:12px;box-shadow:var(--shadow);z-index:300;transition:transform .25s cubic-bezier(.34,1.56,.64,1),opacity .25s;opacity:0;pointer-events:none;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ═══ GOLDEN WINDOW OVERLAY ═══ */
+.gw-overlay{display:none;position:fixed;top:118px;left:50%;transform:translateX(-50%);background:var(--card);border:1.5px solid;border-radius:var(--r2);padding:11px 20px;z-index:50;min-width:210px;box-shadow:var(--shadow);text-align:center}
+.gw-overlay.show{display:block}
+
+/* ═══ MODAL ═══ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(3,7,13,.72);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);width:390px;max-height:600px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal.wide{width:520px}
+.mh{display:flex;align-items:center;padding:15px 17px;border-bottom:1px solid var(--border);background:var(--card2);gap:11px}
+.mbadge{width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.mtitle{font-size:15px;font-weight:700}
+.msub{font-size:11.5px;color:var(--txt3);margin-top:2px}
+.mclose{margin-left:auto;background:none;border:none;cursor:pointer;font-size:19px;color:var(--txt3);line-height:1;padding:2px;flex-shrink:0}
+.mclose:hover{color:var(--txt)}
+.mb{overflow-y:auto;padding:13px 15px;flex:1}
+.rg{margin-bottom:15px}
+.rl{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);font-weight:700;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.ro{width:100%;text-align:left;padding:10px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--card2);cursor:pointer;margin-bottom:6px;display:flex;flex-direction:column;gap:4px;transition:all .12s;font-family:inherit}
+.ro:hover{background:var(--bg3);border-color:var(--border2)}
+.ro.sel{border-color:var(--blue);background:rgba(14,165,233,.08)}
+.ro-n{font-size:12.5px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:6px}
+.ro-d{font-size:11.5px;color:var(--txt2);line-height:1.45}
+.ro-tags{display:flex;gap:5px;margin-top:3px;flex-wrap:wrap}
+.ro-tag{font-size:9px;padding:1.5px 6px;border-radius:99px;font-weight:700;background:var(--bg3);color:var(--txt3)}
+.mf{padding:11px 15px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--card2)}
+.mf button{flex:1;font-size:12.5px;padding:9px;border-radius:var(--r);border:1px solid var(--border);cursor:pointer;font-family:inherit;font-weight:600;background:var(--card);color:var(--txt2);transition:all .12s}
+.mf button:hover{border-color:var(--border2);color:var(--txt)}
+.mf .ok{background:var(--blue);color:#fff;border-color:var(--blue)}
+.mf .ok:hover{background:#0284c7}
+.save-input-row{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}
+.save-input-row label{font-size:12px;color:var(--txt2);font-weight:600}
+.save-input-row input{padding:9px 11px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg3);color:var(--txt);font-size:13px;font-family:inherit;outline:none}
+.save-input-row input:focus{border-color:var(--blue)}
+.save-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:var(--r);border:1px solid var(--border);background:var(--card2);margin-bottom:6px;cursor:pointer;transition:all .12s}
+.save-item:hover{border-color:var(--border2);background:var(--bg3)}
+.save-item-name{font-size:12.5px;font-weight:600;color:var(--txt);flex:1}
+.save-item-info{font-size:10.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace}
+.save-item-del{font-size:14px;color:var(--txt3);cursor:pointer;padding:2px;flex-shrink:0;background:none;border:none}
+.save-item-del:hover{color:var(--red2)}
+.empty-saves{font-size:12.5px;color:var(--txt3);text-align:center;padding:20px 0;font-style:italic}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">⚽</div>
+    <div>
+      <div class="logo-text">TacticBord</div>
+      <div class="logo-sub">Football Tactics Simulator · 29 Role Engine</div>
+    </div>
+  </div>
+  <div class="hactions">
+    <button class="hbtn" onclick="openSaveModal()"><i class="ti ti-device-floppy"></i> Simpan</button>
+    <button class="hbtn" onclick="openLoadModal()"><i class="ti ti-folder-open"></i> Muat</button>
+    <button class="hbtn" onclick="exportJSON()"><i class="ti ti-file-export"></i> Export</button>
+    <label class="hbtn" style="cursor:pointer"><i class="ti ti-file-import"></i> Import<input type="file" accept=".json" onchange="importJSON(event)" style="display:none"></label>
+    <button class="hbtn primary" onclick="openRoleBrowser()"><i class="ti ti-books"></i> Role Database</button>
+  </div>
+</header>
+
+<!-- ═══════════════ PHASE TOOLBAR ═══════════════ -->
+<div class="phasebar">
+  <span class="pb-label">Fase:</span>
+  <button class="phbtn" id="pb-poss" onclick="triggerPhase('possession')"><div class="dot" style="background:#0ea5e9"></div>In Possession</button>
+  <button class="phbtn" id="pb-tp" onclick="triggerPhase('transition_pos')"><div class="dot" style="background:#d97706"></div>Counter-attack</button>
+  <button class="phbtn" id="pb-tn" onclick="triggerPhase('transition_neg')"><div class="dot" style="background:#7c3aed"></div>Gegenpressing</button>
+  <button class="phbtn" id="pb-def" onclick="triggerPhase('defense')"><div class="dot" style="background:#dc2626"></div>Out of Possession</button>
+  <button class="phbtn" onclick="stopSim()" style="color:var(--txt3)"><i class="ti ti-refresh" style="font-size:13px"></i> Reset</button>
+  <div class="pb-right">
+    <span class="mini-lbl">Speed:</span>
+    <button class="spd" id="sp-05" onclick="setSpd(.5)">0.5×</button>
+    <button class="spd on" id="sp-1" onclick="setSpd(1)">1×</button>
+    <button class="spd" id="sp-2" onclick="setSpd(2)">2×</button>
+    <span class="mini-lbl" style="margin-left:5px">Overlay:</span>
+    <button class="ovbtn on" id="btn-zone" onclick="toggleOv('zone')"><i class="ti ti-layout-rows" style="font-size:12px"></i>Zona</button>
+    <button class="ovbtn" id="btn-pass" onclick="toggleOv('pass')"><i class="ti ti-arrows-exchange" style="font-size:12px"></i>Pass</button>
+    <select id="fsel" onchange="changeFormation(this.value)" class="fsel">
+      <option value="433">4-3-3</option><option value="442">4-4-2</option>
+      <option value="4231">4-2-3-1</option><option value="4132">4-1-3-2 Diamond</option>
+      <option value="352">3-5-2</option><option value="343">3-4-3</option>
+      <option value="541">5-4-1</option>
+    </select>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN BODY ═══════════════ -->
+<div class="main">
+
+  <div class="pitch-col">
+    <div class="pitch-wrap">
+      <canvas id="mc" width="460" height="580"></canvas>
+    </div>
+    <div class="hint-bar"><i class="ti ti-drag-drop" style="font-size:12px;vertical-align:middle"></i> Drag pion (posisi auto-update) · Klik pilih peran · Klik-kanan hapus peran</div>
+    <div id="gw-overlay" class="gw-overlay">
+      <div style="font-size:11px;font-weight:700;margin-bottom:4px" id="gw-lbl">Golden Window</div>
+      <div style="font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace" id="gw-timer">6.0s</div>
+      <div class="gw-bar" style="width:170px;margin:7px auto 0"><div class="gw-fill" id="gw-fill" style="width:100%;background:var(--amber)"></div></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sbtabs">
+      <div class="sbtab active" id="tab-sim" onclick="switchTab('sim')">SIMULASI</div>
+      <div class="sbtab" id="tab-team" onclick="switchTab('team')">TIM</div>
+      <div class="sbtab" id="tab-roles" onclick="switchTab('roles')">ROLE DB</div>
+    </div>
+
+    <!-- ─── TAB: SIMULASI ─── -->
+    <div class="sbscroll" id="panel-sim">
+
+      <div class="sc">
+        <div class="sh"><i class="ti ti-activity"></i>Status Simulasi</div>
+        <div class="sb">
+          <div class="phase-badge pbadge-base" id="phase-badge">⬛ Posisi Dasar</div>
+          <div id="phase-rows"><div class="hint"><b>Pilih fase</b> untuk melihat pergerakan tiap role dihitung dari width/depth tendency dan flags taktisnya masing-masing.</div></div>
+        </div>
+      </div>
+
+      <div class="sc">
+        <div class="sh"><i class="ti ti-map"></i>Peta Zona (54 titik)</div>
+        <div class="sb" style="padding:6px 10px">
+          <div class="zone-bar" style="background:rgba(220,38,38,.12);color:#f87171">attacking_box · zone_14</div>
+          <div class="zone-bar" style="background:rgba(234,88,12,.10);color:#fb923c">zone_10 · half_space_inner</div>
+          <div class="zone-bar" style="background:rgba(99,102,241,.12);color:#a5b4fc">central_corridor</div>
+          <div class="zone-bar" style="background:rgba(124,58,237,.10);color:#c4b5fd">half_space_outer · mid_block</div>
+          <div class="zone-bar" style="background:rgba(8,145,178,.10);color:#67e8f9">defensive_wide · low_block</div>
+          <div class="zone-bar" style="background:rgba(37,99,235,.12);color:#93c5fd">deep_build_up · own_penalty</div>
+        </div>
+      </div>
+
+      <div class="sc">
+        <div class="sh"><i class="ti ti-users"></i>Komposisi Tim</div>
+        <div class="sb">
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#2563eb"></span>GK</span><span class="sum-val" id="s-gk">0/1</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#0891b2"></span>CB</span><span class="sum-val" id="s-cb">0/–</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#0ea5e9"></span>FB</span><span class="sum-val" id="s-fb">0/–</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#0284c7"></span>WB</span><span class="sum-val" id="s-wb">0/–</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#7c3aed"></span>DM</span><span class="sum-val" id="s-dm">0/–</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#6366f1"></span>CM</span><span class="sum-val" id="s-cm">0/–</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#9333ea"></span>AM</span><span class="sum-val" id="s-am">0/–</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#ea580c"></span>W</span><span class="sum-val" id="s-w">0/–</span></div>
+          <div class="sum-row"><span style="display:flex;align-items:center"><span class="sum-dot" style="background:#dc2626"></span>CF</span><span class="sum-val" id="s-cf">0/–</span></div>
+          <div style="margin-top:7px;padding-top:7px;border-top:1px solid var(--border)">
+            <div class="sum-row" style="border:none;margin:0"><span>Peran terisi</span><span class="sum-val" id="s-tot">0/11</span></div>
+            <div class="pbar"><div class="pfill" id="s-prog" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sc" id="sel-card" style="display:none">
+        <div class="sh"><i class="ti ti-user-check"></i>Peran Aktif</div>
+        <div class="sb" id="sel-body"></div>
+      </div>
+
+      <div class="sc">
+        <div class="sh"><i class="ti ti-color-swatch"></i>Legenda</div>
+        <div class="sb">
+          <div class="leg-item"><div class="ldot" style="background:#2563eb"></div>GK — Kiper</div>
+          <div class="leg-item"><div class="ldot" style="background:#0891b2"></div>CB — Bek Tengah</div>
+          <div class="leg-item"><div class="ldot" style="background:#0ea5e9"></div>FB — Bek Sayap</div>
+          <div class="leg-item"><div class="ldot" style="background:#0284c7"></div>WB — Wing-back</div>
+          <div class="leg-item"><div class="ldot" style="background:#7c3aed"></div>DM — Gelandang Bertahan</div>
+          <div class="leg-item"><div class="ldot" style="background:#6366f1"></div>CM — Gelandang Tengah</div>
+          <div class="leg-item"><div class="ldot" style="background:#9333ea"></div>AM — Gelandang Serang</div>
+          <div class="leg-item"><div class="ldot" style="background:#ea580c"></div>W — Winger</div>
+          <div class="leg-item"><div class="ldot" style="background:#dc2626"></div>CF — Striker</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ─── TAB: TIM ─── -->
+    <div class="sbscroll" id="panel-team" style="display:none">
+      <div class="sc">
+        <div class="sh"><i class="ti ti-clipboard-list"></i>Susunan Pemain</div>
+        <div class="sb" id="team-list"></div>
+      </div>
+    </div>
+
+    <!-- ─── TAB: ROLE DATABASE ─── -->
+    <div class="sbscroll" id="panel-roles" style="display:none">
+      <input type="text" class="rolelist-search" id="role-search" placeholder="Cari role (mis: winger, press, false)..." oninput="renderRoleList()">
+      <div id="role-list-container"></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ TOAST ═══════════════ -->
+<div class="toast" id="toast"><div id="t-dot" class="t-dot"></div><span id="t-msg"></span></div>
+
+<!-- ═══════════════ ROLE ASSIGN MODAL ═══════════════ -->
+<div class="overlay" id="role-modal" onclick="if(event.target===this)closeRoleModal()">
+  <div class="modal">
+    <div class="mh">
+      <div class="mbadge" id="m-badge"></div>
+      <div><div class="mtitle" id="m-title">Pilih Peran</div><div class="msub" id="m-sub"></div></div>
+      <button class="mclose" onclick="closeRoleModal()">&#x2715;</button>
+    </div>
+    <div class="mb" id="m-body"></div>
+    <div class="mf">
+      <button onclick="clearRole()"><i class="ti ti-eraser"></i> Hapus Peran</button>
+      <button class="ok" onclick="confirmRole()">Simpan Peran</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ROLE BROWSER MODAL ═══════════════ -->
+<div class="overlay" id="browser-modal" onclick="if(event.target===this)closeBrowser()">
+  <div class="modal wide">
+    <div class="mh">
+      <div style="font-size:24px">📚</div>
+      <div><div class="mtitle">Role Database</div><div class="msub">29 role lengkap dengan atribut taktis</div></div>
+      <button class="mclose" onclick="closeBrowser()">&#x2715;</button>
+    </div>
+    <div class="mb" id="browser-body"></div>
+    <div class="mf"><button onclick="closeBrowser()">Tutup</button></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SAVE MODAL ═══════════════ -->
+<div class="overlay" id="save-modal" onclick="if(event.target===this)closeSaveModal()">
+  <div class="modal">
+    <div class="mh">
+      <div style="font-size:22px">💾</div>
+      <div><div class="mtitle">Simpan Taktik</div><div class="msub">Tersimpan lokal di browser</div></div>
+      <button class="mclose" onclick="closeSaveModal()">&#x2715;</button>
+    </div>
+    <div class="mb">
+      <div class="save-input-row">
+        <label>Nama taktik</label>
+        <input type="text" id="save-name-input" placeholder="cth: High Press 4-3-3" maxlength="60">
+      </div>
+      <div class="save-input-row">
+        <label>Catatan (opsional)</label>
+        <input type="text" id="save-note-input" placeholder="cth: Untuk lawan bertahan rendah">
+      </div>
+    </div>
+    <div class="mf">
+      <button onclick="closeSaveModal()">Batal</button>
+      <button class="ok" onclick="saveTactic()"><i class="ti ti-device-floppy"></i> Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LOAD MODAL ═══════════════ -->
+<div class="overlay" id="load-modal" onclick="if(event.target===this)closeLoadModal()">
+  <div class="modal wide">
+    <div class="mh">
+      <div style="font-size:22px">📂</div>
+      <div><div class="mtitle">Muat Taktik</div><div class="msub">Pilih taktik tersimpan</div></div>
+      <button class="mclose" onclick="closeLoadModal()">&#x2715;</button>
+    </div>
+    <div class="mb" id="load-list" style="min-height:120px"></div>
+    <div class="mf"><button onclick="closeLoadModal()">Tutup</button></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  REAL DATASET — role_master.csv (29 role) + zone_coordinate_map.csv (54 zona)
+// ════════════════════════════════════════════════════════
+const ROLE_MASTER = [{"id":"advanced_forward","name":"Advanced Forward","short":"AF","posType":"CF","posGroup":"FWD","side":"center","formations":"433,4231,442","width":0.5,"depth":0.9,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"immediate","fillsSpace":false,"attackSP":true,"defendSP":"edge_box","desc":"Titik fokus serangan yang bertugas mencetak gol dan mengejar bola di lini depan."},{"id":"inside_forward","name":"Inside Forward","short":"IF","posType":"W","posGroup":"FWD","side":"both","formations":"433,4231","width":0.3,"depth":0.85,"attackingRun":true,"dropsDeep":false,"overlap":"underlap","pressing":"immediate","fillsSpace":true,"attackSP":true,"defendSP":"edge_box","desc":"Penyerang sayap yang menusuk ke dalam kotak penalti untuk mencetak gol."},{"id":"inverted_winger","name":"Inverted Winger","short":"IW","posType":"W","posGroup":"FWD","side":"both","formations":"433,4231","width":0.4,"depth":0.8,"attackingRun":true,"dropsDeep":false,"overlap":"underlap","pressing":"delayed","fillsSpace":true,"attackSP":false,"defendSP":"edge_box","desc":"Pemain sayap yang menusuk ke dalam untuk menciptakan peluang dan memberikan umpan silang."},{"id":"mezzala","name":"Mezzala","short":"MEZ","posType":"CM","posGroup":"MID","side":"both","formations":"433,352,442_diamond","width":0.65,"depth":0.75,"attackingRun":true,"dropsDeep":false,"overlap":"overlap","pressing":"immediate","fillsSpace":true,"attackSP":true,"defendSP":"zonal","desc":"Gelandang tengah yang bergerak melebar ke area sayap (half-space) untuk menyerang."},{"id":"box_to_box_midfielder","name":"Box to Box Midfielder","short":"BBM","posType":"CM","posGroup":"MID","side":"center","formations":"433,442,4231","width":0.5,"depth":0.5,"attackingRun":true,"dropsDeep":true,"overlap":"none","pressing":"immediate","fillsSpace":true,"attackSP":true,"defendSP":"zonal","desc":"Gelandang dinamis yang berkontribusi penuh baik saat bertahan maupun menyerang."},{"id":"ball_playing_defender","name":"Ball Playing Defender","short":"BPD","posType":"CB","posGroup":"DEF","side":"center","formations":"433,4231,352,343","width":0.2,"depth":0.1,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":true,"defendSP":"near_post","desc":"Bek tengah yang bertugas menghentikan serangan sekaligus memulai serangan dengan umpan akurat."},{"id":"libero","name":"Libero","short":"L","posType":"CB","posGroup":"DEF","side":"center","formations":"433,4231,352,343,532","width":0.2,"depth":0.4,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"delayed","fillsSpace":true,"attackSP":true,"defendSP":"far_post","desc":"Bek yang maju ke lini tengah saat tim menguasai bola untuk membantu sirkulasi."},{"id":"full_back","name":"Full Back","short":"FB","posType":"FB","posGroup":"DEF","side":"both","formations":"442,433,4231","width":0.8,"depth":0.4,"attackingRun":true,"dropsDeep":false,"overlap":"overlap","pressing":"delayed","fillsSpace":false,"attackSP":false,"defendSP":"zonal","desc":"Bek sayap klasik yang seimbang antara bertahan dan membantu serangan di sisi lapangan."},{"id":"sweeper_keeper","name":"Sweeper Keeper","short":"SK","posType":"GK","posGroup":"GK","side":"center","formations":"all","width":0.0,"depth":0.2,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"immediate","fillsSpace":false,"attackSP":false,"defendSP":"zonal","desc":"Kiper yang aktif keluar dari sarangnya untuk menyapu bola dan terlibat dalam build-up."},{"id":"false_nine","name":"False Nine","short":"F9","posType":"CF","posGroup":"FWD","side":"center","formations":"433,4231","width":0.3,"depth":0.7,"attackingRun":false,"dropsDeep":true,"overlap":"none","pressing":"delayed","fillsSpace":true,"attackSP":false,"defendSP":"edge_box","desc":"Penyerang yang turun ke tengah untuk menarik bek lawan dan membuka ruang."},{"id":"trequartista","name":"Trequartista","short":"T","posType":"AM","posGroup":"MID","side":"center","formations":"4231,4411,4312","width":0.5,"depth":0.85,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":true,"defendSP":"edge_box","desc":"Playmaker murni yang bebas berkeliaran tanpa tanggung jawab bertahan."},{"id":"deep_lying_playmaker","name":"Deep Lying Playmaker","short":"DLP","posType":"DM","posGroup":"MID","side":"center","formations":"433,4231,352","width":0.35,"depth":0.35,"attackingRun":false,"dropsDeep":true,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":false,"defendSP":"zonal","desc":"Playmaker kreatif yang beroperasi dari posisi dalam untuk mengatur tempo serangan."},{"id":"inverted_full_back","name":"Inverted Full Back","short":"IFB","posType":"FB","posGroup":"DEF","side":"both","formations":"433,4231","width":0.2,"depth":0.1,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":true,"attackSP":false,"defendSP":"near_post","desc":"Bek sayap yang masuk ke tengah membentuk tiga bek sejajar saat menyerang."},{"id":"inverted_wing_back","name":"Inverted Wing Back","short":"IWB","posType":"WB","posGroup":"DEF","side":"both","formations":"433,4231","width":0.3,"depth":0.5,"attackingRun":true,"dropsDeep":false,"overlap":"underlap","pressing":"immediate","fillsSpace":true,"attackSP":false,"defendSP":"zonal","desc":"Bek sayap yang masuk ke lini tengah untuk menambah jumlah pemain di tengah."},{"id":"pressing_forward","name":"Pressing Forward","short":"PF","posType":"CF","posGroup":"FWD","side":"center","formations":"433,442","width":0.5,"depth":0.85,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"immediate","fillsSpace":false,"attackSP":false,"defendSP":"edge_box","desc":"Penyerang yang bertugas menekan bek lawan agar melakukan kesalahan."},{"id":"target_forward","name":"Target Forward","short":"TF","posType":"CF","posGroup":"FWD","side":"center","formations":"442,451,541","width":0.5,"depth":0.95,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":true,"defendSP":"near_post","desc":"Penyerang fisik yang menjadi tumpuan bola udara dan menahan bola untuk rekan."},{"id":"poacher","name":"Poacher","short":"P","posType":"CF","posGroup":"FWD","side":"center","formations":"442,4231","width":0.45,"depth":0.99,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":true,"defendSP":"none","desc":"Predator kotak penalti yang hanya fokus pada penyelesaian akhir."},{"id":"roaming_playmaker","name":"Roaming Playmaker","short":"RPM","posType":"CM","posGroup":"MID","side":"center","formations":"433,4231","width":0.5,"depth":0.6,"attackingRun":true,"dropsDeep":true,"overlap":"none","pressing":"immediate","fillsSpace":true,"attackSP":true,"defendSP":"edge_box","desc":"Playmaker dinamis yang menjelajahi lapangan untuk mengatur serangan."},{"id":"raumdeuter","name":"Raumdeuter","short":"RD","posType":"W","posGroup":"FWD","side":"both","formations":"433,4231","width":0.5,"depth":0.9,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":true,"defendSP":"none","desc":"Penyelidik ruang yang mencari celah di pertahanan lawan untuk mencetak gol."},{"id":"ball_winning_midfielder","name":"Ball Winning Midfielder","short":"BWM","posType":"DM","posGroup":"MID","side":"center","formations":"433,442,4231","width":0.5,"depth":0.4,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"immediate","fillsSpace":true,"attackSP":false,"defendSP":"zonal","desc":"Gelandang pengangkut air yang bertugas merebut bola melalui tekel agresif."},{"id":"shadow_striker","name":"Shadow Striker","short":"SS","posType":"AM","posGroup":"MID","side":"center","formations":"4231,4411","width":0.5,"depth":0.9,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"immediate","fillsSpace":false,"attackSP":true,"defendSP":"edge_box","desc":"Gelandang serang yang menyerang kotak penalti layaknya striker kedua."},{"id":"regista","name":"Regista","short":"R","posType":"DM","posGroup":"MID","side":"center","formations":"433","width":0.4,"depth":0.35,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":false,"defendSP":"zonal","desc":"Direktur permainan di depan bek yang mendikte ritme serangan dengan visi luas."},{"id":"anchor_man","name":"Anchor","short":"A","posType":"DM","posGroup":"MID","side":"center","formations":"433,4231","width":0.3,"depth":0.25,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":true,"attackSP":false,"defendSP":"near_post","desc":"Gelandang bertahan statis yang bertugas sebagai jangkar dan pelindung bek."},{"id":"segundo_volante","name":"Segundo Volante","short":"VOL","posType":"DM","posGroup":"MID","side":"both","formations":"4231,442_diamond","width":0.5,"depth":0.7,"attackingRun":true,"dropsDeep":false,"overlap":"none","pressing":"immediate","fillsSpace":true,"attackSP":true,"defendSP":"zonal","desc":"Gelandang bertahan yang menyerang dari kedalaman hingga kotak penalti lawan."},{"id":"carrilero","name":"Carrilero","short":"CAR","posType":"CM","posGroup":"MID","side":"both","formations":"4312,442_diamond","width":0.7,"depth":0.5,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":true,"attackSP":false,"defendSP":"zonal","desc":"Gelandang antar-ruang (shuttler) yang bergerak menyamping untuk menutup ruang sayap."},{"id":"wide_target_man","name":"Wide Target Man","short":"WTM","posType":"W","posGroup":"FWD","side":"both","formations":"442,4231","width":0.9,"depth":0.85,"attackingRun":false,"dropsDeep":false,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":true,"defendSP":"near_post","desc":"Pemain sayap fisik yang menjadi sasaran umpan silang dan duel udara."},{"id":"complete_forward","name":"Complete Forward","short":"CF","posType":"CF","posGroup":"FWD","side":"center","formations":"4231,433","width":0.5,"depth":0.9,"attackingRun":true,"dropsDeep":true,"overlap":"none","pressing":"immediate","fillsSpace":true,"attackSP":true,"defendSP":"edge_box","desc":"Penyerang serba bisa yang menggabungkan semua peran striker dalam satu paket."},{"id":"half_back","name":"Half Back","short":"HB","posType":"DM","posGroup":"MID","side":"center","formations":"433","width":0.3,"depth":0.2,"attackingRun":false,"dropsDeep":true,"overlap":"none","pressing":"hold","fillsSpace":true,"attackSP":false,"defendSP":"near_post","desc":"Gelandang yang turun di antara bek tengah untuk membentuk tiga bek saat membangun serangan."},{"id":"enganche","name":"Enganche","short":"EG","posType":"AM","posGroup":"MID","side":"center","formations":"4231,4312","width":0.4,"depth":0.75,"attackingRun":false,"dropsDeep":true,"overlap":"none","pressing":"hold","fillsSpace":false,"attackSP":false,"defendSP":"edge_box","desc":"Playmaker statis yang menjadi poros serangan di area sepertiga akhir lawan."}];
+
+const ZONE_MAP = [{"key":"touchline_left","name":"touchline","side":"left","x":0.05,"y":0.5,"xv":0.03,"yv":0.1,"depthLine":"central_mid"},{"key":"touchline_right","name":"touchline","side":"right","x":0.95,"y":0.5,"xv":0.03,"yv":0.1,"depthLine":"central_mid"},{"key":"touchline_center","name":"touchline","side":"center","x":0.5,"y":0.02,"xv":0.1,"yv":0.02,"depthLine":"final_third"},{"key":"half_space_inner_left","name":"half_space_inner","side":"left","x":0.33,"y":0.33,"xv":0.05,"yv":0.08,"depthLine":"attacking_mid"},{"key":"half_space_inner_right","name":"half_space_inner","side":"right","x":0.67,"y":0.33,"xv":0.05,"yv":0.08,"depthLine":"attacking_mid"},{"key":"half_space_inner_center","name":"half_space_inner","side":"center","x":0.5,"y":0.33,"xv":0.08,"yv":0.08,"depthLine":"attacking_mid"},{"key":"half_space_outer_left","name":"half_space_outer","side":"left","x":0.2,"y":0.67,"xv":0.06,"yv":0.1,"depthLine":"defensive_mid"},{"key":"half_space_outer_right","name":"half_space_outer","side":"right","x":0.8,"y":0.67,"xv":0.06,"yv":0.1,"depthLine":"defensive_mid"},{"key":"half_space_outer_center","name":"half_space_outer","side":"center","x":0.5,"y":0.67,"xv":0.1,"yv":0.1,"depthLine":"defensive_mid"},{"key":"central_corridor_left","name":"central_corridor","side":"left","x":0.4,"y":0.5,"xv":0.05,"yv":0.12,"depthLine":"central_mid"},{"key":"central_corridor_right","name":"central_corridor","side":"right","x":0.6,"y":0.5,"xv":0.05,"yv":0.12,"depthLine":"central_mid"},{"key":"central_corridor_center","name":"central_corridor","side":"center","x":0.5,"y":0.5,"xv":0.08,"yv":0.12,"depthLine":"central_mid"},{"key":"attacking_box_left","name":"attacking_box","side":"left","x":0.35,"y":0.12,"xv":0.05,"yv":0.06,"depthLine":"final_third"},{"key":"attacking_box_right","name":"attacking_box","side":"right","x":0.65,"y":0.12,"xv":0.05,"yv":0.06,"depthLine":"final_third"},{"key":"attacking_box_center","name":"attacking_box","side":"center","x":0.5,"y":0.1,"xv":0.08,"yv":0.06,"depthLine":"final_third"},{"key":"zone_14_left","name":"zone_14","side":"left","x":0.4,"y":0.22,"xv":0.04,"yv":0.05,"depthLine":"attacking_mid"},{"key":"zone_14_right","name":"zone_14","side":"right","x":0.6,"y":0.22,"xv":0.04,"yv":0.05,"depthLine":"attacking_mid"},{"key":"zone_14_center","name":"zone_14","side":"center","x":0.5,"y":0.22,"xv":0.06,"yv":0.05,"depthLine":"attacking_mid"},{"key":"zone_10_left","name":"zone_10","side":"left","x":0.42,"y":0.28,"xv":0.05,"yv":0.07,"depthLine":"attacking_mid"},{"key":"zone_10_right","name":"zone_10","side":"right","x":0.58,"y":0.28,"xv":0.05,"yv":0.07,"depthLine":"attacking_mid"},{"key":"zone_10_center","name":"zone_10","side":"center","x":0.5,"y":0.28,"xv":0.07,"yv":0.07,"depthLine":"attacking_mid"},{"key":"deep_build_up_left","name":"deep_build_up","side":"left","x":0.25,"y":0.78,"xv":0.08,"yv":0.1,"depthLine":"deep"},{"key":"deep_build_up_right","name":"deep_build_up","side":"right","x":0.75,"y":0.78,"xv":0.08,"yv":0.1,"depthLine":"deep"},{"key":"deep_build_up_center","name":"deep_build_up","side":"center","x":0.5,"y":0.8,"xv":0.1,"yv":0.1,"depthLine":"deep"},{"key":"press_trigger_line_left","name":"press_trigger_line","side":"left","x":0.3,"y":0.33,"xv":0.07,"yv":0.08,"depthLine":"attacking_mid"},{"key":"press_trigger_line_right","name":"press_trigger_line","side":"right","x":0.7,"y":0.33,"xv":0.07,"yv":0.08,"depthLine":"attacking_mid"},{"key":"press_trigger_line_center","name":"press_trigger_line","side":"center","x":0.5,"y":0.33,"xv":0.1,"yv":0.08,"depthLine":"attacking_mid"},{"key":"mid_block_line_left","name":"mid_block_line","side":"left","x":0.25,"y":0.5,"xv":0.1,"yv":0.1,"depthLine":"central_mid"},{"key":"mid_block_line_right","name":"mid_block_line","side":"right","x":0.75,"y":0.5,"xv":0.1,"yv":0.1,"depthLine":"central_mid"},{"key":"mid_block_line_center","name":"mid_block_line","side":"center","x":0.5,"y":0.5,"xv":0.15,"yv":0.1,"depthLine":"central_mid"},{"key":"low_block_line_left","name":"low_block_line","side":"left","x":0.2,"y":0.75,"xv":0.1,"yv":0.08,"depthLine":"deep"},{"key":"low_block_line_right","name":"low_block_line","side":"right","x":0.8,"y":0.75,"xv":0.1,"yv":0.08,"depthLine":"deep"},{"key":"low_block_line_center","name":"low_block_line","side":"center","x":0.5,"y":0.8,"xv":0.4,"yv":0.08,"depthLine":"deep"},{"key":"defensive_wide_left","name":"defensive_wide","side":"left","x":0.1,"y":0.75,"xv":0.05,"yv":0.1,"depthLine":"deep"},{"key":"defensive_wide_right","name":"defensive_wide","side":"right","x":0.9,"y":0.75,"xv":0.05,"yv":0.1,"depthLine":"deep"},{"key":"defensive_wide_center","name":"defensive_wide","side":"center","x":0.5,"y":0.9,"xv":0.15,"yv":0.05,"depthLine":"own_box"},{"key":"overlap_run_channel_left","name":"overlap_run_channel","side":"left","x":0.08,"y":0.33,"xv":0.04,"yv":0.12,"depthLine":"final_third"},{"key":"overlap_run_channel_right","name":"overlap_run_channel","side":"right","x":0.92,"y":0.33,"xv":0.04,"yv":0.12,"depthLine":"final_third"},{"key":"overlap_run_channel_center","name":"overlap_run_channel","side":"center","x":0.5,"y":0.15,"xv":0.1,"yv":0.05,"depthLine":"final_third"},{"key":"underlap_channel_left","name":"underlap_channel","side":"left","x":0.28,"y":0.25,"xv":0.05,"yv":0.08,"depthLine":"attacking_mid"},{"key":"underlap_channel_right","name":"underlap_channel","side":"right","x":0.72,"y":0.25,"xv":0.05,"yv":0.08,"depthLine":"attacking_mid"},{"key":"underlap_channel_center","name":"underlap_channel","side":"center","x":0.5,"y":0.25,"xv":0.07,"yv":0.08,"depthLine":"attacking_mid"},{"key":"near_post_corner_left","name":"near_post_corner","side":"left","x":0.42,"y":0.06,"xv":0.04,"yv":0.04,"depthLine":"final_third"},{"key":"near_post_corner_right","name":"near_post_corner","side":"right","x":0.58,"y":0.06,"xv":0.04,"yv":0.04,"depthLine":"final_third"},{"key":"near_post_corner_center","name":"near_post_corner","side":"center","x":0.5,"y":0.05,"xv":0.06,"yv":0.04,"depthLine":"final_third"},{"key":"far_post_corner_left","name":"far_post_corner","side":"left","x":0.38,"y":0.07,"xv":0.04,"yv":0.05,"depthLine":"final_third"},{"key":"far_post_corner_right","name":"far_post_corner","side":"right","x":0.62,"y":0.07,"xv":0.04,"yv":0.05,"depthLine":"final_third"},{"key":"far_post_corner_center","name":"far_post_corner","side":"center","x":0.5,"y":0.1,"xv":0.06,"yv":0.05,"depthLine":"final_third"},{"key":"penalty_spot_area_left","name":"penalty_spot_area","side":"left","x":0.45,"y":0.12,"xv":0.04,"yv":0.05,"depthLine":"final_third"},{"key":"penalty_spot_area_right","name":"penalty_spot_area","side":"right","x":0.55,"y":0.12,"xv":0.04,"yv":0.05,"depthLine":"final_third"},{"key":"penalty_spot_area_center","name":"penalty_spot_area","side":"center","x":0.5,"y":0.12,"xv":0.05,"yv":0.05,"depthLine":"final_third"},{"key":"own_penalty_area_left","name":"own_penalty_area","side":"left","x":0.33,"y":0.88,"xv":0.07,"yv":0.08,"depthLine":"own_box"},{"key":"own_penalty_area_right","name":"own_penalty_area","side":"right","x":0.67,"y":0.88,"xv":0.07,"yv":0.08,"depthLine":"own_box"},{"key":"own_penalty_area_center","name":"own_penalty_area","side":"center","x":0.5,"y":0.88,"xv":0.1,"yv":0.08,"depthLine":"own_box"}];
+
+// ════════════════════════════════════════════════════════
+//  FORMATIONS — posisi dasar (pos_type + koordinat awal)
+// ════════════════════════════════════════════════════════
+const FORMATIONS = {
+  '433': { name:'4-3-3', players:[
+    {id:0,posType:'GK',side:'center',x:.50,y:.91},
+    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
+    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
+    {id:5,posType:'DM',side:'center',x:.50,y:.63},
+    {id:6,posType:'CM',side:'left',x:.32,y:.52},{id:7,posType:'CM',side:'right',x:.68,y:.52},
+    {id:8,posType:'W',side:'left',x:.10,y:.29},{id:9,posType:'CF',side:'center',x:.50,y:.21},
+    {id:10,posType:'W',side:'right',x:.90,y:.29},
+  ]},
+  '442': { name:'4-4-2', players:[
+    {id:0,posType:'GK',side:'center',x:.50,y:.91},
+    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
+    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
+    {id:5,posType:'W',side:'left',x:.10,y:.57},{id:6,posType:'CM',side:'left',x:.37,y:.57},
+    {id:7,posType:'CM',side:'right',x:.63,y:.57},{id:8,posType:'W',side:'right',x:.90,y:.57},
+    {id:9,posType:'CF',side:'left',x:.37,y:.27},{id:10,posType:'CF',side:'right',x:.63,y:.27},
+  ]},
+  '4231': { name:'4-2-3-1', players:[
+    {id:0,posType:'GK',side:'center',x:.50,y:.91},
+    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
+    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
+    {id:5,posType:'DM',side:'left',x:.37,y:.64},{id:6,posType:'DM',side:'right',x:.63,y:.64},
+    {id:7,posType:'W',side:'left',x:.12,y:.44},{id:8,posType:'AM',side:'center',x:.50,y:.44},
+    {id:9,posType:'W',side:'right',x:.88,y:.44},{id:10,posType:'CF',side:'center',x:.50,y:.22},
+  ]},
+  '4132': { name:'4-1-3-2 (Diamond)', players:[
+    {id:0,posType:'GK',side:'center',x:.50,y:.91},
+    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
+    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
+    {id:5,posType:'DM',side:'center',x:.50,y:.66},
+    {id:6,posType:'CM',side:'left',x:.30,y:.52},{id:7,posType:'AM',side:'center',x:.50,y:.40},
+    {id:8,posType:'CM',side:'right',x:.70,y:.52},
+    {id:9,posType:'CF',side:'left',x:.38,y:.25},{id:10,posType:'CF',side:'right',x:.62,y:.25},
+  ]},
+  '352': { name:'3-5-2', players:[
+    {id:0,posType:'GK',side:'center',x:.50,y:.91},
+    {id:1,posType:'CB',side:'left',x:.27,y:.80},{id:2,posType:'CB',side:'center',x:.50,y:.82},
+    {id:3,posType:'CB',side:'right',x:.73,y:.80},
+    {id:4,posType:'WB',side:'left',x:.08,y:.62},{id:5,posType:'CM',side:'left',x:.32,y:.53},
+    {id:6,posType:'DM',side:'center',x:.50,y:.62},{id:7,posType:'CM',side:'right',x:.68,y:.53},
+    {id:8,posType:'WB',side:'right',x:.92,y:.62},
+    {id:9,posType:'CF',side:'left',x:.37,y:.27},{id:10,posType:'CF',side:'right',x:.63,y:.27},
+  ]},
+  '343': { name:'3-4-3', players:[
+    {id:0,posType:'GK',side:'center',x:.50,y:.91},
+    {id:1,posType:'CB',side:'left',x:.27,y:.80},{id:2,posType:'CB',side:'center',x:.50,y:.82},
+    {id:3,posType:'CB',side:'right',x:.73,y:.80},
+    {id:4,posType:'WB',side:'left',x:.08,y:.58},{id:5,posType:'CM',side:'left',x:.36,y:.53},
+    {id:6,posType:'CM',side:'right',x:.64,y:.53},{id:7,posType:'WB',side:'right',x:.92,y:.58},
+    {id:8,posType:'W',side:'left',x:.16,y:.28},{id:9,posType:'CF',side:'center',x:.50,y:.21},
+    {id:10,posType:'W',side:'right',x:.84,y:.28},
+  ]},
+  '541': { name:'5-4-1', players:[
+    {id:0,posType:'GK',side:'center',x:.50,y:.91},
+    {id:1,posType:'WB',side:'left',x:.08,y:.70},{id:2,posType:'CB',side:'left',x:.27,y:.80},
+    {id:3,posType:'CB',side:'center',x:.50,y:.82},{id:4,posType:'CB',side:'right',x:.73,y:.80},
+    {id:5,posType:'WB',side:'right',x:.92,y:.70},
+    {id:6,posType:'CM',side:'left',x:.12,y:.57},{id:7,posType:'DM',side:'left',x:.37,y:.64},
+    {id:8,posType:'DM',side:'right',x:.63,y:.64},{id:9,posType:'CM',side:'right',x:.88,y:.57},
+    {id:10,posType:'CF',side:'center',x:.50,y:.26},
+  ]},
+};
+
+// ════════════════════════════════════════════════════════
+//  ZONE RESOLVER — mengubah zone_name + side → koordinat aktual
+// ════════════════════════════════════════════════════════
+function resolveZone(zoneName, side){
+  // Jika side tidak 'left'/'right', pakai 'center'
+  const targetSide = (side === 'left' || side === 'right') ? side : 'center';
+  let z = ZONE_MAP.find(z => z.name === zoneName && z.side === targetSide);
+  if(!z) z = ZONE_MAP.find(z => z.name === zoneName && z.side === 'center');
+  if(!z) return {x:.5, y:.5};
+  return {x: z.x, y: z.y};
+}
+
+function getRole(roleId){ return ROLE_MASTER.find(r => r.id === roleId) || null; }
+
+function rolesForPosType(posType){
+  return ROLE_MASTER.filter(r => r.posType === posType);
+}
+
+// ════════════════════════════════════════════════════════
+//  MOVEMENT ENGINE — inti simulasi
+//  Menghitung target posisi (x,y) berdasarkan role_master fields
+//  murni dari data nyata: width, depth, attackingRun, dropsDeep,
+//  overlap, pressing, fillsSpace — TANPA data hardcode per role.
+// ════════════════════════════════════════════════════════
+
+// Interpolasi: width_tendency (0=pusat,1=touchline) → koordinat X absolut
+function widthToX(width, side){
+  if(side === 'left')  return 0.50 - width * 0.45;   // 0.50 (pusat) → 0.05 (touchline kiri)
+  if(side === 'right') return 0.50 + width * 0.45;   // 0.50 (pusat) → 0.95 (touchline kanan)
+  return 0.50;                                        // center selalu di tengah
+}
+
+// Interpolasi: depth_tendency (0=garis bek sendiri,1=kotak lawan) → koordinat Y absolut
+// Y: 0.95 (gawang sendiri) → 0.05 (gawang lawan)
+function depthToY(depth){
+  return 0.90 - depth * 0.85;
+}
+
+function computePlayerTarget(player, role, phase, teammates){
+  if(!role || player.posType === 'GK'){
+    // GK selalu dekat gawang, sedikit gerak untuk sweeper/ball-playing
+    const gkRole = role;
+    let y = 0.91;
+    if(gkRole){
+      if(gkRole.id === 'sweeper_keeper') y = phase === 'defense' ? 0.86 : 0.80;
+      if(gkRole.id === 'ball_playing_gk') y = phase === 'possession' ? 0.82 : 0.89;
+    }
+    if(phase === 'transition_neg') y = 0.90;
+    return { x: 0.50, y, delay: 0, duration: 0.5, easing: 'ease-in-out' };
+  }
+
+  const side = player.side;
+  let width = role.width;
+  let depth = role.depth;
+  let delay = 0.15, duration = 0.85, easing = 'ease-in-out';
+
+  // ─── FASE: POSSESSION ───
+  if(phase === 'possession'){
+    // Base: pakai width & depth tendency asli dari role_master
+    if(role.dropsDeep){
+      // False Nine, Enganche, Regista dsb turun dari depth normal
+      depth = Math.max(0.15, depth - 0.30);
+      delay = 0.30; duration = 0.95; easing = 'ease-in-out';
+    }
+    if(role.overlap === 'overlap'){
+      // Full-back/wing-back overlap: dorong lebih lebar & lebih tinggi
+      width = Math.min(1, width + 0.08);
+      delay = 0.25; duration = 1.05; easing = 'ease-out';
+    }
+    if(role.overlap === 'underlap'){
+      // Inverted winger/fullback: masuk ke half-space (kurangi width)
+      width = Math.max(0, width - 0.15);
+      delay = 0.25; duration = 0.95; easing = 'ease-in-out';
+    }
+    if(role.attackingRun && !role.dropsDeep){
+      depth = Math.min(1, depth + 0.05);
+    }
+  }
+
+  // ─── FASE: TRANSITION_POS (baru menang bola — Golden Window counter) ───
+  else if(phase === 'transition_pos'){
+    if(role.attackingRun){
+      // Sprint ke depan, lebih ekstrem dari possession normal
+      depth = Math.min(1, depth + 0.12);
+      delay = 0.05; duration = 0.45; easing = 'linear';
+    } else if(role.pressing === 'hold'){
+      // Anchor/Regista/CB — tetap, jadi jangkar untuk build-up cepat
+      delay = 0; duration = 0.3; easing = 'linear';
+    } else {
+      delay = 0.15; duration = 0.55; easing = 'ease-out';
+    }
+    if(role.overlap === 'overlap'){ width = Math.min(1, width + 0.05); }
+  }
+
+  // ─── FASE: TRANSITION_NEG (baru kehilangan bola — Golden Window gegenpress) ───
+  else if(phase === 'transition_neg'){
+    if(role.pressing === 'immediate'){
+      // Kejar bola segera — dorong ke depan (press_trigger_line area)
+      depth = Math.min(1, depth + 0.05);
+      delay = 0; duration = 0.35; easing = 'linear';
+    } else if(role.pressing === 'delayed'){
+      depth = Math.max(0, depth - 0.05);
+      delay = 0.15; duration = 0.55; easing = 'linear';
+    } else { // hold
+      delay = 0; duration = 0.3; easing = 'linear';
+    }
+  }
+
+  // ─── FASE: DEFENSE (lawan menguasai bola — bertahan terorganisir) ───
+  else if(phase === 'defense'){
+    // Compactness: width dikurangi drastis, depth ditarik dalam
+    width = width * 0.55;
+    depth = Math.max(0, depth - 0.45);
+    delay = 0.1; duration = 0.9; easing = 'ease-in-out';
+    if(role.fillsSpace){
+      // Anchor/Half-back/Libero — cover ruang partner yang naik
+      depth = Math.max(0, depth - 0.05);
+    }
+  }
+
+  let x = widthToX(Math.max(0, Math.min(1, width)), side);
+  let y = depthToY(Math.max(0, Math.min(1, depth)));
+
+  return { x, y, delay, duration, easing };
+}
+
+// ════════════════════════════════════════════════════════
+//  CANVAS SETUP
+// ════════════════════════════════════════════════════════
+const CV = document.getElementById('mc');
+const ctx = CV.getContext('2d');
+const CW = CV.width, CH = CV.height;
+const PX = 18, PY = 14, PW = CW - PX*2, PH = CH - PY*2;
+function gx(r){ return PX + r*PW; }
+function gy(r){ return PY + r*PH; }
+function toRel(cx,cy){ return { rx:(cx-PX)/PW, ry:(cy-PY)/PH }; }
+function getScale(){ const r=CV.getBoundingClientRect(); return {sx:CW/r.width, sy:CH/r.height, rect:r}; }
+
+// ════════════════════════════════════════════════════════
+//  ZONE → POSTYPE DETECTION (untuk drag & drop auto-convert)
+// ════════════════════════════════════════════════════════
+const WT = 0.28;
+function detectPosType(rx, ry, curPosType){
+  if(curPosType === 'GK') return { posType:'GK', side:'center' };
+  const L = rx < WT, R = rx > (1-WT);
+  const side = L ? 'left' : R ? 'right' : 'center';
+  if(ry < 0.28) return { posType: (L||R) ? 'W' : 'CF', side };
+  if(ry < 0.44) return { posType: (L||R) ? 'W' : 'AM', side };
+  if(ry < 0.58) return { posType: 'CM', side };
+  if(ry < 0.72) return { posType: (L||R) ? 'WB' : 'DM', side };
+  if(ry < 0.88) return { posType: (L||R) ? 'FB' : 'CB', side };
+  return { posType:'CB', side:'center' };
+}
+
+const TC = {GK:'#2563eb',CB:'#0891b2',FB:'#0ea5e9',WB:'#0284c7',DM:'#7c3aed',CM:'#6366f1',AM:'#9333ea',W:'#ea580c',CF:'#dc2626'};
+const TB = {GK:'#1e40af',CB:'#0e7490',FB:'#0369a1',WB:'#075985',DM:'#4c1d95',CM:'#3730a3',AM:'#7e22ce',W:'#c2410c',CF:'#991b1b'};
+const POS_LABEL = {GK:'GK',CB:'CB',FB:'FB',WB:'WB',DM:'DM',CM:'CM',AM:'AM',W:'W',CF:'CF'};
+
+// ════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════
+let curFId = '433';
+let players = [];
+let assignedRoles = {};
+let overlays = { zone:true, pass:false };
+let dragPid=null, dOX=0, dOY=0, dragging=false, moved=false;
+let hoverPid=null, preview=null;
+let selP=null, pendingRole=null;
+let tTimer=null, rafId=null;
+
+let phase = null, simSpd = 1;
+let pAnim = {}, pAnimStart=null, pAnimRunning=false;
+let gwTimer=null, gwRemain=0, gwDur=6;
+
+function initPlayers(){
+  players = FORMATIONS[curFId].players.map(p => ({...p, cx:gx(p.x), cy:gy(p.y)}));
+}
+function ease(t, fn){
+  t = Math.max(0, Math.min(1, t));
+  if(fn === 'linear') return t;
+  if(fn === 'ease-out') return 1 - Math.pow(1-t, 2);
+  return t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+}
+function lighten(h){
+  const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16);
+  return `rgb(${Math.min(255,r+40)},${Math.min(255,g+40)},${Math.min(255,b+40)})`;
+}
+
+// ════════════════════════════════════════════════════════
+//  DRAWING
+// ════════════════════════════════════════════════════════
+function drawPitch(){
+  ctx.fillStyle = '#1a5c2e'; ctx.fillRect(0,0,CW,CH);
+  for(let i=0;i<6;i++){ ctx.fillStyle = i%2 ? '#1a5c2e' : '#1e6834'; ctx.fillRect(PX, PY+i*PH/6, PW, PH/6); }
+  ctx.strokeStyle = 'rgba(255,255,255,.32)'; ctx.lineWidth = 1.3;
+  ctx.strokeRect(PX, PY, PW, PH);
+  ctx.beginPath(); ctx.moveTo(PX, PY+PH/2); ctx.lineTo(PX+PW, PY+PH/2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH/2, 36, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH/2, 2.5, 0, Math.PI*2); ctx.fillStyle='rgba(255,255,255,.45)'; ctx.fill();
+  const paw=PW*.46, pah=PH*.12;
+  ctx.strokeRect(PX+(PW-paw)/2, PY, paw, pah); ctx.strokeRect(PX+(PW-paw)/2, PY+PH-pah, paw, pah);
+  ctx.strokeRect(PX+(PW-paw*.48)/2, PY, paw*.48, 24); ctx.strokeRect(PX+(PW-paw*.48)/2, PY+PH-24, paw*.48, 24);
+  ctx.beginPath(); ctx.arc(PX+(PW-paw)/2+paw/2, PY+pah, 18, 0, Math.PI); ctx.stroke();
+  ctx.beginPath(); ctx.arc(PX+(PW-paw)/2+paw/2, PY+PH-pah, 18, Math.PI, Math.PI*2); ctx.stroke();
+  ctx.strokeRect(PX+(PW-paw*.3)/2, PY-7, paw*.3, 9); ctx.strokeRect(PX+(PW-paw*.3)/2, PY+PH-2, paw*.3, 9);
+}
+
+const ZBANDS = [
+  {m:.28,bg:'rgba(220,38,38,.07)',tc:'rgba(248,113,113,.5)',l:'CF · W (att)'},
+  {m:.44,bg:'rgba(234,88,12,.07)',tc:'rgba(251,146,60,.5)',l:'AM · W'},
+  {m:.58,bg:'rgba(99,102,241,.08)',tc:'rgba(165,180,252,.5)',l:'CM'},
+  {m:.72,bg:'rgba(124,58,237,.08)',tc:'rgba(196,181,253,.5)',l:'DM · WB'},
+  {m:.88,bg:'rgba(8,145,178,.08)',tc:'rgba(103,232,249,.5)',l:'CB · FB'},
+  {m:1,bg:'rgba(37,99,235,.12)',tc:'rgba(147,197,253,.5)',l:'GK'},
+];
+function drawZones(){
+  if(!overlays.zone) return;
+  let prev = 0;
+  ZBANDS.forEach((b,i) => {
+    const y0 = PY+prev*PH, h = (b.m-prev)*PH;
+    ctx.fillStyle = b.bg; ctx.fillRect(PX, y0, PW, h);
+    ctx.font = '9px Poppins,sans-serif'; ctx.fillStyle = b.tc; ctx.textAlign='right'; ctx.textBaseline='middle';
+    ctx.fillText(b.l, PX+PW-5, y0+h/2);
+    if(i < ZBANDS.length-1){
+      ctx.strokeStyle='rgba(255,255,255,.07)'; ctx.lineWidth=.6; ctx.setLineDash([3,4]);
+      ctx.beginPath(); ctx.moveTo(PX, PY+b.m*PH); ctx.lineTo(PX+PW, PY+b.m*PH); ctx.stroke(); ctx.setLineDash([]);
+    }
+    prev = b.m;
+  });
+  ctx.strokeStyle='rgba(255,255,255,.09)'; ctx.lineWidth=.7; ctx.setLineDash([2,4]);
+  [WT, 1-WT].forEach(rx => { ctx.beginPath(); ctx.moveTo(gx(rx),PY); ctx.lineTo(gx(rx),PY+PH); ctx.stroke(); });
+  ctx.setLineDash([]);
+}
+
+function drawPass(){
+  if(!overlays.pass) return;
+  const t = Date.now()/1200;
+  for(let i=0;i<players.length;i++) for(let j=i+1;j<players.length;j++){
+    const a=players[i], b=players[j], d=Math.hypot(a.cx-b.cx, a.cy-b.cy);
+    if(d>185) continue;
+    const al = Math.max(.06, .30-(d/185)*.20);
+    ctx.beginPath(); ctx.moveTo(a.cx,a.cy); ctx.lineTo(b.cx,b.cy);
+    ctx.strokeStyle=`rgba(250,204,21,${al})`; ctx.lineWidth=.8; ctx.setLineDash([3,4]); ctx.stroke(); ctx.setLineDash([]);
+    const tv = ((t+(i*.13+j*.07))%1);
+    ctx.beginPath(); ctx.arc(a.cx+(b.cx-a.cx)*tv, a.cy+(b.cy-a.cy)*tv, 2.5, 0, Math.PI*2);
+    ctx.fillStyle=`rgba(250,204,21,${al*1.8})`; ctx.fill();
+  }
+}
+
+function drawArrows(){
+  if(!phase) return;
+  players.forEach(p => {
+    const d = pAnim[p.id]; if(!d) return;
+    const dist = Math.hypot(d.tx-p.cx, d.ty-p.cy); if(dist<5) return;
+    const col = TC[p.posType] || '#aaa';
+    ctx.beginPath(); ctx.moveTo(p.cx,p.cy); ctx.lineTo(d.tx,d.ty);
+    ctx.strokeStyle=col+'55'; ctx.lineWidth=1.2; ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
+    const ang = Math.atan2(d.ty-p.cy, d.tx-p.cx), hs=7;
+    ctx.beginPath(); ctx.moveTo(d.tx,d.ty);
+    ctx.lineTo(d.tx-hs*Math.cos(ang-.38), d.ty-hs*Math.sin(ang-.38));
+    ctx.lineTo(d.tx-hs*Math.cos(ang+.38), d.ty-hs*Math.sin(ang+.38));
+    ctx.closePath(); ctx.fillStyle=col+'77'; ctx.fill();
+  });
+}
+
+function drawPlayers(){
+  [...players].sort((a,b)=>(a.id===dragPid?1:b.id===dragPid?-1:0)).forEach(p => {
+    const roleId = assignedRoles[p.id];
+    const isD = dragPid===p.id && dragging, isH = hoverPid===p.id && !dragging;
+    const col = TC[p.posType] || '#888', bdr = TB[p.posType] || '#444', R = isD?15:12;
+    if(isD){
+      ctx.beginPath(); ctx.arc(p.cx+3,p.cy+5,R,0,Math.PI*2); ctx.fillStyle='rgba(0,0,0,.3)'; ctx.fill();
+      if(preview && preview.posType !== p.posType){
+        const pc = TC[preview.posType] || '#aaa';
+        ctx.beginPath(); ctx.arc(p.cx,p.cy,R+7,0,Math.PI*2); ctx.strokeStyle=pc; ctx.lineWidth=2; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.font='bold 8px Poppins,sans-serif'; ctx.fillStyle=pc; ctx.textAlign='center'; ctx.textBaseline='bottom';
+        ctx.fillText('→ '+preview.posType, p.cx, p.cy-R-2);
+      }
+    }
+    if(isH){ ctx.beginPath(); ctx.arc(p.cx,p.cy,R+5,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,.10)'; ctx.fill(); }
+    ctx.beginPath(); ctx.arc(p.cx,p.cy,R,0,Math.PI*2);
+    if(roleId){ ctx.fillStyle=isD?lighten(col):col; ctx.fill(); ctx.strokeStyle=bdr; ctx.lineWidth=isD?2.2:1.8; ctx.stroke(); }
+    else{ ctx.fillStyle='rgba(255,255,255,.07)'; ctx.fill(); ctx.strokeStyle='rgba(255,255,255,.40)'; ctx.lineWidth=1.4; ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]); }
+    const lbl = POS_LABEL[p.posType] || p.posType;
+    ctx.font='bold 8.5px "JetBrains Mono",monospace'; ctx.fillStyle=roleId?'#fff':'rgba(255,255,255,.6)'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(lbl, p.cx, p.cy);
+    if(roleId){
+      const r = getRole(roleId);
+      if(r){ ctx.font='bold 6.5px Poppins,sans-serif'; ctx.fillStyle='rgba(255,255,255,.85)'; ctx.fillText(r.short, p.cx, p.cy+(isD?21:18)); }
+    } else if(isH){
+      ctx.font='9px Poppins,sans-serif'; ctx.fillStyle='rgba(255,255,255,.5)'; ctx.fillText('+ peran', p.cx, p.cy+20);
+    }
+  });
+}
+
+function render(){
+  ctx.clearRect(0,0,CW,CH);
+  drawPitch(); drawZones(); drawPass(); drawArrows(); drawPlayers();
+}
+
+// ════════════════════════════════════════════════════════
+//  ANIMATION LOOP
+// ════════════════════════════════════════════════════════
+function startLoop(){ if(!rafId) rafId = requestAnimationFrame(loop); }
+function loop(time){
+  rafId = null; let need = false;
+  if(pAnimRunning){
+    if(pAnimStart===null) pAnimStart = time;
+    const el = (time-pAnimStart)/1000; let done = true;
+    players.forEach(p => {
+      const d = pAnim[p.id]; if(!d) return;
+      const prog = d.dr<=0 ? 1 : Math.max(0, Math.min(1, (el-d.dl)/d.dr));
+      if(prog<1) done=false;
+      const et = ease(prog, d.e);
+      p.cx = d.sx+(d.tx-d.sx)*et; p.cy = d.sy+(d.ty-d.sy)*et;
+    });
+    if(done) pAnimRunning = false; else need = true;
+  }
+  if(overlays.pass) need = true;
+  render();
+  if(need) rafId = requestAnimationFrame(loop);
+}
+
+// ════════════════════════════════════════════════════════
+//  DRAG & DROP
+// ════════════════════════════════════════════════════════
+function hitP(mx,my){ for(let i=players.length-1;i>=0;i--) if(Math.hypot(players[i].cx-mx, players[i].cy-my)<16) return players[i]; return null; }
+function cxy(e){ const {sx,sy,rect} = getScale(); const t = e.touches?e.touches[0]:e; return {mx:(t.clientX-rect.left)*sx, my:(t.clientY-rect.top)*sy}; }
+
+function onDown(mx,my){
+  const h = hitP(mx,my); if(!h) return false;
+  pAnimRunning = false;
+  dragPid=h.id; moved=false; dragging=false; preview=null; dOX=mx-h.cx; dOY=my-h.cy;
+  return true;
+}
+function onMove(mx,my){
+  if(dragPid!==null){
+    const p = players.find(x=>x.id===dragPid);
+    if(p){
+      p.cx = Math.max(PX+13, Math.min(PX+PW-13, mx-dOX));
+      p.cy = Math.max(PY+13, Math.min(PY+PH-13, my-dOY));
+      dragging=true; moved=true;
+      const {rx,ry} = toRel(p.cx,p.cy);
+      preview = detectPosType(rx, ry, p.posType);
+    }
+    CV.style.cursor='grabbing'; startLoop();
+  } else {
+    const h = hitP(mx,my); hoverPid = h?h.id:null; CV.style.cursor = h?'grab':'default';
+    if(!rafId) render();
+  }
+}
+function onUp(mx,my){
+  if(dragPid!==null){
+    const p = players.find(x=>x.id===dragPid);
+    if(moved && p && p.posType!=='GK'){
+      const {rx,ry} = toRel(p.cx,p.cy);
+      const res = detectPosType(rx, ry, p.posType);
+      if(res.posType!==p.posType || res.side!==p.side){
+        const old = p.posType;
+        p.posType = res.posType; p.side = res.side;
+        if(assignedRoles[p.id]){
+          const r = getRole(assignedRoles[p.id]);
+          if(!r || r.posType !== res.posType){ delete assignedRoles[p.id]; document.getElementById('sel-card').style.display='none'; }
+        }
+        toast(`${old} → ${res.posType}`, TC[res.posType]);
+        updateComp(); renderTeamList();
+      }
+    }
+    if(!moved && p) openRoleModal(p);
+    dragPid=null; dragging=false; moved=false; preview=null; CV.style.cursor='grab'; render();
+  }
+}
+CV.addEventListener('mousedown', e=>{ if(e.button===2) return; const {mx,my}=cxy(e); if(onDown(mx,my)) e.preventDefault(); });
+CV.addEventListener('mousemove', e=>{ const {mx,my}=cxy(e); onMove(mx,my); });
+CV.addEventListener('mouseup', e=>{ const {mx,my}=cxy(e); onUp(mx,my); });
+CV.addEventListener('mouseleave', ()=>{ if(dragPid){dragPid=null;dragging=false;moved=false;preview=null;} hoverPid=null; if(!rafId) render(); });
+CV.addEventListener('contextmenu', e=>{
+  e.preventDefault(); const {mx,my}=cxy(e); const h=hitP(mx,my);
+  if(h && assignedRoles[h.id]){ delete assignedRoles[h.id]; updateComp(); renderTeamList(); document.getElementById('sel-card').style.display='none'; toast('Peran dihapus','#6b7280'); render(); }
+});
+CV.addEventListener('touchstart', e=>{ const {mx,my}=cxy(e); if(onDown(mx,my)) e.preventDefault(); }, {passive:false});
+CV.addEventListener('touchmove', e=>{ const {mx,my}=cxy(e); onMove(mx,my); e.preventDefault(); }, {passive:false});
+CV.addEventListener('touchend', e=>{ const t=e.changedTouches[0]; const {sx,sy,rect}=getScale(); onUp((t.clientX-rect.left)*sx, (t.clientY-rect.top)*sy); });
+
+// ════════════════════════════════════════════════════════
+//  PHASE TRIGGER
+// ════════════════════════════════════════════════════════
+function triggerPhase(ph){
+  phase = ph;
+  const targets = {};
+  players.forEach(p => {
+    const r = getRole(assignedRoles[p.id]);
+    const t = computePlayerTarget(p, r, ph, players);
+    targets[p.id] = t;
+  });
+  pAnim = {};
+  players.forEach(p => {
+    const t = targets[p.id]; if(!t) return;
+    pAnim[p.id] = { sx:p.cx, sy:p.cy, tx:gx(t.x), ty:gy(t.y), dl:t.delay/simSpd, dr:t.duration/simSpd, e:t.easing };
+  });
+  pAnimStart = null; pAnimRunning = true;
+
+  ['pb-poss','pb-tp','pb-tn','pb-def'].forEach(id => document.getElementById(id).className='phbtn');
+  const clsMap = {possession:'phbtn on-poss', transition_pos:'phbtn on-tp', transition_neg:'phbtn on-tn', defense:'phbtn on-def'};
+  const idMap = {possession:'pb-poss', transition_pos:'pb-tp', transition_neg:'pb-tn', defense:'pb-def'};
+  document.getElementById(idMap[ph]).className = clsMap[ph];
+
+  updatePhaseUI(ph);
+  if(ph==='transition_pos' || ph==='transition_neg') startGW(ph); else stopGW();
+  startLoop();
+}
+
+function stopSim(){
+  pAnimRunning = false; phase = null; stopGW();
+  ['pb-poss','pb-tp','pb-tn','pb-def'].forEach(id => document.getElementById(id).className='phbtn');
+  document.getElementById('phase-badge').className = 'phase-badge pbadge-base';
+  document.getElementById('phase-badge').textContent = '⬛ Posisi Dasar';
+  document.getElementById('phase-rows').innerHTML = `<div class="hint"><b>Pilih fase</b> untuk melihat pergerakan tiap role dihitung dari width/depth tendency dan flags taktisnya masing-masing.</div>`;
+  render();
+}
+
+function setSpd(s){
+  simSpd = s;
+  ['sp-05','sp-1','sp-2'].forEach(id => document.getElementById(id).classList.remove('on'));
+  document.getElementById(s===.5?'sp-05':s===2?'sp-2':'sp-1').classList.add('on');
+}
+
+function startGW(ph){
+  gwRemain = gwDur;
+  const ov = document.getElementById('gw-overlay'), lbl = document.getElementById('gw-lbl'), fill = document.getElementById('gw-fill'), timer = document.getElementById('gw-timer');
+  const isPos = ph === 'transition_pos';
+  lbl.textContent = isPos ? 'Golden Window — Counter-attack' : 'Golden Window — Gegenpressing';
+  lbl.style.color = isPos ? '#fbbf24' : '#a78bfa';
+  fill.style.background = isPos ? '#d97706' : '#7c3aed';
+  ov.style.borderColor = isPos ? '#d97706' : '#7c3aed';
+  ov.classList.add('show');
+  clearInterval(gwTimer);
+  gwTimer = setInterval(() => {
+    gwRemain = Math.max(0, gwRemain-.1);
+    fill.style.width = (gwRemain/gwDur*100)+'%';
+    timer.textContent = gwRemain.toFixed(1)+'s';
+    if(gwRemain<=0) stopGW();
+  }, 100);
+}
+function stopGW(){ clearInterval(gwTimer); document.getElementById('gw-overlay').classList.remove('show'); }
+
+function updatePhaseUI(ph){
+  const map = {
+    possession: {cls:'pbadge-poss', lbl:'⚽ In Possession', rows:[
+      ['Width & depth dihitung dari width_tendency/depth_tendency role','#0ea5e9'],
+      ['overlap → dorong lebar; underlap → masuk half-space','#38bdf8'],
+      ['drops_deep=true → role narik mundur (False Nine, Enganche, dst)','#a78bfa'],
+    ]},
+    transition_pos: {cls:'pbadge-tp', lbl:'↗ Counter-attack (Golden Window)', rows:[
+      ['attacking_run=true → sprint depth+0.12, delay 0.05s','#fbbf24'],
+      ['pressing=hold → tetap jadi jangkar build-up cepat','#d97706'],
+      ['6 detik kritis untuk eksploitasi ruang kosong','#92400e'],
+    ]},
+    transition_neg: {cls:'pbadge-tn', lbl:'🔄 Gegenpressing (Golden Window)', rows:[
+      ['pressing=immediate → maju & sprint rebut bola','#a78bfa'],
+      ['pressing=delayed → geser moderat, jaga jarak','#7c3aed'],
+      ['pressing=hold → bek/anchor tetap di posisi','#4c1d95'],
+    ]},
+    defense: {cls:'pbadge-def', lbl:'🛡 Out of Possession', rows:[
+      ['Compactness: width ×0.55, depth ditarik dalam','#f87171'],
+      ['fills_space=true → cover ruang partner yang naik','#dc2626'],
+      ['Seluruh unit merapat membentuk blok pertahanan','#991b1b'],
+    ]},
+  };
+  const m = map[ph]; if(!m) return;
+  const badge = document.getElementById('phase-badge');
+  badge.className = 'phase-badge '+m.cls; badge.textContent = m.lbl;
+  document.getElementById('phase-rows').innerHTML = m.rows.map(([txt,col]) =>
+    `<div class="info-row"><i class="ti ti-arrow-right" style="color:${col};font-size:13px"></i><span style="color:${col}">${txt}</span></div>`
+  ).join('');
+}
+
+function toggleOv(k){
+  overlays[k] = !overlays[k];
+  document.getElementById('btn-'+k).classList.toggle('on', overlays[k]);
+  if(overlays.pass) startLoop(); else render();
+}
+
+// ════════════════════════════════════════════════════════
+//  ROLE ASSIGN MODAL
+// ════════════════════════════════════════════════════════
+function openRoleModal(player){
+  selP = player; pendingRole = assignedRoles[player.id] || null;
+  const col = TC[player.posType] || '#888';
+  const badge = document.getElementById('m-badge');
+  badge.style.background = col; badge.style.fontSize='13px'; badge.textContent = POS_LABEL[player.posType];
+  document.getElementById('m-title').textContent = 'Pilih Peran — ' + POS_LABEL[player.posType];
+  const roles = rolesForPosType(player.posType);
+  document.getElementById('m-sub').textContent = `${roles.length} role tersedia untuk posisi ${player.posType}`;
+  const body = document.getElementById('m-body');
+  if(!roles.length){ body.innerHTML = '<p style="font-size:12px;color:var(--txt2)">Belum ada role untuk posisi ini.</p>'; document.getElementById('role-modal').classList.add('open'); return; }
+  body.innerHTML = `<div class="rg"><div class="rl">Semua Role ${player.posType}</div>${roles.map(r => `
+    <button class="ro${pendingRole===r.id?' sel':''}" onclick="pickRole('${r.id}',this)">
+      <div class="ro-n"><span style="background:${TC[r.posType]};color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px">${r.short}</span>${r.name}</div>
+      <div class="ro-d">${r.desc}</div>
+      <div class="ro-tags">
+        <span class="ro-tag">width ${r.width}</span><span class="ro-tag">depth ${r.depth}</span>
+        <span class="ro-tag">${r.pressing}</span>
+        ${r.overlap!=='none' ? `<span class="ro-tag">${r.overlap}</span>` : ''}
+      </div>
+    </button>`).join('')}</div>`;
+  document.getElementById('role-modal').classList.add('open');
+}
+function pickRole(id, el){ pendingRole = id; document.querySelectorAll('.ro').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+function confirmRole(){ if(!selP || !pendingRole) return; assignedRoles[selP.id] = pendingRole; closeRoleModal(); updateComp(); showSel(selP); renderTeamList(); render(); }
+function clearRole(){ if(!selP) return; delete assignedRoles[selP.id]; closeRoleModal(); document.getElementById('sel-card').style.display='none'; updateComp(); renderTeamList(); render(); }
+function closeRoleModal(){ document.getElementById('role-modal').classList.remove('open'); selP = null; }
+
+function showSel(p){
+  const rid = assignedRoles[p.id]; if(!rid) return;
+  const r = getRole(rid); if(!r) return;
+  const col = TC[p.posType] || '#888';
+  document.getElementById('sel-body').innerHTML = `
+    <div class="role-name">${r.name}</div>
+    <div class="role-desc">${r.desc}</div>
+    <div>
+      <span class="role-tag" style="background:${col}22;color:${col};border-color:${col}55">${r.posType}</span>
+      <span class="role-tag" style="background:#ffffff11;color:var(--txt2);border-color:var(--border2)">${r.pressing}</span>
+      ${r.overlap!=='none' ? `<span class="role-tag" style="background:#ffffff11;color:var(--txt2);border-color:var(--border2)">${r.overlap}</span>` : ''}
+    </div>
+    <div class="attr-grid">
+      <div class="attr-item"><div class="attr-lbl">Width</div><div class="attr-val">${r.width}</div></div>
+      <div class="attr-item"><div class="attr-lbl">Depth</div><div class="attr-val">${r.depth}</div></div>
+      <div class="attr-item"><div class="attr-lbl">Attacking Run</div><div class="attr-val">${r.attackingRun?'Ya':'Tidak'}</div></div>
+      <div class="attr-item"><div class="attr-lbl">Drops Deep</div><div class="attr-val">${r.dropsDeep?'Ya':'Tidak'}</div></div>
+    </div>`;
+  document.getElementById('sel-card').style.display = '';
+}
+
+// ════════════════════════════════════════════════════════
+//  ROLE BROWSER MODAL (semua 29 role)
+// ════════════════════════════════════════════════════════
+function openRoleBrowser(){
+  const body = document.getElementById('browser-body');
+  const groups = {};
+  ROLE_MASTER.forEach(r => { (groups[r.posGroup] = groups[r.posGroup]||[]).push(r); });
+  const order = ['GK','DEF','MID','FWD'];
+  const groupNames = {GK:'Kiper',DEF:'Bertahan',MID:'Gelandang',FWD:'Penyerang'};
+  body.innerHTML = order.filter(g=>groups[g]).map(g => `
+    <div class="rg"><div class="rl">${groupNames[g]} (${groups[g].length})</div>
+    ${groups[g].map(r => `
+      <div class="rl-card">
+        <div class="rl-head">
+          <span class="rl-badge" style="background:${TC[r.posType]}">${r.short}</span>
+          <span class="rl-name">${r.name}</span>
+          <span class="rl-pos">${r.posType} · ${r.side}</span>
+        </div>
+        <div class="rl-desc">${r.desc}</div>
+        <div class="ro-tags" style="margin-top:5px">
+          <span class="ro-tag">width ${r.width}</span><span class="ro-tag">depth ${r.depth}</span>
+          <span class="ro-tag">${r.pressing}</span>
+          ${r.attackingRun ? '<span class="ro-tag">attacking run</span>' : ''}
+          ${r.dropsDeep ? '<span class="ro-tag">drops deep</span>' : ''}
+          ${r.overlap!=='none' ? `<span class="ro-tag">${r.overlap}</span>` : ''}
+        </div>
+      </div>`).join('')}
+    </div>`).join('');
+  document.getElementById('browser-modal').classList.add('open');
+}
+function closeBrowser(){ document.getElementById('browser-modal').classList.remove('open'); }
+
+// ════════════════════════════════════════════════════════
+//  SIDEBAR TABS
+// ════════════════════════════════════════════════════════
+function switchTab(tab){
+  ['sim','team','roles'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('panel-'+t).style.display = t===tab ? '' : 'none';
+  });
+  if(tab==='team') renderTeamList();
+  if(tab==='roles') renderRoleList();
+}
+
+function renderTeamList(){
+  const el = document.getElementById('team-list');
+  el.innerHTML = players.map(p => {
+    const rid = assignedRoles[p.id];
+    const r = getRole(rid);
+    const col = TC[p.posType];
+    return `<div class="rl-card" onclick="openRoleModal(${JSON.stringify(p).replace(/"/g,'&quot;')})" style="cursor:pointer">
+      <div class="rl-head">
+        <span class="rl-badge" style="background:${col}">${POS_LABEL[p.posType]}</span>
+        <span class="rl-name">${r ? r.name : '— Belum ada peran —'}</span>
+      </div>
+      ${r ? `<div class="rl-desc">${r.desc}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderRoleList(){
+  const q = (document.getElementById('role-search')?.value || '').toLowerCase();
+  const filtered = ROLE_MASTER.filter(r => !q || r.name.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q) || r.posType.toLowerCase().includes(q));
+  document.getElementById('role-list-container').innerHTML = filtered.map(r => `
+    <div class="rl-card">
+      <div class="rl-head">
+        <span class="rl-badge" style="background:${TC[r.posType]}">${r.short}</span>
+        <span class="rl-name">${r.name}</span>
+        <span class="rl-pos">${r.posType}</span>
+      </div>
+      <div class="rl-desc">${r.desc}</div>
+    </div>`).join('') || '<div class="empty-saves">Tidak ada role ditemukan</div>';
+}
+
+// ════════════════════════════════════════════════════════
+//  COMPOSITION PANEL
+// ════════════════════════════════════════════════════════
+function updateComp(){
+  const cnt={}, tot={};
+  players.forEach(p => { tot[p.posType]=(tot[p.posType]||0)+1; if(assignedRoles[p.id]) cnt[p.posType]=(cnt[p.posType]||0)+1; });
+  ['GK','CB','FB','WB','DM','CM','AM','W','CF'].forEach(pt => {
+    const el = document.getElementById('s-'+pt.toLowerCase());
+    if(el) el.textContent = `${cnt[pt]||0}/${tot[pt]||0}`;
+  });
+  const filled = Object.keys(assignedRoles).filter(id => players.find(p=>p.id==id)).length;
+  document.getElementById('s-tot').textContent = `${filled}/${players.length}`;
+  document.getElementById('s-prog').style.width = (filled/players.length*100)+'%';
+}
+
+// ════════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════════
+function toast(msg, col){
+  const el = document.getElementById('toast');
+  document.getElementById('t-dot').style.background = col || '#0ea5e9';
+  document.getElementById('t-msg').textContent = msg;
+  el.classList.add('show'); clearTimeout(tTimer);
+  tTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+// ════════════════════════════════════════════════════════
+//  SAVE / LOAD / EXPORT / IMPORT
+// ════════════════════════════════════════════════════════
+function openSaveModal(){ document.getElementById('save-modal').classList.add('open'); }
+function closeSaveModal(){ document.getElementById('save-modal').classList.remove('open'); }
+function saveTactic(){
+  const name = document.getElementById('save-name-input').value.trim();
+  const note = document.getElementById('save-note-input').value.trim();
+  if(!name){ toast('Masukkan nama taktik!','#dc2626'); return; }
+  const data = {
+    name, note, formation:curFId, formationName:FORMATIONS[curFId].name,
+    roles:{...assignedRoles},
+    playerPositions: players.map(p=>({id:p.id, posType:p.posType, side:p.side, relX:(p.cx-PX)/PW, relY:(p.cy-PY)/PH})),
+    savedAt: new Date().toISOString(),
+  };
+  const saves = JSON.parse(localStorage.getItem('tacticbord_v2')||'[]');
+  saves.unshift(data);
+  localStorage.setItem('tacticbord_v2', JSON.stringify(saves.slice(0,20)));
+  closeSaveModal();
+  document.getElementById('save-name-input').value=''; document.getElementById('save-note-input').value='';
+  toast('Taktik disimpan: '+name, '#16a34a');
+}
+function openLoadModal(){
+  const saves = JSON.parse(localStorage.getItem('tacticbord_v2')||'[]');
+  const list = document.getElementById('load-list');
+  if(!saves.length){ list.innerHTML = '<div class="empty-saves">Belum ada taktik tersimpan.</div>'; document.getElementById('load-modal').classList.add('open'); return; }
+  list.innerHTML = saves.map((s,i) => `
+    <div class="save-item" onclick="loadTactic(${i})">
+      <div style="font-size:20px">📋</div>
+      <div style="flex:1;min-width:0">
+        <div class="save-item-name">${s.name}</div>
+        <div class="save-item-info">${s.formationName||s.formation} · ${s.note?s.note+' · ':''}${new Date(s.savedAt).toLocaleDateString('id-ID')}</div>
+      </div>
+      <button class="save-item-del" onclick="deleteSave(event,${i})"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+  document.getElementById('load-modal').classList.add('open');
+}
+function closeLoadModal(){ document.getElementById('load-modal').classList.remove('open'); }
+function loadTactic(idx){
+  const saves = JSON.parse(localStorage.getItem('tacticbord_v2')||'[]');
+  const data = saves[idx]; if(!data) return;
+  curFId = data.formation; document.getElementById('fsel').value = curFId;
+  initPlayers();
+  assignedRoles = {...data.roles};
+  if(data.playerPositions){
+    data.playerPositions.forEach(sv => {
+      const p = players.find(x=>x.id===sv.id);
+      if(p){ p.posType=sv.posType; p.side=sv.side; p.cx=PX+sv.relX*PW; p.cy=PY+sv.relY*PH; }
+    });
+  }
+  closeLoadModal(); updateComp(); renderTeamList(); render(); toast('Taktik dimuat: '+data.name, '#0ea5e9');
+}
+function deleteSave(e, idx){
+  e.stopPropagation();
+  const saves = JSON.parse(localStorage.getItem('tacticbord_v2')||'[]');
+  saves.splice(idx,1);
+  localStorage.setItem('tacticbord_v2', JSON.stringify(saves));
+  openLoadModal(); toast('Taktik dihapus','#6b7280');
+}
+function exportJSON(){
+  const data = {
+    version:'2.0', app:'TacticBord', exportedAt:new Date().toISOString(),
+    formation:curFId, formationName:FORMATIONS[curFId].name, roles:{...assignedRoles},
+    players: players.map(p=>({id:p.id, posType:p.posType, side:p.side, relX:((p.cx-PX)/PW).toFixed(3), relY:((p.cy-PY)/PH).toFixed(3)})),
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const link = document.createElement('a');
+  link.download = `TacticBord-${FORMATIONS[curFId].name}-${Date.now()}.json`;
+  link.href = URL.createObjectURL(blob); link.click();
+  toast('Diekspor sebagai JSON','#16a34a');
+}
+function importJSON(e){
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(!data.formation || !FORMATIONS[data.formation]){ toast('Format file tidak valid','#dc2626'); return; }
+      curFId = data.formation; document.getElementById('fsel').value = curFId;
+      initPlayers(); assignedRoles = {...data.roles};
+      if(data.players){
+        data.players.forEach(sv => {
+          const p = players.find(x=>x.id===sv.id);
+          if(p){ p.posType=sv.posType||p.posType; p.side=sv.side||p.side; if(sv.relX&&sv.relY){ p.cx=PX+parseFloat(sv.relX)*PW; p.cy=PY+parseFloat(sv.relY)*PH; } }
+        });
+      }
+      updateComp(); renderTeamList(); render(); toast('Taktik berhasil diimpor!','#16a34a');
+    }catch{ toast('Gagal membaca file JSON','#dc2626'); }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function changeFormation(fid){ stopSim(); curFId=fid; assignedRoles={}; initPlayers(); document.getElementById('sel-card').style.display='none'; updateComp(); renderTeamList(); render(); }
+
+// ════════════════════════════════════════════════════════
+//  BOOT
+// ════════════════════════════════════════════════════════
+initPlayers(); updateComp(); render();
+</script>
+</body>
+</html>
