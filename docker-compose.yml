@@ -1,0 +1,33 @@
+services:
+  backend:
+    build: ./backend
+    container_name: tacticbord-backend
+    ports:
+      - "${PORT:-8787}:8787"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PORT=8787
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - DATA_DIR=/app/data
+    volumes:
+      - tacticbord-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8787/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── Uncomment jika ingin frontend juga ikut di-orkestrasi di sini ──
+  # frontend:
+  #   build: ./frontend
+  #   container_name: tacticbord-frontend
+  #   ports:
+  #     - "3000:80"
+  #   depends_on:
+  #     - backend
+  #   restart: unless-stopped
+
+volumes:
+  tacticbord-data:
