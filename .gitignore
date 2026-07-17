@@ -1,87 +1,24 @@
-/10.15314-tsed.1507305-4032100.pdf
-/1653-Article Text-5979-1-10-20220125.pdf
-/1778169104483.png
-/3054132.pdf
-/405-Article Text-1101-1-10-20251230.pdf
-/47-62.pdf
-/978-3-030-17274-9_3 (1).pdf
-/978-3-030-17274-9_3.pdf
-/a.docx
-/aalbers_mlsa18.pdf
-/applsci-15-04532-v2.pdf
-/ASC Portofolio V 1.0 (Rev. 01.06.24).pdf
-/A_Dimension_Reduction_Approach_to_Player_Rankings_in_European_Football.pdf
-/BAB_I_Proposal_TA_TacticBord.docx
-/BS_Art_52573-10.pdf
-/cijpfdp_2108b.exe
-/Claude Setup.exe
-/CMCMA_Volume 2_Issue 1_Pages 24-33.pdf
-/Constructing_Spaces_and_Times_for_Tactical_Analysis_in_Football.pdf
-/cv Danis.pdf
-/D3TI-Template TA (Update 2-5-2025) (1).docx
-/D3TI-Template TA (Update 2-5-2025).docx
-/DAAK_KRS_Manual_Setelah perbaikan KRS s_d UTS-05feb2025 (1).docx
-/DAAK_KRS_Manual_Setelah perbaikan KRS s_d UTS-05feb2025.docx
-/desktop.ini
-/e1875399X311682.pdf
-/FIFAFinalReportThomas_Edwards_August2022_CB_Finalforprint.pdf
-/FLIGHT#1-MOHAMMAD HINDAR TABIKKINANDO-YIA-SKBJGB, SMXWYL-BTH-FLIGHT_ORIGINATING.pdf
-/FLIGHT#2-MOHAMMAD HINDAR TABIKKINANDO-YIA-SKBJGB, SMXWYL-BTH-FLIGHT_RETURNING.pdf
-/FMF_25-26_New&Predict_v0.2.zip
-/Formulir Panitia P2K 2026.docx
-/Formulir Pendaftaran BEM 26-27.docx
-/Formulir Pendaftaran BEM 26-27.pdf
-/fspor-7-1569155.pdf
-/Girls Girls Girls-SteamGG.NET (1).zip
-/Git-2.53.0.3-64-bit.exe
-/HM_Art_45625-10.pdf
-/Italy_-_Serie_A.zip
-/jfmk-08-00039-v3.pdf
-/jfmk-08-00104.pdf
-/Kelas 69 - Mohammad Hindar Tabikkinando 2300026082.docx
-/Kelas 69 - Mohammad Hindar Tabikkinando 2300026082.pdf
-/Kontrak kerja-new.docx
-/Kontrak kerja-new.pdf
-/KRS_Manual_WR1.docx
-/KRS_Manual_WR1.pdf
-/KRS_MUHAMMAD RIZKY NUR DANISWARA.pdf
-/logo naga.png
-/MC Intimate Wedding.docx
-/memreduct-3.5.2-setup.exe
-/Metodologi_Penelitian_TacticBord_Revisi.docx
-/moodle-latest-501
-/moodle-latest-501.zip
-/mp68-win-mg2500-1_04-ea32_2.exe
-/out.pdf
-/PAS FOTO FORMAL NEW.jpg
-/Phone Link
-/Pokemon Indigo 4.0.2.zip
-/Pokemon Unbound Official Patch 2.1.1+
-/Pokemon Unbound Official Patch 2.1.1+.zip
-/PoP8Setup.exe
-/Presentasi_TacticBoard_Manajemen_Proyek_IT.docx
-/Proposal_Bisnis_Digital_TacticBoard.docx
-/Rangkuman.pdf
-/Resume Tokoh Muhammadiyyah.docx
-/Siti-Hapsah-Isfardiyana-Jurnal-Hukum-Arena-Volume-7-No-2-Agustus-2014.pdf
-/stamped_file_path-RGMTGLOM4NS2_4eb69de1-f7d7-4989-80bb-b15932f7f30b.pdf
-/tactical-board.html
-/tactical_board_simulation.html
-/TacticBoard_Digital_Playbook.pptx
-/tugas 1.docx
-/tugas 3.docx
-/tugas 4.docx
-/WhatsApp Image 2026-03-01 at 05.24.39.jpeg
-/WhatsApp Image 2026-03-02 at 10.35.27.jpeg
-/WhatsApp Image 2026-04-12 at 17.44.53.jpeg
-/WhatsApp Image 2026-04-20 at 11.03.44 (1).jpeg
-/WhatsApp Image 2026-04-20 at 11.03.44 (2).jpeg
-/WhatsApp Image 2026-04-20 at 11.03.44 (3).jpeg
-/WhatsApp Image 2026-04-20 at 11.03.44.jpeg
-/WhatsApp Image 2026-04-20 at 11.03.45 (1).jpeg
-/WhatsApp Image 2026-04-20 at 11.03.45 (2).jpeg
-/WhatsApp Image 2026-04-20 at 11.03.45.jpeg
-/win-mg2500-2_2-n_acd.exe
-/xp68-win-mg2500-5_70c-ea32_2.exe
-/Yuka.pdf
-/~$735dcf-44b9-f011-837e-d97c71b52123_DT199_20251104130924..docx
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
