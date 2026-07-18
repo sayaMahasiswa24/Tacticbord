@@ -897,33 +897,22 @@ Konteks papan taktik saat ini:
 ${buildTacticContext()}`;
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': keyToUse,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-5',
-          max_tokens: 500,
-          system: systemPrompt,
-          messages: newHistory.map(m => ({ role: m.role, content: m.content })),
-        }),
-      });
-      const data = await res.json();
-      setChatBusy(false);
-      if(data.error) {
-        setChatHistory(prev => [...prev, { role: 'assistant', content: `⚠️ Error: ${data.error.message || 'Gagal menghubungi API'}` }]);
-      } else {
-        const txt = data.content?.[0]?.text || 'Tidak ada respons dari asisten.';
-        setChatHistory(prev => [...prev, { role: 'assistant', content: txt }]);
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8787';
+
+      async function sendChatMessage(messages, tacticContext) {
+        const res = await fetch(`${BACKEND_URL}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages,          // format: [{role:'user', content:'...'}, ...]
+            tacticContext,      // ringkasan formasi & role aktif (string)
+            sessionId: crypto.randomUUID(), // opsional, untuk log server
+          }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        return data.reply;
       }
-    } catch {
-      setChatBusy(false);
-      setChatHistory(prev => [...prev, { role: 'assistant', content: '⚠️ Gagal menghubungi API. Periksa API key dan koneksi internet.' }]);
-    }
   };
 
   // ── KALKULASI KOMPOSISI TIM ──
