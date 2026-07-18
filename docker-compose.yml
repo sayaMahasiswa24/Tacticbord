@@ -19,15 +19,17 @@ services:
       retries: 3
       start_period: 10s
 
-  # ── Uncomment jika ingin frontend juga ikut di-orkestrasi di sini ──
-  # frontend:
-  #   build: ./frontend
-  #   container_name: tacticbord-frontend
-  #   ports:
-  #     - "3000:80"
-  #   depends_on:
-  #     - backend
-  #   restart: unless-stopped
+  frontend:
+    build:
+      context: .
+      args:
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL:-http://localhost:8787}
+    container_name: tacticbord-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
 
 volumes:
   tacticbord-data:

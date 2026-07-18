@@ -1,16 +1,69 @@
-# React + Vite
+# TacticBord
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Papan taktik sepak bola interaktif dengan simulasi pergerakan pemain berbasis
+29 role taktis nyata (Regista, False Nine, Inverted Winger, dll), lengkap
+dengan asisten AI untuk analisis formasi.
 
-Currently, two official plugins are available:
+## Struktur Proyek
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```
+Tacticbord/
+├── src/                  ← Frontend React (Vite)
+│   ├── App.jsx           ← Seluruh logika papan taktik & canvas
+│   └── services/api.js   ← Pemanggilan ke backend
+├── backend/               ← Backend API + database + proxy AI
+│   ├── server.js
+│   ├── db/                ← Skema & data role_master, zone_coordinate_map
+│   └── Dockerfile
+├── Dockerfile             ← Build frontend (multi-stage, disajikan via Nginx)
+├── docker-compose.yml     ← Orkestrasi frontend + backend
+└── nginx.conf
+```
 
-## React Compiler
+## Jalankan Secara Lokal
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**1. Backend** (wajib jalan duluan — frontend butuh ini untuk fitur AI Chat & data role)
+```bash
+cd backend
+cp .env.example .env
+# isi ANTHROPIC_API_KEY di .env dengan API key asli
+npm install
+npm start
+```
 
-## Expanding the Oxlint configuration
+**2. Frontend**
+```bash
+npm install
+cp .env.example .env   # pastikan VITE_BACKEND_URL mengarah ke backend di atas
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Jalankan dengan Docker
+
+```bash
+cp backend/.env.example .env
+# isi ANTHROPIC_API_KEY di .env
+docker compose up --build
+```
+
+Frontend akan tersedia di `http://localhost:3000`, backend di `http://localhost:8787`.
+
+## Fitur Utama
+
+- **29 role taktis** dari `role_master` — setiap posisi punya sub-peran lengkap
+  dengan atribut `width_tendency`, `depth_tendency`, `pressing_intensity`, dll.
+- **Simulasi 4 fase permainan**: In Possession, Counter-attack, Gegenpressing,
+  Out of Possession — posisi pemain dihitung otomatis dari atribut role-nya.
+- **Drag & drop posisi** — geser pion, posisi (GK/CB/CM/dst) berubah otomatis
+  sesuai zona lapangan.
+- **Mode spidol** — gambar bebas/panah di atas lapangan untuk anotasi taktik.
+- **Asisten Taktik AI** — chat dengan AI yang membaca konteks formasi & role
+  yang sedang aktif untuk memberi saran (API key disimpan aman di backend,
+  tidak pernah di browser).
+- **Simpan/Muat taktik** — tersimpan di localStorage browser.
+
+## Stack Teknologi
+
+- Frontend: React 19 + Vite, canvas 2D untuk rendering papan taktik
+- Backend: Node.js (Express) + `node:sqlite` bawaan (tanpa dependency native)
+- Deploy: Docker multi-stage build, disajikan via Nginx

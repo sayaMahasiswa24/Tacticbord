@@ -6,6 +6,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Terima URL backend saat build time (Vite membakukan env var ke dalam bundle,
+# bukan saat runtime — jadi ini WAJIB berupa build ARG, bukan environment biasa)
+ARG VITE_BACKEND_URL=http://localhost:8787
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
+
 # Copy seluruh source code dan lakukan build production
 COPY . .
 RUN npm run build

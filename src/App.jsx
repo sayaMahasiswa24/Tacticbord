@@ -261,7 +261,6 @@ export default function App() {
   const [saveNote, setSaveNote] = useState('');
 
   // AI Chat State
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('tb_api_key') || '');
   const [chatHistory, setChatHistory] = useState([]);
   const [chatInput, setChatInput] = useState('');
   const [chatBusy, setChatBusy] = useState(false);
@@ -860,13 +859,7 @@ export default function App() {
     reader.readAsText(file);
   };
 
-  // ── AI TACTICAL ASSISTANT (ANTHROPIC API) ──
-  const saveChatAPIKey = () => {
-    if(!apiKey.trim()) { showToast('Masukkan API key terlebih dulu', '#dc2626'); return; }
-    localStorage.setItem('tb_api_key', apiKey.trim());
-    showToast('API key tersimpan di browser ini', '#16a34a');
-  };
-
+  // ── AI TACTICAL ASSISTANT (proxy ke backend — key aman di server) ──
   const buildTacticContext = () => {
     const fname = FORMATIONS[curFId].name;
     const lines = players.map(p => {
@@ -881,43 +874,38 @@ export default function App() {
   const sendChatMessage = async (customText) => {
     const textToSend = customText || chatInput;
     if(!textToSend.trim() || chatBusy) return;
-    const keyToUse = apiKey.trim() || localStorage.getItem('tb_api_key');
-    if(!keyToUse) { showToast('Masukkan API key Anthropic dulu di atas', '#dc2626'); return; }
 
     const newHistory = [...chatHistory, { role: 'user', content: textToSend.trim() }];
     setChatHistory(newHistory);
     if(!customText) setChatInput('');
     setChatBusy(true);
 
-    const systemPrompt = `Kamu adalah asisten taktik sepak bola untuk pelatih yang sedang menyusun formasi di aplikasi TacticBord.
-Jawab dalam Bahasa Indonesia, ringkas (maks 150 kata), langsung ke saran/solusi praktis — hindari basa-basi panjang.
-Gunakan **teks tebal** untuk istilah taktis penting.
-
-Konteks papan taktik saat ini:
-${buildTacticContext()}`;
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8787';
 
     try {
-      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8787';
-
-      async function sendChatMessage(messages, tacticContext) {
-        const res = await fetch(`${BACKEND_URL}/api/chat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages,          // format: [{role:'user', content:'...'}, ...]
-            tacticContext,      // ringkasan formasi & role aktif (string)
-            sessionId: crypto.randomUUID(), // opsional, untuk log server
-          }),
-        });
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        return data.reply;
-      }
+      const res = await fetch(`${BACKEND_URL}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: newHistory.map(m => ({ role: m.role, content: m.content })),
+          tacticContext: buildTacticContext(),
+          sessionId: crypto.randomUUID(),
+        }),
+      });
+      const data = await res.json();
+      if(data.error) throw new Error(data.error);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: data.reply }]);
+    } catch(err) {
+      setChatHistory(prev => [...prev, { role: 'assistant', content: `⚠️ ${err.message || 'Gagal menghubungi asisten AI. Periksa apakah backend sudah jalan dan VITE_BACKEND_URL sudah benar.'}` }]);
+    } finally {
+      setChatBusy(false);
+    }
   };
 
   // ── KALKULASI KOMPOSISI TIM ──
   const getCompStats = () => {
     const cnt = {}, tot = {};
+
     players.forEach(p => { tot[p.posType] = (tot[p.posType] || 0) + 1; if(assignedRoles[p.id]) cnt[p.posType] = (cnt[p.posType] || 0) + 1; });
     const filled = Object.keys(assignedRoles).filter(id => players.find(p => p.id == id)).length;
     return { cnt, tot, filled };
@@ -1563,10 +1551,6 @@ ${buildTacticContext()}`;
               <div><div className="mtitle">Asisten Taktik AI</div><div className="msub">Bertanya soal saran & solusi taktis</div></div>
               <button className="mclose" onClick={() => setIsAIChatOpen(false)}>&#x2715;</button>
             </div>
-            <div className="chat-apikey-row">
-              <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="sk-ant-... (API Key Anthropic)" />
-              <button onClick={saveChatAPIKey}>Simpan Key</button>
-            </div>
             <div className="chat-log">
               {chatHistory.length === 0 && (
                 <div className="chat-empty">
@@ -1609,7 +1593,7 @@ ${buildTacticContext()}`;
               <button className="mclose" onClick={() => setIsResetConfirmOpen(false)}>&#x2715;</button>
             </div>
             <div className="mb"><p style={{fontSize:12.5, color:'var(--txt2)', lineHeight:1.6}}>Tindakan ini akan menghapus seluruh peran yang sudah diberikan dan mengembalikan posisi pemain ke formasi dasar. Coretan spidol tidak terpengaruh.</p></div>
-            <div class="mf">
+            <div className="mf">
               <button onClick={() => setIsResetConfirmOpen(false)}>Batal</button>
               <button className="danger" onClick={doFullReset}><i className="ti ti-refresh"></i> Ya, Reset</button>
             </div>
