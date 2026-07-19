@@ -99,7 +99,90 @@ const FORMATIONS = {
   ]},
 };
 
+// ════════════════════════════════════════════════════════
+// PRESET GAYA BERMAIN — 6 filosofi taktik klasik.
+// Setiap preset otomatis mengisi: formasi + peran tiap posisi
+// + modifier gerakan (widthMult/depthMult/tempoMult/pressBoost)
+// yang diterapkan DI ATAS perhitungan role individual, sehingga
+// karakter gaya bermain tetap terasa meski role-nya berbeda.
+// ════════════════════════════════════════════════════════
+const STYLE_PRESETS = {
+  tiki_taka: {
+    name: 'Tiki-Taka',
+    emoji: '🔴🔵',
+    formation: '433',
+    desc: 'Penguasaan bola tinggi, segitiga pendek rapat, false nine, sabar membongkar blok pertahanan lawan.',
+    roles: {
+      0:'sweeper_keeper', 1:'inverted_full_back', 2:'ball_playing_defender',
+      3:'ball_playing_defender', 4:'inverted_full_back', 5:'regista',
+      6:'mezzala', 7:'mezzala', 8:'inverted_winger', 9:'false_nine', 10:'inverted_winger',
+    },
+    modifiers: { widthMult: 0.85, depthMult: 1.00, tempoMult: 0.85, pressBoost: 0.05 },
+  },
+  total_football: {
+    name: 'Total Football',
+    emoji: '🟠',
+    formation: '433',
+    desc: 'Setiap pemain bisa bertukar posisi kapan saja — universalitas penuh, garis pertahanan tinggi, penguasaan ruang fluid.',
+    roles: {
+      0:'sweeper_keeper', 1:'full_back', 2:'libero',
+      3:'ball_playing_defender', 4:'full_back', 5:'half_back',
+      6:'roaming_playmaker', 7:'box_to_box_midfielder', 8:'inside_forward', 9:'complete_forward', 10:'inside_forward',
+    },
+    modifiers: { widthMult: 1.08, depthMult: 1.05, tempoMult: 0.85, pressBoost: 0.08 },
+  },
+  gegenpressing: {
+    name: 'Gegenpressing',
+    emoji: '🔴',
+    formation: '433',
+    desc: 'Rebut bola secepat mungkin dalam 5 detik pertama setelah kehilangan — intensitas pressing tertinggi, transisi vertikal cepat.',
+    roles: {
+      0:'sweeper_keeper', 1:'full_back', 2:'ball_playing_defender',
+      3:'ball_playing_defender', 4:'full_back', 5:'ball_winning_midfielder',
+      6:'box_to_box_midfielder', 7:'roaming_playmaker', 8:'inside_forward', 9:'pressing_forward', 10:'inside_forward',
+    },
+    modifiers: { widthMult: 1.00, depthMult: 1.10, tempoMult: 0.65, pressBoost: 0.18 },
+  },
+  kick_and_rush: {
+    name: 'Kick and Rush',
+    emoji: '⚪',
+    formation: '442',
+    desc: 'Direct football — lewati lini tengah secepatnya lewat bola panjang ke target man, minim buildup, fisik & agresif.',
+    roles: {
+      0:'sweeper_keeper', 1:'full_back', 2:'ball_playing_defender',
+      3:'ball_playing_defender', 4:'full_back', 5:'wide_target_man',
+      6:'box_to_box_midfielder', 7:'box_to_box_midfielder', 8:'wide_target_man', 9:'target_forward', 10:'poacher',
+    },
+    modifiers: { widthMult: 1.12, depthMult: 1.00, tempoMult: 0.60, pressBoost: 0.00 },
+  },
+  catenaccio: {
+    name: 'Catenaccio',
+    emoji: '🔵⚫',
+    formation: '541',
+    desc: 'Sistem sweeper (libero) di belakang trio bek, sangat disiplin & kompak, menunggu momen counter-attack yang klinis.',
+    roles: {
+      0:'sweeper_keeper', 1:'inverted_wing_back', 2:'ball_playing_defender',
+      3:'libero', 4:'ball_playing_defender', 5:'inverted_wing_back',
+      6:'carrilero', 7:'anchor_man', 8:'anchor_man', 9:'carrilero', 10:'poacher',
+    },
+    modifiers: { widthMult: 0.75, depthMult: 0.60, tempoMult: 1.15, pressBoost: -0.12 },
+  },
+  parkir_bus: {
+    name: 'Parkir Bus',
+    emoji: '🚌',
+    formation: '4231',
+    desc: 'Bertahan total — seluruh unit turun sangat dalam, blok sangat rapat, minim ambisi menyerang, tunggu satu peluang counter.',
+    roles: {
+      0:'sweeper_keeper', 1:'full_back', 2:'ball_playing_defender',
+      3:'ball_playing_defender', 4:'full_back', 5:'anchor_man',
+      6:'anchor_man', 7:'wide_target_man', 8:'enganche', 9:'wide_target_man', 10:'poacher',
+    },
+    modifiers: { widthMult: 0.65, depthMult: 0.45, tempoMult: 1.30, pressBoost: -0.20 },
+  },
+};
+
 const TC = {GK:'#2563eb',CB:'#0891b2',FB:'#0ea5e9',WB:'#0284c7',DM:'#7c3aed',CM:'#6366f1',AM:'#9333ea',W:'#ea580c',CF:'#dc2626'};
+
 const TB = {GK:'#1e40af',CB:'#0e7490',FB:'#0369a1',WB:'#075985',DM:'#4c1d95',CM:'#3730a3',AM:'#7e22ce',W:'#c2410c',CF:'#991b1b'};
 const POS_LABEL = {GK:'GK',CB:'CB',FB:'FB',WB:'WB',DM:'DM',CM:'CM',AM:'AM',W:'W',CF:'CF'};
 
@@ -155,7 +238,7 @@ function widthToX(width, side) {
 function depthToY(depth) {
   return 0.90 - depth * 0.85;
 }
-function computePlayerTarget(player, role, phase) {
+function computePlayerTarget(player, role, phase, styleModifier) {
   if(!role || player.posType === 'GK') {
     let y = 0.91;
     if(role) {
@@ -163,6 +246,7 @@ function computePlayerTarget(player, role, phase) {
       if(role.id === 'ball_playing_gk') y = phase === 'possession' ? 0.82 : 0.89;
     }
     if(phase === 'transition_neg') y = 0.90;
+    if(styleModifier) y = 0.90 - (0.90 - y) * (styleModifier.depthMult ?? 1);
     return { x: 0.50, y, delay: 0, duration: 0.5, easing: 'ease-in-out' };
   }
 
@@ -207,6 +291,11 @@ function computePlayerTarget(player, role, phase) {
     } else {
       delay = 0; duration = 0.3; easing = 'linear';
     }
+    // pressBoost gaya bermain: gegenpressing mendorong lebih maju saat rebut bola,
+    // parkir bus/catenaccio justru menahan diri (nilai negatif = lebih pasif)
+    if(styleModifier?.pressBoost) {
+      depth = Math.max(0, Math.min(1, depth + styleModifier.pressBoost));
+    }
   } else if(phase === 'defense') {
     width = width * 0.55;
     depth = Math.max(0, depth - 0.45);
@@ -214,6 +303,14 @@ function computePlayerTarget(player, role, phase) {
     if(role.fillsSpace) {
       depth = Math.max(0, depth - 0.05);
     }
+  }
+
+  // ── Terapkan modifier gaya bermain (lapisan di atas perhitungan role individual) ──
+  if(styleModifier) {
+    width = Math.max(0, Math.min(1, width * (styleModifier.widthMult ?? 1)));
+    depth = Math.max(0, Math.min(1, depth * (styleModifier.depthMult ?? 1)));
+    duration = duration * (styleModifier.tempoMult ?? 1);
+    delay = delay * (styleModifier.tempoMult ?? 1);
   }
 
   let x = widthToX(Math.max(0, Math.min(1, width)), side);
@@ -237,6 +334,8 @@ export default function App() {
     FORMATIONS['433'].players.map(p => ({ ...p, cx: gx(p.x), cy: gy(p.y) }))
   );
   const [assignedRoles, setAssignedRoles] = useState({});
+  const [activeStyleId, setActiveStyleId] = useState(null);
+  const [isStyleModalOpen, setIsStyleModalOpen] = useState(false);
   const [overlays, setOverlays] = useState({ zone: true, pass: false });
   const [phase, setPhase] = useState(null);
   const [simSpd, setSimSpd] = useState(1);
@@ -290,10 +389,10 @@ export default function App() {
   const drawRef = useRef({ active: false, currentPath: null });
 
   // Sinkronisasi ref dengan state agar loop canvas dapat membacanya tanpa closure stale
-  const stateRef = useRef({ players, assignedRoles, overlays, phase, simSpd, drawingPaths, drawTool, drawColor });
+  const stateRef = useRef({ players, assignedRoles, overlays, phase, simSpd, drawingPaths, drawTool, drawColor, activeStyleId });
   useEffect(() => {
-    stateRef.current = { players, assignedRoles, overlays, phase, simSpd, drawingPaths, drawTool, drawColor };
-  }, [players, assignedRoles, overlays, phase, simSpd, drawingPaths, drawTool, drawColor]);
+    stateRef.current = { players, assignedRoles, overlays, phase, simSpd, drawingPaths, drawTool, drawColor, activeStyleId };
+  }, [players, assignedRoles, overlays, phase, simSpd, drawingPaths, drawTool, drawColor, activeStyleId]);
 
   // ── TOAST HELPER ──
   const showToast = useCallback((msg, col = '#0ea5e9') => {
@@ -530,11 +629,12 @@ export default function App() {
   // ── TRIGGER FASE TAKTIS ──
   const triggerPhase = useCallback((ph) => {
     setPhase(ph);
-    const { players: curPlayers, assignedRoles: curRoles, simSpd: curSpd } = stateRef.current;
+    const { players: curPlayers, assignedRoles: curRoles, simSpd: curSpd, activeStyleId: curStyleId } = stateRef.current;
+    const styleMod = curStyleId ? STYLE_PRESETS[curStyleId]?.modifiers : null;
     const targets = {};
     curPlayers.forEach(p => {
       const r = getRole(curRoles[p.id]);
-      targets[p.id] = computePlayerTarget(p, r, ph);
+      targets[p.id] = computePlayerTarget(p, r, ph, styleMod);
     });
     const pAnim = {};
     curPlayers.forEach(p => {
@@ -774,8 +874,30 @@ export default function App() {
     stopSim();
     setCurFId(fid);
     setAssignedRoles({});
+    setActiveStyleId(null);
     const newPlayers = FORMATIONS[fid].players.map(p => ({ ...p, cx: gx(p.x), cy: gy(p.y) }));
     setPlayers(newPlayers);
+  };
+
+  // ── TERAPKAN PRESET GAYA BERMAIN ──
+  // Mengisi formasi + peran tiap posisi + karakter gerakan (widthMult/depthMult/
+  // tempoMult/pressBoost) sekaligus, sesuai filosofi taktik yang dipilih.
+  const applyStyle = (styleId) => {
+    const style = STYLE_PRESETS[styleId];
+    if(!style) return;
+    stopSim();
+    setCurFId(style.formation);
+    const newPlayers = FORMATIONS[style.formation].players.map(p => ({ ...p, cx: gx(p.x), cy: gy(p.y) }));
+    setPlayers(newPlayers);
+    setAssignedRoles({ ...style.roles });
+    setActiveStyleId(styleId);
+    setIsStyleModalOpen(false);
+    showToast(`Gaya bermain diterapkan: ${style.name}`, '#16a34a');
+  };
+
+  const clearStyle = () => {
+    setActiveStyleId(null);
+    showToast('Gaya bermain dilepas — role tetap tersimpan', '#6b7280');
   };
 
   const saveTacticToStorage = () => {
@@ -943,6 +1065,10 @@ export default function App() {
         .logo-text{font-size:17px;font-weight:800;letter-spacing:-.4px;background:linear-gradient(90deg,var(--green2),var(--blue2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .logo-sub{font-size:10px;color:var(--txt3);margin-top:0px}
         .header-mid{margin-left:6px;display:flex;align-items:center;gap:6px}
+        .style-trigger-btn{background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(14,165,233,.18));border-color:var(--purple)}
+        .style-trigger-btn:hover{border-color:var(--purple2);color:var(--purple2)}
+        .style-clear-btn{padding:7px 9px;color:var(--txt3)}
+        .style-clear-btn:hover{border-color:var(--red);color:var(--red2)}
         .fsel{font-size:12.5px;padding:6px 10px;border-radius:var(--r);border:1px solid var(--border2);background:var(--card2);color:var(--txt);font-family:inherit;font-weight:600}
         .header-right{margin-left:auto;display:flex;align-items:center;gap:6px;position:relative}
         .hbtn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--r);border:1px solid var(--border2);font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;background:var(--card2);color:var(--txt2);transition:all .15s}
@@ -1029,6 +1155,16 @@ export default function App() {
         .rl-name{font-size:12px;font-weight:600;color:var(--txt)}
         .rl-pos{font-size:9.5px;color:var(--txt3);margin-left:auto}
         .rl-desc{font-size:10.5px;color:var(--txt2);line-height:1.4}
+
+        /* ── Preset Gaya Bermain ── */
+        .style-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .style-card{text-align:left;padding:14px;border-radius:var(--r2);border:1.5px solid var(--border);background:var(--card2);cursor:pointer;transition:all .15s;font-family:inherit;color:var(--txt)}
+        .style-card:hover{border-color:var(--purple);background:var(--bg3);transform:translateY(-1px)}
+        .style-card.active{border-color:var(--purple);background:rgba(124,58,237,.12);box-shadow:0 0 0 1px var(--purple)}
+        .style-card-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+        .style-emoji{font-size:20px;line-height:1}
+        .style-name{font-size:14px;font-weight:700;color:var(--txt)}
+        .style-desc{font-size:11.5px;color:var(--txt2);line-height:1.5}
         .bottombar{flex-shrink:0;background:var(--bg2);border-top:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:var(--thumb-h)}
         .bb-group{display:flex;align-items:center;gap:5px;padding-right:10px;border-right:1px solid var(--border)}
         .bb-group:last-child{border-right:none}
@@ -1128,6 +1264,19 @@ export default function App() {
             <option value="352">3-5-2</option><option value="343">3-4-3</option>
             <option value="541">5-4-1</option>
           </select>
+          <button className="hbtn style-trigger-btn" onClick={() => setIsStyleModalOpen(true)}>
+            <i className="ti ti-chess-queen"></i>
+            {activeStyleId ? (
+              <span>{STYLE_PRESETS[activeStyleId].emoji} {STYLE_PRESETS[activeStyleId].name}</span>
+            ) : (
+              <span>Gaya Bermain</span>
+            )}
+          </button>
+          {activeStyleId && (
+            <button className="hbtn style-clear-btn" onClick={clearStyle} aria-label="Lepas gaya bermain" title="Lepas gaya bermain">
+              <i className="ti ti-x"></i>
+            </button>
+          )}
         </div>
         <div className="header-right">
           <button className="hbtn settings-btn" onClick={() => setIsSettingsOpen(!isSettingsOpen)} aria-label="Menu pengaturan"><i className="ti ti-dots-vertical"></i></button>
@@ -1443,6 +1592,46 @@ export default function App() {
       )}
 
       {/* ════ ROLE BROWSER MODAL ════ */}
+      {/* ════ GAYA BERMAIN MODAL ════ */}
+      {isStyleModalOpen && (
+        <div className="overlay open" onClick={(e) => { if(e.target === e.currentTarget) setIsStyleModalOpen(false); }}>
+          <div className="modal wide">
+            <div className="mh">
+              <div style={{fontSize:24}}>🎭</div>
+              <div><div className="mtitle">Preset Gaya Bermain</div><div className="msub">Otomatis isi formasi + peran + karakter gerakan</div></div>
+              <button className="mclose" onClick={() => setIsStyleModalOpen(false)}>&#x2715;</button>
+            </div>
+            <div className="mb">
+              <div className="style-grid">
+                {Object.entries(STYLE_PRESETS).map(([id, style]) => (
+                  <button
+                    key={id}
+                    className={`style-card ${activeStyleId === id ? 'active' : ''}`}
+                    onClick={() => applyStyle(id)}
+                  >
+                    <div className="style-card-head">
+                      <span className="style-emoji">{style.emoji}</span>
+                      <span className="style-name">{style.name}</span>
+                    </div>
+                    <div className="style-desc">{style.desc}</div>
+                    <div className="ro-tags" style={{marginTop:7}}>
+                      <span className="ro-tag">{FORMATIONS[style.formation].name}</span>
+                      <span className="ro-tag">{`lebar ×${style.modifiers.widthMult}`}</span>
+                      <span className="ro-tag">{`tempo ×${style.modifiers.tempoMult}`}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <div className="hint" style={{marginTop:10}}>
+                <b>Catatan:</b> Menerapkan preset akan mengganti formasi dan seluruh peran yang sudah kamu atur secara manual.
+                Kamu tetap bisa menyesuaikan peran per-pemain setelahnya — label gaya bermain akan tetap tersimpan sampai kamu ganti formasi atau lepas manual.
+              </div>
+            </div>
+            <div className="mf"><button onClick={() => setIsStyleModalOpen(false)}>Tutup</button></div>
+          </div>
+        </div>
+      )}
+
       {isBrowserOpen && (
         <div className="overlay open" onClick={(e) => { if(e.target === e.currentTarget) setIsBrowserOpen(false); }}>
           <div className="modal wide">
