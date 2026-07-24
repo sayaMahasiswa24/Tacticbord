@@ -150,21 +150,66 @@ riwayat git tetap menyimpan key lama meski file sudah dihapus.
 
 ---
 
-## Ringkasan Endpoint yang Tersedia
+## Struktur Backend (v2 — direstrukturisasi)
+
+Backend tidak lagi satu file `server.js` raksasa — sekarang terpisah rapi:
+
+```
+backend/
+├── server.js                    ← composition root (39 baris, cuma nyusun routes)
+├── routes/                      ← definisi path + HTTP method
+├── controllers/                 ← seluruh logika bisnis
+├── middleware/errorHandler.js   ← 404 & error handler terpusat
+├── utils/dto.js                 ← transformasi row SQLite ↔ JSON
+└── db/
+    ├── schema.sql                ← 10 tabel
+    ├── index.js                  ← koneksi + orkestrasi seed
+    └── seed/                     ← seluruh data awal (JSON) + logika seed
+```
+
+`FORMATIONS` dan `STYLE_PRESETS` yang dulu hardcoded di `App.jsx` sekarang
+juga hidup di database (tabel `formations`+`formation_players` dan
+`style_presets`+`style_preset_roles`), lengkap dengan endpoint API-nya.
+
+## Ringkasan Endpoint API (v2)
 
 | Method | Endpoint | Fungsi |
 |---|---|---|
-| GET | `/api/health` | Cek status server & jumlah data |
+| GET | `/api/health` | Status server + jumlah data tiap tabel |
 | GET | `/api/roles?posType=CB&search=press` | List role, bisa difilter |
 | GET | `/api/roles/:roleId` | Detail satu role |
-| GET | `/api/roles/:roleId/movement` | Data phase_movement (kalau sudah diisi) |
+| **POST** | **`/api/roles`** | **Buat role baru** |
+| **PUT** | **`/api/roles/:roleId`** | **Update role (partial update didukung)** |
+| **DELETE** | **`/api/roles/:roleId`** | **Hapus role (ditolak jika masih dipakai style preset)** |
+| GET | `/api/roles/:roleId/movement` | Data role_phase_movement |
 | GET | `/api/roles/:roleId/rules` | Conditional rules role tsb |
-| GET | `/api/zones?name=zone_10&side=left` | List zona, bisa difilter |
-| GET | `/api/tactics` | List taktik tersimpan |
-| GET | `/api/tactics/:id` | Detail satu taktik |
-| POST | `/api/tactics` | Simpan taktik baru |
-| DELETE | `/api/tactics/:id` | Hapus taktik |
-| POST | `/api/chat` | Kirim pesan ke AI agent (key aman di server) |
+| GET | `/api/zones` / `/api/zones/:key` | List/detail zona |
+| PUT | `/api/zones/:key` | Update koordinat zona |
+| GET | `/api/formations` | Semua formasi (bentuk sama persis dgn `FORMATIONS` lama) |
+| GET | `/api/formations/:id` | Detail satu formasi |
+| PUT | `/api/formations/:id/players/:slot` | Ubah posisi satu slot pemain |
+| GET | `/api/style-presets` | Semua gaya bermain |
+| **POST** | **`/api/style-presets`** | **Buat gaya bermain baru** |
+| PUT | `/api/style-presets/:id` | Update metadata + modifier gaya |
+| PUT | `/api/style-presets/:id/roles/:slot` | Ganti role di satu slot preset |
+| DELETE | `/api/style-presets/:id` | Hapus gaya bermain |
+| GET/POST/DELETE | `/api/tactics` | Simpan/muat/hapus taktik |
+| POST | `/api/chat` | Kirim pesan ke AI agent |
+
+### Contoh: Update `role_master` lewat API
+
+```bash
+curl -X PUT http://localhost:8787/api/roles/poacher \
+  -H "Content-Type: application/json" \
+  -d '{"width": 0.40, "depth": 0.97}'
+```
+
+Partial update — field yang tidak dikirim tetap memakai nilai lama.
+Validasi otomatis berlaku (posType/posGroup/overlap/pressing harus enum valid,
+width/depth harus 0.0–1.0). Mencoba hapus role yang masih dipakai preset
+gaya bermain akan ditolak dengan HTTP 409 demi menjaga integritas data.
+
+
 
 ---
 

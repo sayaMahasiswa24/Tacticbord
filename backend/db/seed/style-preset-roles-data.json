@@ -1,0 +1,332 @@
+[
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 0,
+    "role_id": "sweeper_keeper"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 1,
+    "role_id": "inverted_full_back"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 2,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 3,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 4,
+    "role_id": "inverted_full_back"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 5,
+    "role_id": "regista"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 6,
+    "role_id": "mezzala"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 7,
+    "role_id": "mezzala"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 8,
+    "role_id": "inverted_winger"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 9,
+    "role_id": "false_nine"
+  },
+  {
+    "style_id": "tiki_taka",
+    "player_slot": 10,
+    "role_id": "inverted_winger"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 0,
+    "role_id": "sweeper_keeper"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 1,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 2,
+    "role_id": "libero"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 3,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 4,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 5,
+    "role_id": "half_back"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 6,
+    "role_id": "roaming_playmaker"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 7,
+    "role_id": "box_to_box_midfielder"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 8,
+    "role_id": "inside_forward"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 9,
+    "role_id": "complete_forward"
+  },
+  {
+    "style_id": "total_football",
+    "player_slot": 10,
+    "role_id": "inside_forward"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 0,
+    "role_id": "sweeper_keeper"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 1,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 2,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 3,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 4,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 5,
+    "role_id": "ball_winning_midfielder"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 6,
+    "role_id": "box_to_box_midfielder"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 7,
+    "role_id": "roaming_playmaker"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 8,
+    "role_id": "inside_forward"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 9,
+    "role_id": "pressing_forward"
+  },
+  {
+    "style_id": "gegenpressing",
+    "player_slot": 10,
+    "role_id": "inside_forward"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 0,
+    "role_id": "sweeper_keeper"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 1,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 2,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 3,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 4,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 5,
+    "role_id": "wide_target_man"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 6,
+    "role_id": "box_to_box_midfielder"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 7,
+    "role_id": "box_to_box_midfielder"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 8,
+    "role_id": "wide_target_man"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 9,
+    "role_id": "target_forward"
+  },
+  {
+    "style_id": "kick_and_rush",
+    "player_slot": 10,
+    "role_id": "poacher"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 0,
+    "role_id": "sweeper_keeper"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 1,
+    "role_id": "inverted_wing_back"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 2,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 3,
+    "role_id": "libero"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 4,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 5,
+    "role_id": "inverted_wing_back"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 6,
+    "role_id": "carrilero"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 7,
+    "role_id": "anchor_man"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 8,
+    "role_id": "anchor_man"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 9,
+    "role_id": "carrilero"
+  },
+  {
+    "style_id": "catenaccio",
+    "player_slot": 10,
+    "role_id": "poacher"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 0,
+    "role_id": "sweeper_keeper"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 1,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 2,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 3,
+    "role_id": "ball_playing_defender"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 4,
+    "role_id": "full_back"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 5,
+    "role_id": "anchor_man"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 6,
+    "role_id": "anchor_man"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 7,
+    "role_id": "wide_target_man"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 8,
+    "role_id": "enganche"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 9,
+    "role_id": "wide_target_man"
+  },
+  {
+    "style_id": "parkir_bus",
+    "player_slot": 10,
+    "role_id": "poacher"
+  }
+]

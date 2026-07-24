@@ -1,0 +1,618 @@
+[
+  {
+    "formation_id": "343",
+    "player_slot": 0,
+    "pos_type": "GK",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.91
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 1,
+    "pos_type": "CB",
+    "side": "left",
+    "base_rel_x": 0.27,
+    "base_rel_y": 0.8
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 2,
+    "pos_type": "CB",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.82
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 3,
+    "pos_type": "CB",
+    "side": "right",
+    "base_rel_x": 0.73,
+    "base_rel_y": 0.8
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 4,
+    "pos_type": "WB",
+    "side": "left",
+    "base_rel_x": 0.08,
+    "base_rel_y": 0.58
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 5,
+    "pos_type": "CM",
+    "side": "left",
+    "base_rel_x": 0.36,
+    "base_rel_y": 0.53
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 6,
+    "pos_type": "CM",
+    "side": "right",
+    "base_rel_x": 0.64,
+    "base_rel_y": 0.53
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 7,
+    "pos_type": "WB",
+    "side": "right",
+    "base_rel_x": 0.92,
+    "base_rel_y": 0.58
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 8,
+    "pos_type": "W",
+    "side": "left",
+    "base_rel_x": 0.16,
+    "base_rel_y": 0.28
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 9,
+    "pos_type": "CF",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.21
+  },
+  {
+    "formation_id": "343",
+    "player_slot": 10,
+    "pos_type": "W",
+    "side": "right",
+    "base_rel_x": 0.84,
+    "base_rel_y": 0.28
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 0,
+    "pos_type": "GK",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.91
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 1,
+    "pos_type": "CB",
+    "side": "left",
+    "base_rel_x": 0.27,
+    "base_rel_y": 0.8
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 2,
+    "pos_type": "CB",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.82
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 3,
+    "pos_type": "CB",
+    "side": "right",
+    "base_rel_x": 0.73,
+    "base_rel_y": 0.8
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 4,
+    "pos_type": "WB",
+    "side": "left",
+    "base_rel_x": 0.08,
+    "base_rel_y": 0.62
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 5,
+    "pos_type": "CM",
+    "side": "left",
+    "base_rel_x": 0.32,
+    "base_rel_y": 0.53
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 6,
+    "pos_type": "DM",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.62
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 7,
+    "pos_type": "CM",
+    "side": "right",
+    "base_rel_x": 0.68,
+    "base_rel_y": 0.53
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 8,
+    "pos_type": "WB",
+    "side": "right",
+    "base_rel_x": 0.92,
+    "base_rel_y": 0.62
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 9,
+    "pos_type": "CF",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.27
+  },
+  {
+    "formation_id": "352",
+    "player_slot": 10,
+    "pos_type": "CF",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.27
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 0,
+    "pos_type": "GK",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.91
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 1,
+    "pos_type": "FB",
+    "side": "left",
+    "base_rel_x": 0.13,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 2,
+    "pos_type": "CB",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 3,
+    "pos_type": "CB",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 4,
+    "pos_type": "FB",
+    "side": "right",
+    "base_rel_x": 0.87,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 5,
+    "pos_type": "DM",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.63
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 6,
+    "pos_type": "CM",
+    "side": "left",
+    "base_rel_x": 0.32,
+    "base_rel_y": 0.52
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 7,
+    "pos_type": "CM",
+    "side": "right",
+    "base_rel_x": 0.68,
+    "base_rel_y": 0.52
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 8,
+    "pos_type": "W",
+    "side": "left",
+    "base_rel_x": 0.1,
+    "base_rel_y": 0.29
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 9,
+    "pos_type": "CF",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.21
+  },
+  {
+    "formation_id": "433",
+    "player_slot": 10,
+    "pos_type": "W",
+    "side": "right",
+    "base_rel_x": 0.9,
+    "base_rel_y": 0.29
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 0,
+    "pos_type": "GK",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.91
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 1,
+    "pos_type": "FB",
+    "side": "left",
+    "base_rel_x": 0.13,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 2,
+    "pos_type": "CB",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 3,
+    "pos_type": "CB",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 4,
+    "pos_type": "FB",
+    "side": "right",
+    "base_rel_x": 0.87,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 5,
+    "pos_type": "W",
+    "side": "left",
+    "base_rel_x": 0.1,
+    "base_rel_y": 0.57
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 6,
+    "pos_type": "CM",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.57
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 7,
+    "pos_type": "CM",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.57
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 8,
+    "pos_type": "W",
+    "side": "right",
+    "base_rel_x": 0.9,
+    "base_rel_y": 0.57
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 9,
+    "pos_type": "CF",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.27
+  },
+  {
+    "formation_id": "442",
+    "player_slot": 10,
+    "pos_type": "CF",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.27
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 0,
+    "pos_type": "GK",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.91
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 1,
+    "pos_type": "WB",
+    "side": "left",
+    "base_rel_x": 0.08,
+    "base_rel_y": 0.7
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 2,
+    "pos_type": "CB",
+    "side": "left",
+    "base_rel_x": 0.27,
+    "base_rel_y": 0.8
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 3,
+    "pos_type": "CB",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.82
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 4,
+    "pos_type": "CB",
+    "side": "right",
+    "base_rel_x": 0.73,
+    "base_rel_y": 0.8
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 5,
+    "pos_type": "WB",
+    "side": "right",
+    "base_rel_x": 0.92,
+    "base_rel_y": 0.7
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 6,
+    "pos_type": "CM",
+    "side": "left",
+    "base_rel_x": 0.12,
+    "base_rel_y": 0.57
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 7,
+    "pos_type": "DM",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.64
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 8,
+    "pos_type": "DM",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.64
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 9,
+    "pos_type": "CM",
+    "side": "right",
+    "base_rel_x": 0.88,
+    "base_rel_y": 0.57
+  },
+  {
+    "formation_id": "541",
+    "player_slot": 10,
+    "pos_type": "CF",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.26
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 0,
+    "pos_type": "GK",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.91
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 1,
+    "pos_type": "FB",
+    "side": "left",
+    "base_rel_x": 0.13,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 2,
+    "pos_type": "CB",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 3,
+    "pos_type": "CB",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 4,
+    "pos_type": "FB",
+    "side": "right",
+    "base_rel_x": 0.87,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 5,
+    "pos_type": "DM",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.66
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 6,
+    "pos_type": "CM",
+    "side": "left",
+    "base_rel_x": 0.3,
+    "base_rel_y": 0.52
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 7,
+    "pos_type": "AM",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.4
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 8,
+    "pos_type": "CM",
+    "side": "right",
+    "base_rel_x": 0.7,
+    "base_rel_y": 0.52
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 9,
+    "pos_type": "CF",
+    "side": "left",
+    "base_rel_x": 0.38,
+    "base_rel_y": 0.25
+  },
+  {
+    "formation_id": "4132",
+    "player_slot": 10,
+    "pos_type": "CF",
+    "side": "right",
+    "base_rel_x": 0.62,
+    "base_rel_y": 0.25
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 0,
+    "pos_type": "GK",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.91
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 1,
+    "pos_type": "FB",
+    "side": "left",
+    "base_rel_x": 0.13,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 2,
+    "pos_type": "CB",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 3,
+    "pos_type": "CB",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.79
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 4,
+    "pos_type": "FB",
+    "side": "right",
+    "base_rel_x": 0.87,
+    "base_rel_y": 0.78
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 5,
+    "pos_type": "DM",
+    "side": "left",
+    "base_rel_x": 0.37,
+    "base_rel_y": 0.64
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 6,
+    "pos_type": "DM",
+    "side": "right",
+    "base_rel_x": 0.63,
+    "base_rel_y": 0.64
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 7,
+    "pos_type": "W",
+    "side": "left",
+    "base_rel_x": 0.12,
+    "base_rel_y": 0.44
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 8,
+    "pos_type": "AM",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.44
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 9,
+    "pos_type": "W",
+    "side": "right",
+    "base_rel_x": 0.88,
+    "base_rel_y": 0.44
+  },
+  {
+    "formation_id": "4231",
+    "player_slot": 10,
+    "pos_type": "CF",
+    "side": "center",
+    "base_rel_x": 0.5,
+    "base_rel_y": 0.22
+  }
+]

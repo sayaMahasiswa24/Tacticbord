@@ -33,6 +33,56 @@ CREATE TABLE IF NOT EXISTS zone_coordinate_map (
   depth_line  TEXT
 );
 
+-- ════════════════════════════════════════════════════════
+--  FORMASI — dipisah jadi 2 tabel karena satu formasi
+--  punya banyak slot pemain (relasi one-to-many)
+-- ════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS formations (
+  formation_id   TEXT PRIMARY KEY,
+  name           TEXT NOT NULL,
+  display_order  INTEGER DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS formation_players (
+  id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  formation_id   TEXT NOT NULL,
+  player_slot    INTEGER NOT NULL,
+  pos_type       TEXT NOT NULL,
+  side           TEXT NOT NULL,
+  base_rel_x     REAL NOT NULL,
+  base_rel_y     REAL NOT NULL,
+  UNIQUE(formation_id, player_slot),
+  FOREIGN KEY(formation_id) REFERENCES formations(formation_id)
+);
+
+-- ════════════════════════════════════════════════════════
+--  PRESET GAYA BERMAIN — sama polanya: satu gaya (Tiki-Taka,
+--  dst) punya banyak penugasan peran per slot formasi
+-- ════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS style_presets (
+  style_id       TEXT PRIMARY KEY,
+  name           TEXT NOT NULL,
+  emoji          TEXT,
+  formation_id   TEXT NOT NULL,
+  description    TEXT NOT NULL,
+  width_mult     REAL NOT NULL DEFAULT 1.0,
+  depth_mult     REAL NOT NULL DEFAULT 1.0,
+  tempo_mult     REAL NOT NULL DEFAULT 1.0,
+  press_boost    REAL NOT NULL DEFAULT 0.0,
+  display_order  INTEGER DEFAULT 0,
+  FOREIGN KEY(formation_id) REFERENCES formations(formation_id)
+);
+
+CREATE TABLE IF NOT EXISTS style_preset_roles (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  style_id     TEXT NOT NULL,
+  player_slot  INTEGER NOT NULL,
+  role_id      TEXT NOT NULL,
+  UNIQUE(style_id, player_slot),
+  FOREIGN KEY(style_id) REFERENCES style_presets(style_id),
+  FOREIGN KEY(role_id) REFERENCES role_master(role_id)
+);
+
 -- Diisi bertahap saat prompt-prompt lanjutan (03-11) selesai kamu jalankan
 CREATE TABLE IF NOT EXISTS role_phase_movement (
   id                    INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -130,3 +180,5 @@ CREATE INDEX IF NOT EXISTS idx_phase_movement_role ON role_phase_movement(role_i
 CREATE INDEX IF NOT EXISTS idx_conditional_role ON role_conditional_rules(role_id);
 CREATE INDEX IF NOT EXISTS idx_override_role_formation ON role_formation_override(role_id, formation_id);
 CREATE INDEX IF NOT EXISTS idx_chat_session ON chat_logs(session_id);
+CREATE INDEX IF NOT EXISTS idx_formation_players_formation ON formation_players(formation_id);
+CREATE INDEX IF NOT EXISTS idx_style_preset_roles_style ON style_preset_roles(style_id);

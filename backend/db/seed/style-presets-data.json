@@ -1,0 +1,74 @@
+[
+  {
+    "style_id": "tiki_taka",
+    "name": "Tiki-Taka",
+    "emoji": "🔴🔵",
+    "formation_id": "433",
+    "description": "Penguasaan bola tinggi, segitiga pendek rapat, false nine, sabar membongkar blok pertahanan lawan.",
+    "width_mult": 0.85,
+    "depth_mult": 1,
+    "tempo_mult": 0.85,
+    "press_boost": 0.05,
+    "display_order": 0
+  },
+  {
+    "style_id": "total_football",
+    "name": "Total Football",
+    "emoji": "🟠",
+    "formation_id": "433",
+    "description": "Setiap pemain bisa bertukar posisi kapan saja — universalitas penuh, garis pertahanan tinggi, penguasaan ruang fluid.",
+    "width_mult": 1.08,
+    "depth_mult": 1.05,
+    "tempo_mult": 0.85,
+    "press_boost": 0.08,
+    "display_order": 1
+  },
+  {
+    "style_id": "gegenpressing",
+    "name": "Gegenpressing",
+    "emoji": "🔴",
+    "formation_id": "433",
+    "description": "Rebut bola secepat mungkin dalam 5 detik pertama setelah kehilangan — intensitas pressing tertinggi, transisi vertikal cepat.",
+    "width_mult": 1,
+    "depth_mult": 1.1,
+    "tempo_mult": 0.65,
+    "press_boost": 0.18,
+    "display_order": 2
+  },
+  {
+    "style_id": "kick_and_rush",
+    "name": "Kick and Rush",
+    "emoji": "⚪",
+    "formation_id": "442",
+    "description": "Direct football — lewati lini tengah secepatnya lewat bola panjang ke target man, minim buildup, fisik & agresif.",
+    "width_mult": 1.12,
+    "depth_mult": 1,
+    "tempo_mult": 0.6,
+    "press_boost": 0,
+    "display_order": 3
+  },
+  {
+    "style_id": "catenaccio",
+    "name": "Catenaccio",
+    "emoji": "🔵⚫",
+    "formation_id": "541",
+    "description": "Sistem sweeper (libero) di belakang trio bek, sangat disiplin & kompak, menunggu momen counter-attack yang klinis.",
+    "width_mult": 0.75,
+    "depth_mult": 0.6,
+    "tempo_mult": 1.15,
+    "press_boost": -0.12,
+    "display_order": 4
+  },
+  {
+    "style_id": "parkir_bus",
+    "name": "Parkir Bus",
+    "emoji": "🚌",
+    "formation_id": "4231",
+    "description": "Bertahan total — seluruh unit turun sangat dalam, blok sangat rapat, minim ambisi menyerang, tunggu satu peluang counter.",
+    "width_mult": 0.65,
+    "depth_mult": 0.45,
+    "tempo_mult": 1.3,
+    "press_boost": -0.2,
+    "display_order": 5
+  }
+]
