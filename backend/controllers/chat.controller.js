@@ -1,10 +1,37 @@
 // ════════════════════════════════════════════════════════
-//  controllers/chat.controller.js — Proxy ke Anthropic API.
-//  API key HANYA hidup di server, tidak pernah dikirim ke browser.
+//  controllers/chat.controller.js — Proxy ke Anthropic API
+//  DENGAN TOOL-USE. API key hanya hidup di server.
+//
+//  Alur: Claude terima system prompt (konteks papan taktik
+//  saat ini) + daftar tools. Kalau Claude butuh data lebih
+//  luas (role lain, style preset lain, dsb) dia panggil tool
+//  -> backend eksekusi query SQL -> hasil dikirim balik ke
+//  Claude -> diulang sampai Claude kasih jawaban akhir.
 // ════════════════════════════════════════════════════════
 import db from '../db/index.js';
+import { AI_TOOLS, executeTool } from '../utils/aiTools.js';
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const MAX_TOOL_ROUNDS = 5; // guard rail — cegah loop tak berkesudahan
+
+async function callAnthropic(systemPrompt, conversationMessages) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-5',
+      max_tokens: 700,
+      system: systemPrompt,
+      tools: AI_TOOLS,
+      messages: conversationMessages,
+    }),
+  });
+  return res.json();
+}
 
 export async function sendChat(req, res) {
   if (!ANTHROPIC_API_KEY) {
@@ -15,42 +42,68 @@ export async function sendChat(req, res) {
     return res.status(400).json({ error: 'messages wajib berupa array dan tidak kosong' });
   }
 
+  // System prompt sengaja LEBIH RINGKAS dari versi sebelumnya — hanya berisi
+  // konteks papan taktik yang sedang aktif. Untuk pertanyaan yang butuh data
+  // di luar itu (role lain, style preset lain, dsb), Claude memanggil tools.
   const systemPrompt = `Kamu adalah asisten taktik sepak bola untuk pelatih yang sedang menyusun formasi di aplikasi TacticBord.
-Jawab dalam Bahasa Indonesia, ringkas (maks 150 kata), langsung ke saran/solusi praktis — hindari basa-basi panjang.
+Jawab dalam Bahasa Indonesia, ringkas (maks 150 kata), langsung ke saran/solusi praktis.
 Gunakan **teks tebal** untuk istilah taktis penting.
+
+Kamu punya akses ke tools untuk mencari role, formasi, dan preset gaya bermain lain di database
+selain yang sedang aktif di papan — pakai tools itu kalau pertanyaan user butuh data di luar konteks berikut.
+Jangan menebak atribut role dari memori — selalu pakai get_role_detail/search_roles untuk data yang akurat.
 
 Konteks papan taktik saat ini:
 ${tacticContext || '(tidak ada konteks taktik dikirim)'}`;
 
+  let conversationMessages = [...messages];
+  let finalText = null;
+  let toolCallLog = []; // untuk debug/transparansi ke frontend (opsional)
+
   try {
-    const upstream = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 500,
-        system: systemPrompt,
-        messages,
-      }),
-    });
-    const data = await upstream.json();
+    for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+      const data = await callAnthropic(systemPrompt, conversationMessages);
 
-    if (data.error) return res.status(502).json({ error: data.error.message || 'Anthropic API error' });
+      if (data.error) return res.status(502).json({ error: data.error.message || 'Anthropic API error' });
 
-    const replyText = data.content?.[0]?.text || 'Tidak ada respons.';
+      if (data.stop_reason === 'tool_use') {
+        // Simpan pesan assistant (berisi tool_use blocks) ke riwayat percakapan
+        conversationMessages.push({ role: 'assistant', content: data.content });
+
+        // Eksekusi setiap tool_use, kumpulkan tool_result
+        const toolResults = [];
+        for (const block of data.content) {
+          if (block.type === 'tool_use') {
+            const result = executeTool(block.name, block.input);
+            toolCallLog.push({ tool: block.name, input: block.input });
+            toolResults.push({
+              type: 'tool_result',
+              tool_use_id: block.id,
+              content: JSON.stringify(result),
+            });
+          }
+        }
+        conversationMessages.push({ role: 'user', content: toolResults });
+        continue; // lanjut ke ronde berikutnya, Claude proses hasil tool
+      }
+
+      // stop_reason !== 'tool_use' → jawaban akhir sudah siap
+      finalText = data.content?.find(b => b.type === 'text')?.text || 'Tidak ada respons.';
+      break;
+    }
+
+    if (finalText === null) {
+      finalText = 'Maaf, butuh terlalu banyak langkah pencarian data untuk pertanyaan ini. Coba pertanyaan yang lebih spesifik.';
+    }
 
     if (sessionId) {
       const lastUserMsg = messages[messages.length - 1];
       const logStmt = db.prepare('INSERT INTO chat_logs (session_id, role, content) VALUES (?,?,?)');
       logStmt.run(sessionId, 'user', lastUserMsg?.content || '');
-      logStmt.run(sessionId, 'assistant', replyText);
+      logStmt.run(sessionId, 'assistant', finalText);
     }
 
-    res.json({ reply: replyText });
+    res.json({ reply: finalText, toolCalls: toolCallLog });
   } catch (err) {
     console.error('Chat proxy error:', err);
     res.status(500).json({ error: 'Gagal menghubungi layanan AI. Coba lagi sebentar.' });
