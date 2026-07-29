@@ -209,14 +209,72 @@ Validasi otomatis berlaku (posType/posGroup/overlap/pressing harus enum valid,
 width/depth harus 0.0–1.0). Mencoba hapus role yang masih dipakai preset
 gaya bermain akan ditolak dengan HTTP 409 demi menjaga integritas data.
 
+---
 
+## AI Tactical Assistant — Tool-Use, bukan Context-Stuffing
+
+`POST /api/chat` **tidak** menjejalkan seluruh `role_master` ke setiap prompt.
+Sebaliknya, Claude diberi **tools** untuk query database sendiri saat butuh —
+lebih akurat dan lebih hemat token untuk dataset terstruktur seperti ini
+(dibanding vector-embedding RAG, yang lebih cocok untuk dokumen bebas/tidak terstruktur).
+
+**File terkait:**
+- `backend/utils/aiTools.js` — skema 5 tool + fungsi eksekusinya
+- `backend/controllers/chat.controller.js` — *agentic loop* yang memanggil Anthropic API
+
+**5 tools yang tersedia untuk Claude:**
+
+| Tool | Kapan dipanggil Claude |
+|---|---|
+| `search_roles(query, posType?)` | User tanya "role apa yang cocok untuk..." tanpa sebut nama role |
+| `get_role_detail(roleId)` | Butuh atribut lengkap satu role spesifik |
+| `get_role_rules(roleId)` | Pertanyaan soal interaksi antar role (butuh tabel `role_conditional_rules` terisi) |
+| `list_style_presets()` | Rekomendasi gaya bermain |
+| `get_formation(formationId)` | Detail susunan slot formasi lain |
+
+**Alur teknis:**
+```
+1. Backend kirim system prompt (konteks papan aktif) + daftar tools ke Claude
+2. Kalau stop_reason === 'tool_use' → backend eksekusi query SQL yang diminta
+3. Hasil query dikirim balik sebagai tool_result
+4. Ulangi maksimal 5 ronde (guard rail cegah loop tak berkesudahan)
+5. Begitu Claude tidak lagi minta tool → itu jawaban akhir, dikirim ke frontend
+```
+
+**Catatan penting**: deskripsi role di database berbahasa Indonesia, dan
+`search_roles` pakai `LIKE` (substring literal, bukan semantik). Tool
+description sudah diarahkan eksplisit supaya Claude mencari pakai kata kunci
+Indonesia ("turun" bukan "drop deep") dan coba sinonim lain kalau query
+pertama nihil hasil.
+
+**Test tanpa API key asli** (verifikasi mekanisme lokal):
+```bash
+cd backend
+node --experimental-sqlite --input-type=module -e "
+import { executeTool } from './utils/aiTools.js';
+console.log(executeTool('search_roles', { query: 'menahan bola', posType: 'CF' }));
+"
+```
 
 ---
 
-## Langkah Selanjutnya (opsional, tingkatkan akurasi AI)
+## Langkah Selanjutnya
 
-Backend ini sudah siap menerima tabel `role_phase_movement`, `role_conditional_rules`,
-dan `role_formation_override` — begitu kamu isi CSV-nya (dari prompt 03-11 yang
-sudah dibuat sebelumnya), tinggal buat script seed serupa `db/index.js` untuk
-tabel-tabel itu, dan endpoint `/api/roles/:roleId/movement` serta `/rules` akan
-langsung mengembalikan data yang lebih presisi — tanpa perlu ubah frontend sama sekali.
+### Opsional — tingkatkan akurasi simulasi
+Backend sudah siap menerima tabel `role_phase_movement` dan `role_conditional_rules`
+— begitu diisi (dari prompt 03-11 yang sudah dibuat sebelumnya), endpoint
+`/api/roles/:roleId/movement` dan `/rules` langsung mengembalikan data lebih presisi,
+dan tool `get_role_rules` yang sudah dibangun otomatis ikut lebih berguna.
+
+### Opsional — dokumen taktik tidak terstruktur (RAG murni)
+Kalau nanti kamu tambahkan materi taktik dalam bentuk dokumen bebas (artikel,
+e-book coaching, transkrip analisis) — bukan data tabel seperti sekarang —
+barulah vector RAG (chunking + embedding + vector store) jadi pendekatan yang tepat,
+melengkapi (bukan menggantikan) sistem tool-use yang sudah ada.
+
+### Belum dikerjakan — fitur login user
+Untuk kontrol data per-pengguna (tiap pelatih punya taktik & role custom sendiri),
+backend perlu ditambah: tabel `users`, autentikasi (JWT/session), dan setiap
+tabel yang bersifat personal (`saved_tactics`, mungkin juga `role_master` kalau
+role custom per-user) perlu kolom `user_id` + middleware otentikasi di routes terkait.
+
