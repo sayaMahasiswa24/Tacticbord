@@ -1,11 +1,14 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './App.css';
-import { FORMATIONS, TC, TB, POS_LABEL, ICON_R_NORMAL, ICON_R_DRAG } from './data/tacticData';
+// 1. Data & Helpers (Pastikan ZBANDS dan STYLE_PRESETS ikut ter-import)
+import { FORMATIONS, TC, TB, POS_LABEL, ICON_R_NORMAL, ICON_R_DRAG, ZBANDS, STYLE_PRESETS } from './data/tacticData';
 import { lighten } from './utils/helpers';
+// 2. Custom Hooks
 import { usePitchZoom } from './hooks/usePitchZoom';
 import { useSimulation } from './hooks/useSimulation';
 import { useDragAndDrop } from './hooks/useDragAndDrop';
 import { useDrawing } from './hooks/useDrawing';
+// 3. Components
 import Header from './components/layout/Header';
 import PhaseToolbar from './components/layout/PhaseToolbar';
 import BottomBar from './components/layout/BottomBar';
@@ -53,6 +56,19 @@ export default function App() {
   const [isHoldingReset, setIsHoldingReset] = useState(false);
   const [resetHoldProgress, setResetHoldProgress] = useState(0);
 
+  // ── INIT CUSTOM HOOKS ──
+  const { zoom, setZoom } = usePitchZoom(1);
+  
+  // PENYEBAB ERROR KEMARIN: drawingPaths belum dikeluarkan di sini, sekarang sudah ada.
+  const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, clearDrawings, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
+  
+  const { dragRef, onDown: dragDown, onMove: dragMove, onUp: dragUp } = useDragAndDrop(
+    players, setPlayers, assignedRoles, setSelectedPlayer, setPendingRole, 
+    () => animRef?.current?.startLoop?.(), 
+    () => renderPitch(), 
+    PX, PY, PW, PH
+  );
+
   // ── FUNGSI RENDER LAPANGAN ──
   const renderPitch = useCallback(() => {
     const canvas = mcRef.current; if(!canvas) return;
@@ -62,12 +78,46 @@ export default function App() {
     const dragging = dragRef?.current?.dragging;
 
     ctx.clearRect(0, 0, CW, CH);
-    // Background
+    
+    // Background Lapangan
     ctx.fillStyle = '#1a5c2e'; ctx.fillRect(0,0,CW,CH);
     for(let i=0;i<6;i++){ ctx.fillStyle = i%2 ? '#1a5c2e' : '#1e6834'; ctx.fillRect(PX, PY+i*PH/6, PW, PH/6); }
     ctx.strokeStyle = 'rgba(255,255,255,.32)'; ctx.lineWidth = 1.3; ctx.strokeRect(PX, PY, PW, PH);
     ctx.beginPath(); ctx.moveTo(PX, PY+PH/2); ctx.lineTo(PX+PW, PY+PH/2); ctx.stroke();
     ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH/2, 36, 0, Math.PI*2); ctx.stroke();
+
+    // RENDER ZONA (ZBANDS)
+    if (overlays.zone) {
+      let lastY = 0;
+      ZBANDS.forEach(b => {
+        const h = b.m * PH - lastY;
+        ctx.fillStyle = b.bg;
+        ctx.fillRect(PX, PY + lastY, PW, h);
+        ctx.fillStyle = b.tc;
+        ctx.font = '600 12px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(b.l, PX + 8, PY + lastY + 16);
+        lastY += h;
+      });
+    }
+
+    // RENDER GARIS PASSING
+    if (overlays.pass) {
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < players.length; i++) {
+        for (let j = i + 1; j < players.length; j++) {
+          const dx = players[i].cx - players[j].cx;
+          const dy = players[i].cy - players[j].cy;
+          if (Math.hypot(dx, dy) < 160) { 
+            ctx.moveTo(players[i].cx, players[i].cy);
+            ctx.lineTo(players[j].cx, players[j].cy);
+          }
+        }
+      }
+      ctx.stroke();
+    }
     
     // Pemain
     [...players].sort((a,b)=>(a.id===dragPid?1:b.id===dragPid?-1:0)).forEach(p => {
@@ -87,23 +137,22 @@ export default function App() {
       ctx.font='800 11.5px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillStyle= roleId ? '#ffffff' : 'rgba(255,255,255,.7)'; ctx.fillText(POS_LABEL[p.posType] || p.posType, p.cx, p.cy);
     });
-  }, [players, assignedRoles]); // Bergantung pada pemain dan peran
+  }, [players, assignedRoles, overlays, dragRef]); // overlays sudah dimasukkan agar Zona re-render
 
-  // ── INIT CUSTOM HOOKS ──
-  const { zoom, setZoom } = usePitchZoom(1);
-  const { drawTool, setDrawTool, drawColor, setDrawColor, clearDrawings } = useDrawing();
   const { phase, triggerPhase: simTrigger, stopSim, startLoop, animRef } = useSimulation(players, setPlayers, assignedRoles, activeStyleId, simSpd, renderPitch, curFId, setAssignedRoles);
-  const { dragRef, onDown: dragDown, onMove: dragMove, onUp: dragUp } = useDragAndDrop(players, setPlayers, assignedRoles, setSelectedPlayer, setPendingRole, startLoop, renderPitch, PX, PY, PW, PH);
 
-  // Helper Wrappers untuk Drag
-  const onDown = (mx, my) => dragDown(mx, my, () => { animRef.current.running = false; });
+  // Wrapper Drag untuk mematikan animasi saat diseret
+  const onDown = (mx, my) => dragDown(mx, my, () => { if (animRef.current) animRef.current.running = false; });
   const onMove = (mx, my, cx, cy) => dragMove(mx, my, cx, cy, trashRef.current?.getBoundingClientRect());
   const onUp = dragUp;
 
-  // Render ulang setiap ada perubahan pemain/peran
+  // Render lapangan otomatis
   useEffect(() => { renderPitch(); }, [renderPitch]);
 
-  // ── FUNGSI UTAMA ──
+  // Render ulang coretan spidol (saat zoom atau gambar)
+  useEffect(() => { redrawDrawings(drawcRef.current); }, [zoom, drawingPaths, redrawDrawings]);
+
+  // ── FUNGSI UTAMA UI ──
   const showToast = useCallback((msg, col = '#0ea5e9') => {
     setToastData({ show: true, msg, col });
     if(toastTimerRef.current) clearTimeout(toastTimerRef.current);
@@ -128,7 +177,6 @@ export default function App() {
     setIsResetConfirmOpen(false); showToast('Di-reset ke awal', '#16a34a');
   };
 
-  // Reset Button Logics
   const startHoldReset = () => {
     setIsHoldingReset(true); resetHoldRef.current.start = Date.now();
     const tick = () => {
@@ -153,13 +201,15 @@ export default function App() {
       
       <PitchCanvas 
         zoom={zoom} setZoom={setZoom} mcRef={mcRef} drawcRef={drawcRef} trashRef={trashRef}
-        drawTool={drawTool} dragId={dragRef.current.id} overTrash={dragRef.current.overTrash}
-        getScale={getScale} onDown={onDown} onMove={onMove} onUp={onUp} curFId={curFId}
+        drawTool={drawTool} dragId={dragRef.current?.id} overTrash={dragRef.current?.overTrash}
+        getScale={getScale} onDown={onDown} onMove={onMove} onUp={onUp} 
+        onDrawStart={handleDrawStart} onDrawMove={handleDrawMove} onDrawEnd={handleDrawEnd}
+        curFId={curFId}
       />
       
       <BottomBar 
         drawTool={drawTool} setDrawTool={setDrawTool} drawColor={drawColor} setDrawColor={setDrawColor} 
-        clearDrawings={() => { clearDrawings(); showToast('Coretan dihapus', '#6b7280'); }}
+        clearDrawings={() => { clearDrawings(drawcRef.current); showToast('Coretan dihapus', '#6b7280'); }}
         isHoldingReset={isHoldingReset} startHoldReset={startHoldReset} cancelHoldReset={cancelHoldReset} resetHoldProgress={resetHoldProgress} 
       />
 
