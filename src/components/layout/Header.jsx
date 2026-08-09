@@ -1,5 +1,5 @@
 import React from 'react';
-import { STYLE_PRESETS } from '../../data/tacticsData';
+import { STYLE_PRESETS } from '../../data/tacticData';
 
 const Header = ({ 
   curFId, changeFormation, activeStyleId, setIsStyleModalOpen, clearStyle, 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ROLE_MASTER, FORMATIONS, STYLE_PRESETS, TC, POS_LABEL } from '../../data/tacticsData';
+import { ROLE_MASTER, FORMATIONS, STYLE_PRESETS, TC, POS_LABEL } from '../../data/tacticData';
 import { rolesForPosType } from '../../utils/helpers';
 
 const AllModals = ({

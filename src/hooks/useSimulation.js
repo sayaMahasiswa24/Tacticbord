@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { getRole, computePlayerTarget, ease } from '../utils/helpers';
-import { STYLE_PRESETS, FORMATIONS } from '../data/tacticsData';
+import { STYLE_PRESETS, FORMATIONS } from '../data/tacticData';
 
 export const useSimulation = (players, setPlayers, assignedRoles, activeStyleId, simSpd, renderPitch, curFId, setAssignedRoles) => {
   const [phase, setPhase] = useState(null);

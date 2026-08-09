@@ -1,4 +1,4 @@
-import { ROLE_MASTER, WT } from '../data/tacticsData';
+import { ROLE_MASTER, WT } from '../data/tacticData';
 
 export function getRole(roleId) {
   return ROLE_MASTER.find(r => r.id === roleId) || null;

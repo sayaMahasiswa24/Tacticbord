@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { HIT_RADIUS } from '../data/tacticsData';
+import { HIT_RADIUS } from '../data/tacticData';
 
 export const useDragAndDrop = (players, setPlayers, assignedRoles, setSelectedPlayer, setPendingRole, startLoop, renderPitch, PX, PY, PW, PH) => {
   const dragRef = useRef({ id: null, dOX: 0, dOY: 0, dragging: false, moved: false, overTrash: false, hoverId: null });
