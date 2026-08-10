@@ -193,6 +193,35 @@ export default function App() {
     setPlayers(FORMATIONS[fid].players.map(p => ({ ...p, cx: gx(p.x), cy: gy(p.y) })));
   };
 
+  const sendChatMessage = async () => {
+    if (!chatInput.trim() || chatBusy) return;
+    const msg = chatInput.trim();
+    setChatInput('');
+    setChatHistory(prev => [...prev, { role: 'user', content: msg }]);
+    setChatBusy(true);
+
+    try {
+      const res = await fetch('http://localhost:8787/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...chatHistory, { role: 'user', content: msg }],
+          tacticContext: `Formasi: ${curFId}. Role Terpasang: ${Object.values(assignedRoles).join(', ')}` 
+        })
+      });
+      const data = await res.json();
+      if (data.error) {
+        showToast(data.error, '#ef4444');
+      } else {
+        setChatHistory(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      }
+    } catch (err) {
+      showToast('Gagal menghubungi server.', '#ef4444');
+    } finally {
+      setChatBusy(false);
+    }
+  };
+
   const applyStyle = (styleId) => {
     stopSim(); setCurFId(STYLE_PRESETS[styleId].formation);
     setPlayers(FORMATIONS[STYLE_PRESETS[styleId].formation].players.map(p => ({ ...p, cx: gx(p.x), cy: gy(p.y) })));
@@ -250,7 +279,7 @@ export default function App() {
         isBrowserOpen={isBrowserOpen} setIsBrowserOpen={setIsBrowserOpen}
         isSaveOpen={isSaveOpen} setIsSaveOpen={setIsSaveOpen} saveName={saveName} setSaveName={setSaveName} saveNote={saveNote} setSaveNote={setSaveNote} saveTacticToStorage={() => setIsSaveOpen(false)}
         isLoadOpen={isLoadOpen} setIsLoadOpen={setIsLoadOpen} loadTacticFromStorage={() => setIsLoadOpen(false)} deleteSaveFromStorage={() => {}}
-        isAIChatOpen={isAIChatOpen} setIsAIChatOpen={setIsAIChatOpen} chatHistory={chatHistory} chatInput={chatInput} setChatInput={setChatInput} chatBusy={chatBusy} 
+        isAIChatOpen={isAIChatOpen} setIsAIChatOpen={setIsAIChatOpen} chatHistory={chatHistory} chatInput={chatInput} setChatInput={setChatInput} chatBusy={chatBusy} sendChatMessage={sendChatMessage}
         isResetConfirmOpen={isResetConfirmOpen} setIsResetConfirmOpen={setIsResetConfirmOpen} doFullReset={doFullReset}
       />
     </div>
