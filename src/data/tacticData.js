@@ -936,25 +936,25 @@ export const STYLE_PRESETS = {
   gegenpressing: {
     name: 'Gegenpressing', emoji: '🔴', formation: '433',
     desc: 'Rebut bola secepat mungkin dalam 5 detik pertama setelah kehilangan — intensitas pressing tertinggi, transisi vertikal cepat.',
-    roles: { 0:'sweeper_keeper', 1:'full_back', 2:'ball_playing_defender', 3:'ball_playing_defender', 4:'full_back', 5:'ball_winning_midfielder', 6:'box_to_box_midfielder', 7:'roaming_playmaker', 8:'inside_forward', 9:'pressing_forward', 10:'inside_forward' },
+    roles: { 0:'sweeper_keeper', 1:'full_back', 2:'ball_playing_defender', 3:'ball_playing_defender', 4:'full_back', 5:'defensive_midfielder', 6:'box_to_box_midfielder', 7:'roaming_playmaker', 8:'inside_forward', 9:'pressing_forward', 10:'inside_forward' },
     modifiers: { widthMult: 1.00, depthMult: 1.10, tempoMult: 0.65, pressBoost: 0.18 },
   },
   kick_and_rush: {
     name: 'Kick and Rush', emoji: '⚪', formation: '442',
     desc: 'Direct football — lewati lini tengah secepatnya lewat bola panjang ke target man, minim buildup, fisik & agresif.',
-    roles: { 0:'sweeper_keeper', 1:'full_back', 2:'ball_playing_defender', 3:'ball_playing_defender', 4:'full_back', 5:'wide_target_man', 6:'box_to_box_midfielder', 7:'box_to_box_midfielder', 8:'wide_target_man', 9:'target_forward', 10:'poacher' },
+    roles: { 0:'goalkeeper', 1:'full_back', 2:'no_nonsense_centre_back', 3:'no_nonsense_centre_back', 4:'full_back', 5:'wide_target_forward', 6:'ball_winning_midfielder', 7:'box_to_box_midfielder', 8:'wide_target_forward', 9:'target_forward', 10:'poacher' },
     modifiers: { widthMult: 1.12, depthMult: 1.00, tempoMult: 0.60, pressBoost: 0.00 },
   },
   catenaccio: {
     name: 'Catenaccio', emoji: '🔵⚫', formation: '541',
     desc: 'Sistem sweeper (libero) di belakang trio bek, sangat disiplin & kompak, menunggu momen counter-attack yang klinis.',
-    roles: { 0:'sweeper_keeper', 1:'inverted_wing_back', 2:'ball_playing_defender', 3:'libero', 4:'ball_playing_defender', 5:'inverted_wing_back', 6:'carrilero', 7:'anchor_man', 8:'anchor_man', 9:'carrilero', 10:'poacher' },
+    roles: { 0:'goalkeeper', 1:'wing_back', 2:'central_defender', 3:'libero', 4:'central_defender', 5:'wing_back', 6:'carrilero', 7:'anchor', 8:'anchor', 9:'carrilero', 10:'poacher' },
     modifiers: { widthMult: 0.75, depthMult: 0.60, tempoMult: 1.15, pressBoost: -0.12 },
   },
   parkir_bus: {
     name: 'Parkir Bus', emoji: '🚌', formation: '4231',
     desc: 'Bertahan total — seluruh unit turun sangat dalam, blok sangat rapat, minim ambisi menyerang, tunggu satu peluang counter.',
-    roles: { 0:'sweeper_keeper', 1:'full_back', 2:'ball_playing_defender', 3:'ball_playing_defender', 4:'full_back', 5:'anchor_man', 6:'anchor_man', 7:'wide_target_man', 8:'enganche', 9:'wide_target_man', 10:'poacher' },
+    roles: { 0:'goalkeeper', 1:'no_nonsense_full_back', 2:'no_nonsense_centre_back', 3:'no_nonsense_centre_back', 4:'no_nonsense_full_back', 5:'anchor', 6:'anchor', 7:'defensive_winger', 8:'enganche', 9:'defensive_winger', 10:'target_forward' },
     modifiers: { widthMult: 0.65, depthMult: 0.45, tempoMult: 1.30, pressBoost: -0.20 },
   },
 };

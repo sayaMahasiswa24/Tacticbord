@@ -63,7 +63,7 @@ export default function App() {
   const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, clearDrawings, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
   
   const { dragRef, onDown: dragDown, onMove: dragMove, onUp: dragUp } = useDragAndDrop(
-    players, setPlayers, assignedRoles, setSelectedPlayer, setPendingRole, 
+    players, setPlayers, assignedRoles, setAssignedRoles, setSelectedPlayer, setPendingRole, 
     () => animRef?.current?.startLoop?.(), 
     () => renderPitch(), 
     PX, PY, PW, PH

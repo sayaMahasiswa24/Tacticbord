@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import { HIT_RADIUS } from '../data/tacticData';
+import { detectPosType } from '../utils/helpers';
 
-export const useDragAndDrop = (players, setPlayers, assignedRoles, setSelectedPlayer, setPendingRole, startLoop, renderPitch, PX, PY, PW, PH) => {
+export const useDragAndDrop = (players, setPlayers, assignedRoles, setAssignedRoles, setSelectedPlayer, setPendingRole, startLoop, renderPitch, PX, PY, PW, PH) => {
   const dragRef = useRef({ id: null, dOX: 0, dOY: 0, dragging: false, moved: false, overTrash: false, hoverId: null });
 
   const onDown = (mx, my, animRunningFalse) => {
@@ -35,11 +36,35 @@ export const useDragAndDrop = (players, setPlayers, assignedRoles, setSelectedPl
   const onUp = () => {
     const { id: dragPid, moved, overTrash } = dragRef.current;
     if (dragPid !== null) {
-      const p = players.find(x => x.id === dragPid);
+      const curPlayers = [...players];
+      const pIndex = curPlayers.findIndex(x => x.id === dragPid);
+      const p = curPlayers[pIndex];
+      
       if (!moved && !overTrash && p) { 
         setSelectedPlayer(p); 
         setPendingRole(assignedRoles[p.id] || null); 
+      } else if (moved && !overTrash && p) {
+        // Detect new position type based on coordinates
+        const rx = (p.cx - PX) / PW;
+        const ry = (p.cy - PY) / PH;
+        const newPos = detectPosType(rx, ry, p.posType);
+        
+        if (newPos.posType !== p.posType || newPos.side !== p.side) {
+          p.posType = newPos.posType;
+          p.side = newPos.side;
+          setPlayers(curPlayers);
+          
+          // Clear role if position changes
+          if (assignedRoles[p.id]) {
+            setAssignedRoles(prev => {
+              const next = {...prev};
+              delete next[p.id];
+              return next;
+            });
+          }
+        }
       }
+      
       dragRef.current = { id: null, dOX: 0, dOY: 0, dragging: false, moved: false, overTrash: false, hoverId: null };
       if (renderPitch) renderPitch();
     }
