@@ -1,0 +1,73 @@
+                            [ START ]
+                                 |
+                                 v
++-----------------------------------------------------------------+
+| 1. SETUP TIM USER (INPUT)                                       |
+|-----------------------------------------------------------------|
+| - Memuat state formasi awal (misal: 4-3-3, 4-2-3-1)             |
+| - Menetapkan role (peran) spesifik untuk tiap node (pemain)     |
++-----------------------------------------------------------------+
+                                 |
+                                 v
++-----------------------------------------------------------------+
+| 2. GENERATE TIM MUSUH / AI (SYSTEM PROCESS)                     |
+|-----------------------------------------------------------------|
+| - Sistem membaca formasi dan role dari Tim User                 |
+| - AI mengkalkulasi adaptasi (menentukan formasi & role musuh)   |
++-----------------------------------------------------------------+
+                                 |
+                                 v
++-----------------------------------------------------------------+
+| 3. RENDER KICK-OFF H2H (ORIGIN STATE / KEYFRAME 0)              |
+|-----------------------------------------------------------------|
+| - Menempatkan node Tim User (Bawah) menghadap atas              |
+| - Menempatkan node Tim AI (Atas) menghadap bawah                |
+| - Posisi terpusat di lingkaran tengah (Head-to-Head)            |
++-----------------------------------------------------------------+
+                                 |
+                                 v
++-----------------------------------------------------------------+
+| 4. WAITING FOR USER ACTION (LISTENER)                           |
+|-----------------------------------------------------------------|
+| - Menunggu input tombol Fase Taktis:                            |
+|   [ In Possession ] [ Press ] [ Counter ] [ Out of Possession ] |
++-----------------------------------------------------------------+
+                                 |
+                                 | (Trigger: Tombol Fase Ditekan)
+                                 v
++-----------------------------------------------------------------+
+| 5. KALKULASI INTERPOLASI & TRANSISI (KEYFRAME LOGIC)            |
+|-----------------------------------------------------------------|
+| a. Ambil koordinat X,Y saat ini (Current Keyframe)              |
+| b. Hitung X,Y tujuan Tim User berdasarkan Fase yang dipilih     |
+| c. Hitung X,Y tujuan Tim AI (Reaksi adaptif terhadap Fase User) |
+| d. Jalankan fungsi Tweening (Gerakan mulus antar titik X,Y)     |
++-----------------------------------------------------------------+
+                                 |
+                                 v
++-----------------------------------------------------------------+
+| 6. TAMPILKAN FASE TERPILIH (TARGET KEYFRAME REACHED)            |
+|-----------------------------------------------------------------|
+| - Pergerakan selesai                                            |
+| - Node pemain terkunci pada koordinat fase yang baru            |
++-----------------------------------------------------------------+
+                                 |
+                                 v
+                        < ADA AKSI BARU? >
+                                / \
+                               /   \
+  (User geser pemain manual)  /     \ (User tekan tombol fase lain)
+  +--------------------------+       +----------------------------+
+  |                                                               |
+  v                                                               v
++----------------------------+    +---------------------------------+
+| 7. CUSTOM KEYFRAMING       |    | KEMBALI KE LANGKAH 5            |
+|----------------------------|    |---------------------------------|
+| - Tangkap koordinat drop   |    | - Set koordinat saat ini        |
+| - Update & simpan array X,Y|--->|   sebagai titik awal baru       |
+|   baru khusus di fase ini  |    | - Hitung transisi ke fase baru  |
++----------------------------+    +---------------------------------+
+                                 
+                                 | (Tidak ada aksi / Save)
+                                 v
+                             [ END ]

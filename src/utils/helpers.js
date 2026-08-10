@@ -4,8 +4,27 @@ export function getRole(roleId) {
   return ROLE_MASTER.find(r => r.id === roleId) || null;
 }
 
-export function rolesForPosType(posType) {
-  return ROLE_MASTER.filter(r => r.posType === posType);
+export function rolesForPlayer(player) {
+  const posType = player.posType;
+  return ROLE_MASTER.filter(r => {
+    // 1. Wingback roles can be played in Fullback positions, but not vice versa
+    if (posType === 'FB') {
+      return r.posType === 'FB' || r.posType === 'WB';
+    }
+    
+    // 2. Wide players at CM depth (y > 0.5) cannot play advanced attacking winger roles
+    if (posType === 'W') {
+      if (r.posType !== 'W') return false;
+      if (player.y > 0.5) {
+        if (['raumdeuter', 'wide_target_forward', 'inside_forward'].includes(r.id)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    return r.posType === posType;
+  });
 }
 
 export function lighten(h) {
@@ -77,14 +96,21 @@ export function computePlayerTarget(player, role, phase, styleModifier) {
   const phaseData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);
 
   if (phaseData) {
-    y = phaseData.vertical_bias;
+    // Blend base Y and role Y to prevent exact overlaps for players on different base lines
+    y = (player.y * 0.15) + (phaseData.vertical_bias * 0.85);
+      
+    let targetX;
     if (side === 'left') {
-      x = phaseData.lateral_bias;
+      targetX = phaseData.lateral_bias;
     } else if (side === 'right') {
-      x = 1.0 - phaseData.lateral_bias;
+      targetX = 1.0 - phaseData.lateral_bias;
     } else {
-      x = 0.50;
+      targetX = 0.5; // Central players target the center
     }
+      
+    // Blend base X and role X to maintain formation horizontal structure and prevent overlap
+    x = (player.x * 0.35) + (targetX * 0.65);
+    
     delay = phaseData.start_delay_sec;
     duration = phaseData.move_duration_sec;
     easing = phaseData.easing;

@@ -32,6 +32,9 @@ export default function App() {
   // ── STATES GLOBAL ──
   const [curFId, setCurFId] = useState('433');
   const [players, setPlayers] = useState(() => FORMATIONS['433'].players.map(p => ({ ...p, cx: gx(p.x), cy: gy(p.y) })));
+  const [enemies, setEnemies] = useState([]);
+  const enemiesRef = useRef(enemies);
+  useEffect(() => { enemiesRef.current = enemies; }, [enemies]);
   const [assignedRoles, setAssignedRoles] = useState({});
   const [activeStyleId, setActiveStyleId] = useState(null);
   const [overlays, setOverlays] = useState({ zone: true, pass: false });
@@ -148,6 +151,23 @@ export default function App() {
       ctx.stroke();
     }
     
+    // Enemy Shadow
+    enemiesRef.current.forEach(ep => {
+      ctx.beginPath(); ctx.arc(ep.cx, ep.cy, ICON_R_NORMAL, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.4)'; // Transparent red
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]); // Dashed line for shadow effect
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Draw role or position
+      ctx.font = '800 11.5px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.fillText(POS_LABEL[ep.posType] || ep.posType, ep.cx, ep.cy);
+    });
+
     // Pemain
     [...players].sort((a,b)=>(a.id===dragPid?1:b.id===dragPid?-1:0)).forEach(p => {
       const roleId = assignedRoles[p.id];
@@ -166,9 +186,9 @@ export default function App() {
       ctx.font='800 11.5px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillStyle= roleId ? '#ffffff' : 'rgba(255,255,255,.7)'; ctx.fillText(POS_LABEL[p.posType] || p.posType, p.cx, p.cy);
     });
-  }, [players, assignedRoles, overlays, dragRef]); // overlays sudah dimasukkan agar Zona re-render
+  }, [players, enemies, assignedRoles, overlays, dragRef]); // overlays sudah dimasukkan agar Zona re-render
 
-  const { phase, triggerPhase: simTrigger, stopSim, startLoop, animRef } = useSimulation(players, setPlayers, assignedRoles, activeStyleId, simSpd, renderPitch, curFId, setAssignedRoles);
+  const { phase, triggerPhase: simTrigger, stopSim, startLoop, animRef } = useSimulation(players, setPlayers, enemies, setEnemies, assignedRoles, activeStyleId, simSpd, renderPitch, curFId, setAssignedRoles);
 
   // Wrapper Drag untuk mematikan animasi saat diseret
   const onDown = (mx, my) => dragDown(mx, my, () => { if (animRef.current) animRef.current.running = false; });

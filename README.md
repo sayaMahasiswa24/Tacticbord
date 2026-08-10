@@ -47,8 +47,8 @@ Aplikasi **TacticBoard** berbasis website adalah papan strategi digital interakt
 
 1. **Clone Repositori & Masuk ke Folder**
    ```bash
-   git clone https://github.com/username/tacticboard.git
-   cd tacticboard
+   git clone https://github.com/sayaMahasiswa24/Tacticbord.git
+   cd Tacticbord
    ```
 
 2. **Instal Dependensi Frontend & Backend**

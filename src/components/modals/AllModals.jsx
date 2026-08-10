@@ -1,6 +1,6 @@
 import React from 'react';
 import { ROLE_MASTER, FORMATIONS, STYLE_PRESETS, TC, POS_LABEL } from '../../data/tacticData';
-import { rolesForPosType } from '../../utils/helpers';
+import { rolesForPlayer } from '../../utils/helpers';
 
 const AllModals = ({
   // States
@@ -22,14 +22,14 @@ const AllModals = ({
               <div className="mbadge" style={{background: TC[selectedPlayer.posType], fontSize:13}}>{POS_LABEL[selectedPlayer.posType]}</div>
               <div>
                 <div className="mtitle">{`Pilih Peran — ${POS_LABEL[selectedPlayer.posType]}`}</div>
-                <div className="msub">{`${rolesForPosType(selectedPlayer.posType).length} role tersedia untuk posisi ${selectedPlayer.posType}`}</div>
+                <div className="msub">{`${rolesForPlayer(selectedPlayer).length} role tersedia untuk posisi ${selectedPlayer.posType}`}</div>
               </div>
               <button className="mclose" onClick={() => setSelectedPlayer(null)}>&#x2715;</button>
             </div>
             <div className="mb">
               <div className="rg">
                 <div className="rl">{`Semua Role ${selectedPlayer.posType}`}</div>
-                {rolesForPosType(selectedPlayer.posType).map(r => (
+                {rolesForPlayer(selectedPlayer).map(r => (
                   <button key={r.id} className={`ro ${pendingRole === r.id ? 'sel' : ''}`} onClick={() => setPendingRole(r.id)}>
                     <div className="ro-n"><span style={{background:TC[r.posType], color:'#fff', fontSize:9, fontWeight:800, padding:'1px 5px', borderRadius:4}}>{r.short}</span>{r.name}</div>
                     <div className="ro-d">{r.desc}</div>
