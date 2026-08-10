@@ -143,10 +143,10 @@ canvas#drawc.pen-active { pointer-events: auto; cursor: crosshair; }
 .color-group { display: flex; gap: 8px; align-items: center; }
 
 /* Desktop Grid Layout */
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .app-container {
     display: grid;
-    grid-template-columns: 260px 1fr 260px;
+    grid-template-columns: 220px 1fr 220px;
     grid-template-rows: auto 1fr;
     grid-template-areas:
       "header header header"
@@ -219,7 +219,7 @@ canvas#drawc.pen-active { pointer-events: auto; cursor: crosshair; }
 }
 
 /* Tablet Fallback */
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 899px) {
   .bottombar { left: 50%; transform: translateX(-50%); width: max-content; max-width: 600px; justify-content: center; gap: 16px; padding: 12px 24px; }
   .modal { width: 440px; border-radius: 32px; align-self: center; margin-bottom: 40px; }
   .overlay { align-items: center; }

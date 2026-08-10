@@ -11,40 +11,46 @@
 import db from '../db/index.js';
 import { AI_TOOLS, executeTool } from '../utils/aiTools.js';
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const MAX_TOOL_ROUNDS = 5; // guard rail — cegah loop tak berkesudahan
 
-async function callAnthropic(systemPrompt, conversationMessages) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+// Convert Anthropic tool format to OpenAI/Groq tool format
+const GROQ_TOOLS = AI_TOOLS.map(t => ({
+  type: 'function',
+  function: {
+    name: t.name,
+    description: t.description,
+    parameters: t.input_schema
+  }
+}));
+
+async function callGroq(conversationMessages) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
+      'Authorization': `Bearer ${GROQ_API_KEY}`,
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-5',
+      model: 'openai/gpt-oss-120b',
       max_tokens: 700,
-      system: systemPrompt,
-      tools: AI_TOOLS,
       messages: conversationMessages,
+      tools: GROQ_TOOLS,
+      tool_choice: 'auto'
     }),
   });
   return res.json();
 }
 
 export async function sendChat(req, res) {
-  if (!ANTHROPIC_API_KEY) {
-    return res.status(503).json({ error: 'AI belum dikonfigurasi di server. Set ANTHROPIC_API_KEY di environment.' });
+  if (!GROQ_API_KEY) {
+    return res.status(503).json({ error: 'AI belum dikonfigurasi di server. Set GROQ_API_KEY di environment.' });
   }
   const { messages, tacticContext, sessionId } = req.body;
   if (!Array.isArray(messages) || !messages.length) {
     return res.status(400).json({ error: 'messages wajib berupa array dan tidak kosong' });
   }
 
-  // System prompt sengaja LEBIH RINGKAS dari versi sebelumnya — hanya berisi
-  // konteks papan taktik yang sedang aktif. Untuk pertanyaan yang butuh data
-  // di luar itu (role lain, style preset lain, dsb), Claude memanggil tools.
   const systemPrompt = `Kamu adalah asisten taktik sepak bola yang tegas untuk pelatih yang sedang menyusun formasi di aplikasi TacticBoard.
 Jawab dalam Bahasa Indonesia, ringkas (maks 150 kata), dan langsung berikan saran atau solusi praktis.
 Gunakan **teks tebal** untuk istilah taktis yang penting.
@@ -63,39 +69,55 @@ Jangan menebak atribut role dari memori — selalu pakai get_role_detail/search_
 Konteks papan taktik saat ini:
 ${tacticContext || '(tidak ada konteks taktik dikirim)'}`;
 
-  let conversationMessages = [...messages];
+  // Siapkan message dengan format Groq (OpenAI format)
+  let conversationMessages = [
+    { role: 'system', content: systemPrompt },
+    ...messages.map(m => ({
+      role: m.role,
+      content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
+    }))
+  ];
+
   let finalText = null;
-  let toolCallLog = []; // untuk debug/transparansi ke frontend (opsional)
+  let toolCallLog = []; // untuk debug/transparansi ke frontend
 
   try {
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
-      const data = await callAnthropic(systemPrompt, conversationMessages);
+      const data = await callGroq(conversationMessages);
 
-      if (data.error) return res.status(502).json({ error: data.error.message || 'Anthropic API error' });
+      if (data.error) {
+        return res.status(502).json({ error: data.error.message || 'Groq API error' });
+      }
 
-      if (data.stop_reason === 'tool_use') {
-        // Simpan pesan assistant (berisi tool_use blocks) ke riwayat percakapan
-        conversationMessages.push({ role: 'assistant', content: data.content });
+      const responseMessage = data.choices[0].message;
 
-        // Eksekusi setiap tool_use, kumpulkan tool_result
-        const toolResults = [];
-        for (const block of data.content) {
-          if (block.type === 'tool_use') {
-            const result = executeTool(block.name, block.input);
-            toolCallLog.push({ tool: block.name, input: block.input });
-            toolResults.push({
-              type: 'tool_result',
-              tool_use_id: block.id,
-              content: JSON.stringify(result),
+      // Jika LLM menggunakan tool
+      if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
+        // 1. Masukkan response message yang berisi tool_calls ke riwayat
+        conversationMessages.push(responseMessage);
+
+        // 2. Eksekusi setiap tool dan kirim balik hasilnya
+        for (const toolCall of responseMessage.tool_calls) {
+          if (toolCall.type === 'function') {
+            const funcName = toolCall.function.name;
+            const args = JSON.parse(toolCall.function.arguments);
+            
+            const result = executeTool(funcName, args);
+            toolCallLog.push({ tool: funcName, input: args });
+            
+            conversationMessages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              name: funcName,
+              content: JSON.stringify(result)
             });
           }
         }
-        conversationMessages.push({ role: 'user', content: toolResults });
-        continue; // lanjut ke ronde berikutnya, Claude proses hasil tool
+        continue; // lanjut ke ronde berikutnya
       }
 
-      // stop_reason !== 'tool_use' → jawaban akhir sudah siap
-      finalText = data.content?.find(b => b.type === 'text')?.text || 'Tidak ada respons.';
+      // Jika LLM sudah memberikan teks jawaban akhir
+      finalText = responseMessage.content;
       break;
     }
 

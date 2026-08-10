@@ -35,5 +35,5 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`🚀 TacticBord Backend jalan di http://localhost:${PORT}`);
-  console.log(`   AI Chat: ${process.env.ANTHROPIC_API_KEY ? 'terkonfigurasi ✓' : 'BELUM ada ANTHROPIC_API_KEY ✗'}`);
+  console.log(`   AI Chat: ${process.env.GROQ_API_KEY ? 'terkonfigurasi (Groq) ✓' : 'BELUM ada GROQ_API_KEY ✗'}`);
 });

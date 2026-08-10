@@ -1,4 +1,4 @@
-import { ROLE_MASTER, WT } from '../data/tacticData';
+import { ROLE_MASTER, ROLE_PHASE_MOVEMENT, WT } from '../data/tacticData';
 
 export function getRole(roleId) {
   return ROLE_MASTER.find(r => r.id === roleId) || null;
@@ -43,78 +43,114 @@ export function depthToY(depth) {
 }
 
 export function computePlayerTarget(player, role, phase, styleModifier) {
-  if(!role || player.posType === 'GK') {
+  if (!role || player.posType === 'GK') {
     let y = 0.91;
-    if(role) {
-      if(role.id === 'sweeper_keeper') y = phase === 'defense' ? 0.86 : 0.80;
-      if(role.id === 'ball_playing_gk') y = phase === 'possession' ? 0.82 : 0.89;
+    if (role) {
+      const gkPhaseData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);
+      if (gkPhaseData) {
+        y = gkPhaseData.vertical_bias;
+      } else {
+        if (role.id === 'sweeper_keeper') y = phase === 'defense' ? 0.86 : 0.80;
+        if (role.id === 'ball_playing_gk') y = phase === 'possession' ? 0.82 : 0.89;
+      }
     }
-    if(phase === 'transition_neg') y = 0.90;
-    if(styleModifier) y = 0.90 - (0.90 - y) * (styleModifier.depthMult ?? 1);
-    return { x: 0.50, y, delay: 0, duration: 0.5, easing: 'ease-in-out' };
+    if (phase === 'transition_neg') y = 0.90;
+    if (styleModifier) y = 0.90 - (0.90 - y) * (styleModifier.depthMult ?? 1);
+    
+    let duration = 0.5, delay = 0, easing = 'ease-in-out';
+    if (role) {
+      const pData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);
+      if (pData) {
+         duration = pData.move_duration_sec;
+         delay = pData.start_delay_sec;
+         easing = pData.easing;
+      }
+    }
+    return { x: 0.50, y, delay, duration, easing };
   }
 
   const side = player.side;
+  let x, y, delay = 0.15, duration = 0.85, easing = 'ease-in-out';
   let width = role.width;
   let depth = role.depth;
-  let delay = 0.15, duration = 0.85, easing = 'ease-in-out';
 
-  if(phase === 'possession') {
-    if(role.dropsDeep) {
-      depth = Math.max(0.15, depth - 0.30);
-      delay = 0.30; duration = 0.95; easing = 'ease-in-out';
-    }
-    if(role.overlap === 'overlap') {
-      width = Math.min(1, width + 0.08);
-      delay = 0.25; duration = 1.05; easing = 'ease-out';
-    }
-    if(role.overlap === 'underlap') {
-      width = Math.max(0, width - 0.15);
-      delay = 0.25; duration = 0.95; easing = 'ease-in-out';
-    }
-    if(role.attackingRun && !role.dropsDeep) {
-      depth = Math.min(1, depth + 0.05);
-    }
-  } else if(phase === 'transition_pos') {
-    if(role.attackingRun) {
-      depth = Math.min(1, depth + 0.12);
-      delay = 0.05; duration = 0.45; easing = 'linear';
-    } else if(role.pressing === 'hold') {
-      delay = 0; duration = 0.3; easing = 'linear';
+  const phaseData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);
+
+  if (phaseData) {
+    y = phaseData.vertical_bias;
+    if (side === 'left') {
+      x = phaseData.lateral_bias;
+    } else if (side === 'right') {
+      x = 1.0 - phaseData.lateral_bias;
     } else {
-      delay = 0.15; duration = 0.55; easing = 'ease-out';
+      x = 0.50;
     }
-    if(role.overlap === 'overlap') { width = Math.min(1, width + 0.05); }
-  } else if(phase === 'transition_neg') {
-    if(role.pressing === 'immediate') {
-      depth = Math.min(1, depth + 0.05);
-      delay = 0; duration = 0.35; easing = 'linear';
-    } else if(role.pressing === 'delayed') {
-      depth = Math.max(0, depth - 0.05);
-      delay = 0.15; duration = 0.55; easing = 'linear';
-    } else {
-      delay = 0; duration = 0.3; easing = 'linear';
+    delay = phaseData.start_delay_sec;
+    duration = phaseData.move_duration_sec;
+    easing = phaseData.easing;
+  } else {
+    // Fallback for custom or unmapped roles
+    if(phase === 'possession') {
+      if(role.dropsDeep) {
+        depth = Math.max(0.15, depth - 0.30);
+        delay = 0.30; duration = 0.95; easing = 'ease-in-out';
+      }
+      if(role.overlap === 'overlap') {
+        width = Math.min(1, width + 0.08);
+        delay = 0.25; duration = 1.05; easing = 'ease-out';
+      }
+      if(role.overlap === 'underlap') {
+        width = Math.max(0, width - 0.15);
+        delay = 0.25; duration = 0.95; easing = 'ease-in-out';
+      }
+      if(role.attackingRun && !role.dropsDeep) {
+        depth = Math.min(1, depth + 0.05);
+      }
+    } else if(phase === 'transition_pos') {
+      if(role.attackingRun) {
+        depth = Math.min(1, depth + 0.12);
+        delay = 0.05; duration = 0.45; easing = 'linear';
+      } else if(role.pressing === 'hold') {
+        delay = 0; duration = 0.3; easing = 'linear';
+      } else {
+        delay = 0.15; duration = 0.55; easing = 'ease-out';
+      }
+      if(role.overlap === 'overlap') { width = Math.min(1, width + 0.05); }
+    } else if(phase === 'transition_neg') {
+      if(role.pressing === 'immediate') {
+        depth = Math.min(1, depth + 0.05);
+        delay = 0; duration = 0.35; easing = 'linear';
+      } else if(role.pressing === 'delayed') {
+        depth = Math.max(0, depth - 0.05);
+        delay = 0.15; duration = 0.55; easing = 'linear';
+      } else {
+        delay = 0; duration = 0.3; easing = 'linear';
+      }
+      if(styleModifier?.pressBoost) {
+        depth = Math.max(0, Math.min(1, depth + styleModifier.pressBoost));
+      }
+    } else if(phase === 'defense') {
+      width = width * 0.55;
+      depth = Math.max(0, depth - 0.45);
+      delay = 0.1; duration = 0.9; easing = 'ease-in-out';
+      if(role.fillsSpace) {
+        depth = Math.max(0, depth - 0.05);
+      }
     }
-    if(styleModifier?.pressBoost) {
-      depth = Math.max(0, Math.min(1, depth + styleModifier.pressBoost));
-    }
-  } else if(phase === 'defense') {
-    width = width * 0.55;
-    depth = Math.max(0, depth - 0.45);
-    delay = 0.1; duration = 0.9; easing = 'ease-in-out';
-    if(role.fillsSpace) {
-      depth = Math.max(0, depth - 0.05);
-    }
+    x = widthToX(Math.max(0, Math.min(1, width)), side);
+    y = depthToY(Math.max(0, Math.min(1, depth)));
   }
 
   if(styleModifier) {
-    width = Math.max(0, Math.min(1, width * (styleModifier.widthMult ?? 1)));
-    depth = Math.max(0, Math.min(1, depth * (styleModifier.depthMult ?? 1)));
+    if (styleModifier.widthMult) {
+      x = 0.50 + (x - 0.50) * styleModifier.widthMult;
+    }
+    if (styleModifier.depthMult) {
+      y = 0.90 - (0.90 - y) * styleModifier.depthMult;
+    }
     duration = duration * (styleModifier.tempoMult ?? 1);
     delay = delay * (styleModifier.tempoMult ?? 1);
   }
 
-  let x = widthToX(Math.max(0, Math.min(1, width)), side);
-  let y = depthToY(Math.max(0, Math.min(1, depth)));
   return { x, y, delay, duration, easing };
-}
+}
