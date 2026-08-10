@@ -82,9 +82,38 @@ export default function App() {
     // Background Lapangan
     ctx.fillStyle = '#1a5c2e'; ctx.fillRect(0,0,CW,CH);
     for(let i=0;i<6;i++){ ctx.fillStyle = i%2 ? '#1a5c2e' : '#1e6834'; ctx.fillRect(PX, PY+i*PH/6, PW, PH/6); }
-    ctx.strokeStyle = 'rgba(255,255,255,.32)'; ctx.lineWidth = 1.3; ctx.strokeRect(PX, PY, PW, PH);
+    
+    ctx.strokeStyle = 'rgba(255,255,255,.32)'; 
+    ctx.fillStyle = 'rgba(255,255,255,.32)';
+    ctx.lineWidth = 1.3; 
+    
+    // Garis luar
+    ctx.strokeRect(PX, PY, PW, PH);
+    
+    // Garis tengah
     ctx.beginPath(); ctx.moveTo(PX, PY+PH/2); ctx.lineTo(PX+PW, PY+PH/2); ctx.stroke();
+    
+    // Lingkaran tengah & titik tengah
     ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH/2, 36, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH/2, 2, 0, Math.PI*2); ctx.fill();
+
+    // Area penalti & area gawang (Atas)
+    ctx.strokeRect(PX+PW/2 - 120, PY, 240, 80); // Kotak penalti
+    ctx.strokeRect(PX+PW/2 - 50, PY, 100, 30);  // Kotak kiper
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+60, 2, 0, Math.PI*2); ctx.fill(); // Titik penalti
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+60, 40, Math.PI/6, Math.PI - Math.PI/6); ctx.stroke(); // Busur penalti
+    
+    // Area penalti & area gawang (Bawah)
+    ctx.strokeRect(PX+PW/2 - 120, PY+PH - 80, 240, 80); // Kotak penalti
+    ctx.strokeRect(PX+PW/2 - 50, PY+PH - 30, 100, 30);  // Kotak kiper
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH - 60, 2, 0, Math.PI*2); ctx.fill(); // Titik penalti
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH - 60, 40, Math.PI + Math.PI/6, Math.PI*2 - Math.PI/6); ctx.stroke(); // Busur penalti
+
+    // Sudut lapangan (Corner arcs)
+    ctx.beginPath(); ctx.arc(PX, PY, 10, 0, Math.PI/2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(PX+PW, PY, 10, Math.PI/2, Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.arc(PX+PW, PY+PH, 10, Math.PI, 1.5*Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.arc(PX, PY+PH, 10, 1.5*Math.PI, 2*Math.PI); ctx.stroke();
 
     // RENDER ZONA (ZBANDS)
     if (overlays.zone) {

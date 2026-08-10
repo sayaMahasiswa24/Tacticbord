@@ -1,0 +1,8 @@
+override_id,role_id,formation_id,phase,override_lateral_bias,override_vertical_bias,override_depth_line,override_start_delay,override_duration,notes
+ovr_cwb_532_pos,complete_wing_back,532,possession,0.1,0.2,final_third,0.1,1.5,CWB lebih ofensif karena dilindungi 3 bek tengah
+ovr_lib_541_pos,libero,541,possession,0.5,0.75,deep,0.2,2.0,Libero bermain lebih pasif pada formasi defensif 541
+ovr_cm_442_pos,central_midfielder,442,possession,0.5,0.6,defensive_mid,0.2,2.0,CM di 442 flat lebih seimbang tidak terlalu maju
+ovr_w_424_pos,winger,424,possession,0.95,0.1,attacking_box,0.0,1.0,Winger sangat menekan tinggi karena formasi 4 penyerang
+ovr_bpd_352_pos,ball_playing_defender,352,possession,0.3,0.55,defensive_mid,0.2,1.5,BPD di 3 bek sedikit lebih naik untuk build up
+ovr_fb_4231_pos,full_back,4231,possession,0.1,0.4,central_mid,0.2,2.0,FB sedikit tertahan karena banyak pemain serang
+ovr_dm_4141_def,defensive_midfielder,4141,defense,0.5,0.85,own_box,0.1,1.0,DM tunggal turun nyaris menjadi bek tengah

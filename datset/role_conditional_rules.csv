@@ -1,0 +1,11 @@
+rule_id,role_id,phase,priority,watch_side,watch_pos_type,partner_roles_trigger,override_primary_zone,override_depth_line,override_lateral_bias,override_vertical_bias,override_start_delay,notes
+rule_fb_overlap_iw,full_back,possession,1,same,W,"inverted_winger,inside_forward",touchline,final_third,0.05,0.25,0.1,Full-back naik ke garis tepi jika winger memotong ke dalam
+rule_wb_overlap_iw,wing_back,possession,1,same,W,"inverted_winger,inside_forward",touchline,attacking_box,0.05,0.15,0.1,Wing-back lebih agresif overlap
+rule_if_f9_drop,inside_forward,possession,1,any,CF,false_nine,central_corridor,final_third,0.5,0.15,0.2,Inside forward menempati area striker yang turun
+rule_cm_cover_cwb,central_midfielder,possession,1,same,WB,complete_wing_back,half_space_inner,deep,0.3,0.65,0.3,Gelandang tengah meng-cover bek sayap yang overlap
+rule_iwb_with_w,inverted_wing_back,possession,1,same,W,"winger,wide_midfielder",half_space_inner,central_mid,0.4,0.45,0.1,IWB mengisi half-space jika winger murni di garis tepi
+rule_mez_with_iw,mezzala,possession,1,same,W,"inverted_winger,inside_forward",touchline,final_third,0.15,0.25,0.2,Mezzala melebar ke garis tepi jika winger masuk ke dalam
+rule_bpd_cover_wb,ball_playing_defender,possession,1,same,WB,"complete_wing_back,wing_back",half_space_outer,deep,0.2,0.65,0.3,Bek tengah agak melebar untuk menutupi lubang wingback
+rule_f9_with_ss,false_nine,possession,1,any,AM,shadow_striker,central_corridor,attacking_mid,0.5,0.7,0.1,False nine turun lebih awal memberi ruang untuk shadow striker
+rule_ss_with_f9,shadow_striker,possession,1,any,CF,false_nine,central_corridor,final_third,0.5,0.15,0.1,Shadow striker maju lebih awal menjadi striker utama
+rule_tf_with_p,target_forward,possession,1,any,CF,poacher,central_corridor,attacking_mid,0.5,0.3,0.2,Target man menjemput bola dan memantulkan ke poacher
