@@ -171,7 +171,7 @@ const AllModals = ({
               <button className="mclose" onClick={() => setIsAIChatOpen(false)}>&#x2715;</button>
             </div>
             <div className="chat-log">
-              {chatHistory.length === 0 && <div className="chat-empty">💡 Tanyakan apa saja soal taktik yang sedang kamu susun...</div>}
+              {chatHistory.length === 0 && <div className="chat-empty">💡 Tanyakan apa saja soal taktik sepak bola! (Asisten ini dikonfigurasi khusus untuk membahas sepak bola saja)</div>}
               {chatHistory.map((m, i) => (
                 <div key={i} className={`chat-msg ${m.role === 'user' ? 'user' : 'ai'}`}>
                   {m.role === 'user' ? m.content : <span dangerouslySetInnerHTML={{ __html: m.content.replace(/\n/g, '<br>') }} />}
