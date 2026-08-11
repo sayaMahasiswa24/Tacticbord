@@ -5,7 +5,7 @@ const PitchCanvas = ({
   zoom, setZoom,
   mcRef, drawcRef, trashRef,
   drawTool, dragId, overTrash,
-  getScale, 
+  isLandscape, getPointerCoords,
   onDown, onMove, onUp,        
   onDrawStart, onDrawMove, onDrawEnd,
   curFId,
@@ -20,13 +20,13 @@ const PitchCanvas = ({
     if(!canvasMC || !canvasDC) return;
     
     // --- TOUCH UNTUK DRAG PEMAIN ---
-    const handleTouchStartMC = (e) => { const t = e.touches[0]; const { sx, sy, rect } = getScale(); if(onDown((t.clientX - rect.left)*sx, (t.clientY - rect.top)*sy)) e.preventDefault(); };
-    const handleTouchMoveMC = (e) => { const t = e.touches[0]; const { sx, sy, rect } = getScale(); onMove((t.clientX - rect.left)*sx, (t.clientY - rect.top)*sy, t.clientX, t.clientY); if(dragId !== null) e.preventDefault(); };
-    const handleTouchEndMC = (e) => { const t = e.changedTouches[0]; const { sx, sy, rect } = getScale(); onUp((t.clientX - rect.left)*sx, (t.clientY - rect.top)*sy, t.clientX, t.clientY); };
+    const handleTouchStartMC = (e) => { const t = e.touches[0]; const { x, y } = getPointerCoords(t.clientX, t.clientY); if(onDown(x, y)) e.preventDefault(); };
+    const handleTouchMoveMC = (e) => { const t = e.touches[0]; const { x, y } = getPointerCoords(t.clientX, t.clientY); onMove(x, y, t.clientX, t.clientY); if(dragId !== null) e.preventDefault(); };
+    const handleTouchEndMC = (e) => { const t = e.changedTouches[0]; const { x, y } = getPointerCoords(t.clientX, t.clientY); onUp(x, y, t.clientX, t.clientY); };
     
     // --- TOUCH UNTUK SPIDOL/DRAWING ---
-    const handleTouchStartDC = (e) => { if(drawTool === 'select') return; const t = e.touches[0]; const { sx, sy, rect } = getScale(); onDrawStart((t.clientX - rect.left)*sx, (t.clientY - rect.top)*sy); e.preventDefault(); };
-    const handleTouchMoveDC = (e) => { if(drawTool === 'select') return; const t = e.touches[0]; const { sx, sy, rect } = getScale(); onDrawMove((t.clientX - rect.left)*sx, (t.clientY - rect.top)*sy, canvasDC); e.preventDefault(); };
+    const handleTouchStartDC = (e) => { if(drawTool === 'select') return; const t = e.touches[0]; const { x, y } = getPointerCoords(t.clientX, t.clientY); onDrawStart(x, y); e.preventDefault(); };
+    const handleTouchMoveDC = (e) => { if(drawTool === 'select') return; const t = e.touches[0]; const { x, y } = getPointerCoords(t.clientX, t.clientY); onDrawMove(x, y, canvasDC); e.preventDefault(); };
     const handleTouchEndDC = () => { if(drawTool !== 'select') onDrawEnd(canvasDC); };
 
     canvasMC.addEventListener('touchstart', handleTouchStartMC, { passive: false });
@@ -41,7 +41,7 @@ const PitchCanvas = ({
       canvasMC.removeEventListener('touchstart', handleTouchStartMC); canvasMC.removeEventListener('touchmove', handleTouchMoveMC); canvasMC.removeEventListener('touchend', handleTouchEndMC); 
       canvasDC.removeEventListener('touchstart', handleTouchStartDC); canvasDC.removeEventListener('touchmove', handleTouchMoveDC); canvasDC.removeEventListener('touchend', handleTouchEndDC); 
     };
-  }, [curFId, getScale, onDown, onMove, onUp, onDrawStart, onDrawMove, onDrawEnd, dragId, drawTool, mcRef, drawcRef]);
+  }, [curFId, getPointerCoords, onDown, onMove, onUp, onDrawStart, onDrawMove, onDrawEnd, dragId, drawTool, mcRef, drawcRef]);
 
   return (
     <div className="main">
@@ -55,18 +55,18 @@ const PitchCanvas = ({
         <div className="pitch-wrap">
           <div className="canvas-zoom-wrapper" style={{ width: `${zoom * 100}%`, height: `${zoom * 100}%` }}>
             {/* Kanvas Pemain */}
-            <canvas ref={mcRef} width={460} height={580} id="mc" 
+            <canvas ref={mcRef} width={isLandscape ? 580 : 460} height={isLandscape ? 460 : 580} id="mc" 
               style={{ touchAction: drawTool !== 'select' ? 'none' : 'auto' }}
-              onMouseDown={(e) => { const { sx, sy, rect } = getScale(); if(onDown((e.clientX - rect.left)*sx, (e.clientY - rect.top)*sy)) e.preventDefault(); }}
-              onMouseMove={(e) => { const { sx, sy, rect } = getScale(); onMove((e.clientX - rect.left)*sx, (e.clientY - rect.top)*sy, e.clientX, e.clientY); }}
-              onMouseUp={(e) => { const { sx, sy, rect } = getScale(); onUp((e.clientX - rect.left)*sx, (e.clientY - rect.top)*sy, e.clientX, e.clientY); }}
+              onMouseDown={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); if(onDown(x, y)) e.preventDefault(); }}
+              onMouseMove={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); onMove(x, y, e.clientX, e.clientY); }}
+              onMouseUp={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); onUp(x, y, e.clientX, e.clientY); }}
             />
             {/* Kanvas Spidol */}
-            <canvas ref={drawcRef} width={460} height={580} id="drawc" 
+            <canvas ref={drawcRef} width={isLandscape ? 580 : 460} height={isLandscape ? 460 : 580} id="drawc" 
               className={drawTool !== 'select' ? 'pen-active' : ''} 
               style={{ touchAction: drawTool !== 'select' ? 'none' : 'auto', pointerEvents: drawTool === 'select' ? 'none' : 'auto' }} 
-              onMouseDown={(e) => { const { sx, sy, rect } = getScale(); onDrawStart((e.clientX - rect.left)*sx, (e.clientY - rect.top)*sy); }}
-              onMouseMove={(e) => { const { sx, sy, rect } = getScale(); onDrawMove((e.clientX - rect.left)*sx, (e.clientY - rect.top)*sy, drawcRef.current); }}
+              onMouseDown={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); onDrawStart(x, y); }}
+              onMouseMove={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); onDrawMove(x, y, drawcRef.current); }}
               onMouseUp={() => onDrawEnd(drawcRef.current)}
               onMouseLeave={() => onDrawEnd(drawcRef.current)}
             />

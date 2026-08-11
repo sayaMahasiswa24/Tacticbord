@@ -19,7 +19,26 @@ export default function App() {
   const CW = 460, CH = 580, PX = 18, PY = 14, PW = CW - PX * 2, PH = CH - PY * 2;
   const gx = useCallback((r) => PX + r * PW, [PW]);
   const gy = useCallback((r) => PY + r * PH, [PH]);
-  const getScale = useCallback(() => { const r = mcRef.current?.getBoundingClientRect(); return r ? { sx: CW / r.width, sy: CH / r.height, rect: r } : { sx:1, sy:1, rect:{left:0,top:0} }; }, []);
+  const [isLandscape, setIsLandscape] = useState(() => window.matchMedia('(orientation: landscape)').matches);
+  useEffect(() => {
+    const mql = window.matchMedia('(orientation: landscape)');
+    const onChange = e => setIsLandscape(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  const getPointerCoords = useCallback((clientX, clientY) => {
+    const r = mcRef.current?.getBoundingClientRect();
+    if (!r) return { x: 0, y: 0, rect: {left:0, top:0} };
+    if (isLandscape) {
+      const sx = 580 / r.width;
+      const sy = 460 / r.height;
+      const vx = (clientX - r.left) * sx;
+      const vy = (clientY - r.top) * sy;
+      return { x: 460 - vy, y: vx, rect: r };
+    }
+    return { x: (clientX - r.left) * (460 / r.width), y: (clientY - r.top) * (580 / r.height), rect: r };
+  }, [isLandscape]);
 
   // ── REFS UTAMA ──
   const mcRef = useRef(null);
@@ -79,7 +98,16 @@ export default function App() {
     const overTrash = dragRef?.current?.overTrash;
     const dragging = dragRef?.current?.dragging;
 
-    ctx.clearRect(0, 0, CW, CH);
+    if (isLandscape) {
+      ctx.clearRect(0, 0, 580, 460);
+      ctx.save();
+      ctx.translate(580 / 2, 460 / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.translate(-460 / 2, -580 / 2);
+    } else {
+      ctx.clearRect(0, 0, 460, 580);
+      ctx.save();
+    }
     
     // Background Lapangan
     ctx.fillStyle = '#1a5c2e'; ctx.fillRect(0,0,CW,CH);
@@ -185,7 +213,8 @@ export default function App() {
       ctx.font='800 11.5px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillStyle= roleId ? '#ffffff' : 'rgba(255,255,255,.7)'; ctx.fillText(POS_LABEL[p.posType] || p.posType, p.cx, p.cy);
     });
-  }, [players, enemies, assignedRoles, overlays, dragRef]); // overlays sudah dimasukkan agar Zona re-render
+    ctx.restore();
+  }, [players, enemies, assignedRoles, overlays, dragRef, isLandscape]); // overlays sudah dimasukkan agar Zona re-render
 
   const { phase, triggerPhase: simTrigger, stopSim, startLoop, animRef } = useSimulation(players, setPlayers, enemies, setEnemies, assignedRoles, activeStyleId, simSpd, renderPitch, curFId, setAssignedRoles);
 
@@ -279,7 +308,7 @@ export default function App() {
       <PitchCanvas 
         zoom={zoom} mcRef={mcRef} drawcRef={drawcRef} trashRef={trashRef}
         drawTool={drawTool} dragId={dragRef.current?.id} overTrash={dragRef.current?.overTrash}
-        getScale={getScale} onDown={onDown} onMove={onMove} onUp={onUp} 
+        isLandscape={isLandscape} getPointerCoords={getPointerCoords} onDown={onDown} onMove={onMove} onUp={onUp} 
         onDrawStart={handleDrawStart} onDrawMove={handleDrawMove} onDrawEnd={handleDrawEnd}
         curFId={curFId}
         phase={phase} triggerPhase={(ph) => simTrigger(ph, gx, gy)} simSpd={simSpd} setSimSpd={setSimSpd}

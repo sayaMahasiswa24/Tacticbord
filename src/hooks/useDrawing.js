@@ -9,8 +9,16 @@ export const useDrawing = () => {
   const redrawDrawings = useCallback((canvas, paths = drawingPaths) => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    const isLandscape = canvas.width > canvas.height;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    ctx.save();
+    if (isLandscape) {
+      ctx.translate(580 / 2, 460 / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.translate(-460 / 2, -580 / 2);
+    }
+
     paths.forEach(p => {
       if (!p || !p.points || p.points.length === 0) return;
       ctx.beginPath();
@@ -42,6 +50,7 @@ export const useDrawing = () => {
         ctx.stroke();
       }
     });
+    ctx.restore();
   }, [drawingPaths]);
 
   const handleDrawStart = useCallback((x, y) => {
