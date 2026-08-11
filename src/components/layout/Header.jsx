@@ -10,6 +10,7 @@ const Header = ({
     <header className="header">
       <div className="logo">
         <img src="/logo.png" alt="TacticBoard" style={{ height: '40px', objectFit: 'contain' }} />
+        <div className="logo-text">TacticBoard</div>
       </div>
 
       <div className="header-mid">
