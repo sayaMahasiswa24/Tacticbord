@@ -69,6 +69,15 @@ export default function App() {
   const [isLoadOpen, setIsLoadOpen] = useState(false);
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeenTutorial = localStorage.getItem('tacticbord_tutorial_seen');
+    if (!hasSeenTutorial) {
+      setIsTutorialOpen(true);
+      localStorage.setItem('tacticbord_tutorial_seen', 'true');
+    }
+  }, []);
   const [saveName, setSaveName] = useState('');
   const [saveNote, setSaveNote] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
@@ -324,6 +333,7 @@ export default function App() {
       <div className={`toast ${toastData.show ? 'show' : ''}`}><div className="t-dot" style={{background: toastData.col}}></div><span>{toastData.msg}</span></div>
 
       <AllModals 
+        isTutorialOpen={isTutorialOpen} setIsTutorialOpen={setIsTutorialOpen}
         selectedPlayer={selectedPlayer} setSelectedPlayer={setSelectedPlayer} pendingRole={pendingRole} setPendingRole={setPendingRole} setAssignedRoles={setAssignedRoles}
         isStyleModalOpen={isStyleModalOpen} setIsStyleModalOpen={setIsStyleModalOpen} applyStyle={applyStyle} activeStyleId={activeStyleId}
         isBrowserOpen={isBrowserOpen} setIsBrowserOpen={setIsBrowserOpen}

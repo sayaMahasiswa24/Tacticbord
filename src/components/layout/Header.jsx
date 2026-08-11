@@ -9,11 +9,7 @@ const Header = ({
   return (
     <header className="header">
       <div className="logo">
-        <div className="logo-icon">⚽</div>
-        <div>
-          <div className="logo-text">TacticBoard</div>
-          <div className="logo-sub">On-Field Coaching Mode</div>
-        </div>
+        <img src="/logo.png" alt="TacticBoard" style={{ height: '40px', objectFit: 'contain' }} />
       </div>
 
       <div className="header-mid">
