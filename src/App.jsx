@@ -10,7 +10,6 @@ import { useDragAndDrop } from './hooks/useDragAndDrop';
 import { useDrawing } from './hooks/useDrawing';
 // 3. Components
 import Header from './components/layout/Header';
-import PhaseToolbar from './components/layout/PhaseToolbar';
 import BottomBar from './components/layout/BottomBar';
 import PitchCanvas from './components/pitch/PitchCanvas';
 import AllModals from './components/modals/AllModals';
@@ -275,14 +274,16 @@ export default function App() {
         setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen} isSettingsOpen={isSettingsOpen} setIsSettingsOpen={setIsSettingsOpen}
         setIsAIChatOpen={setIsAIChatOpen} setIsBrowserOpen={setIsBrowserOpen}
       />
-      <PhaseToolbar phase={phase} triggerPhase={(ph) => simTrigger(ph, gx, gy)} simSpd={simSpd} setSimSpd={setSimSpd} overlays={overlays} setOverlays={setOverlays} />
+      
       
       <PitchCanvas 
-        zoom={zoom} setZoom={setZoom} mcRef={mcRef} drawcRef={drawcRef} trashRef={trashRef}
+        zoom={zoom} mcRef={mcRef} drawcRef={drawcRef} trashRef={trashRef}
         drawTool={drawTool} dragId={dragRef.current?.id} overTrash={dragRef.current?.overTrash}
         getScale={getScale} onDown={onDown} onMove={onMove} onUp={onUp} 
         onDrawStart={handleDrawStart} onDrawMove={handleDrawMove} onDrawEnd={handleDrawEnd}
         curFId={curFId}
+        phase={phase} triggerPhase={(ph) => simTrigger(ph, gx, gy)} simSpd={simSpd} setSimSpd={setSimSpd}
+        overlays={overlays} setOverlays={setOverlays} setZoom={setZoom}
       />
       
       <BottomBar 

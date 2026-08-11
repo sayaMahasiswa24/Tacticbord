@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PitchSidebar from '../layout/PitchSidebar';
 
 const PitchCanvas = ({
   zoom, setZoom,
@@ -7,7 +8,9 @@ const PitchCanvas = ({
   getScale, 
   onDown, onMove, onUp,        
   onDrawStart, onDrawMove, onDrawEnd,
-  curFId
+  curFId,
+  phase, triggerPhase, simSpd, setSimSpd,
+  overlays, setOverlays
 }) => {
   
   // Event Listener Touch untuk HP/Tablet
@@ -43,12 +46,12 @@ const PitchCanvas = ({
   return (
     <div className="main">
       <div className="pitch-col">
-        <div className="zoom-controls">
-          <button className="zoom-btn" onClick={() => setZoom(z => Math.min(z + 0.2, 2.5))}>+</button>
-          <button className="zoom-btn" onClick={() => setZoom(1)} style={{fontSize: '11px', fontWeight: 'bold'}}>1x</button>
-          <button className="zoom-btn" onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))}>-</button>
-        </div>
-        
+        <PitchSidebar 
+          phase={phase} triggerPhase={triggerPhase}
+          simSpd={simSpd} setSimSpd={setSimSpd}
+          overlays={overlays} setOverlays={setOverlays}
+          zoom={zoom} setZoom={setZoom}
+        />
         <div className="pitch-wrap">
           <div className="canvas-zoom-wrapper" style={{ width: `${zoom * 100}%`, height: `${zoom * 100}%` }}>
             {/* Kanvas Pemain */}
