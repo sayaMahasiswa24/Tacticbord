@@ -1,21 +1,17 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './App.css';
-// 1. Data & Helpers (Pastikan ZBANDS dan STYLE_PRESETS ikut ter-import)
 import { FORMATIONS, TC, TB, POS_LABEL, ICON_R_NORMAL, ICON_R_DRAG, ZBANDS, STYLE_PRESETS } from './data/tacticData';
 import { lighten } from './utils/helpers';
-// 2. Custom Hooks
 import { usePitchZoom } from './hooks/usePitchZoom';
 import { useSimulation } from './hooks/useSimulation';
 import { useDragAndDrop } from './hooks/useDragAndDrop';
 import { useDrawing } from './hooks/useDrawing';
-// 3. Components
 import Header from './components/layout/Header';
 import BottomBar from './components/layout/BottomBar';
 import PitchCanvas from './components/pitch/PitchCanvas';
 import AllModals from './components/modals/AllModals';
 
 export default function App() {
-  // ── KONSTANTA LAPANGAN ──
   const CW = 460, CH = 580, PX = 18, PY = 14, PW = CW - PX * 2, PH = CH - PY * 2;
   const gx = useCallback((r) => PX + r * PW, [PW]);
   const gy = useCallback((r) => PY + r * PH, [PH]);
@@ -40,14 +36,11 @@ export default function App() {
     return { x: (clientX - r.left) * (460 / r.width), y: (clientY - r.top) * (580 / r.height), rect: r };
   }, [isLandscape]);
 
-  // ── REFS UTAMA ──
   const mcRef = useRef(null);
   const drawcRef = useRef(null);
   const trashRef = useRef(null);
   const toastTimerRef = useRef(null);
   const resetHoldRef = useRef({ start: null, raf: null });
-
-  // ── STATES GLOBAL ──
   const [curFId, setCurFId] = useState('433');
   const [players, setPlayers] = useState(() => FORMATIONS['433'].players.map(p => ({ ...p, cx: gx(p.x), cy: gy(p.y) })));
   const [enemies, setEnemies] = useState([]);
@@ -85,13 +78,8 @@ export default function App() {
   const [chatBusy, setChatBusy] = useState(false);
   const [isHoldingReset, setIsHoldingReset] = useState(false);
   const [resetHoldProgress, setResetHoldProgress] = useState(0);
-
-  // ── INIT CUSTOM HOOKS ──
   const { zoom, setZoom } = usePitchZoom(1);
-  
-  // PENYEBAB ERROR KEMARIN: drawingPaths belum dikeluarkan di sini, sekarang sudah ada.
   const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, clearDrawings, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
-  
   const { dragRef, onDown: dragDown, onMove: dragMove, onUp: dragUp } = useDragAndDrop(
     players, setPlayers, assignedRoles, setAssignedRoles, setSelectedPlayer, setPendingRole, 
     () => animRef?.current?.startLoop?.(), 
@@ -99,7 +87,6 @@ export default function App() {
     PX, PY, PW, PH
   );
 
-  // ── FUNGSI RENDER LAPANGAN ──
   const renderPitch = useCallback(() => {
     const canvas = mcRef.current; if(!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -118,43 +105,29 @@ export default function App() {
       ctx.save();
     }
     
-    // Background Lapangan
     ctx.fillStyle = '#1a5c2e'; ctx.fillRect(0,0,CW,CH);
     for(let i=0;i<6;i++){ ctx.fillStyle = i%2 ? '#1a5c2e' : '#1e6834'; ctx.fillRect(PX, PY+i*PH/6, PW, PH/6); }
     
     ctx.strokeStyle = 'rgba(255,255,255,.32)'; 
     ctx.fillStyle = 'rgba(255,255,255,.32)';
     ctx.lineWidth = 1.3; 
-    
-    // Garis luar
     ctx.strokeRect(PX, PY, PW, PH);
-    
-    // Garis tengah
     ctx.beginPath(); ctx.moveTo(PX, PY+PH/2); ctx.lineTo(PX+PW, PY+PH/2); ctx.stroke();
-    
-    // Lingkaran tengah & titik tengah
     ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH/2, 36, 0, Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH/2, 2, 0, Math.PI*2); ctx.fill();
-
-    // Area penalti & area gawang (Atas)
-    ctx.strokeRect(PX+PW/2 - 120, PY, 240, 80); // Kotak penalti
-    ctx.strokeRect(PX+PW/2 - 50, PY, 100, 30);  // Kotak kiper
-    ctx.beginPath(); ctx.arc(PX+PW/2, PY+60, 2, 0, Math.PI*2); ctx.fill(); // Titik penalti
-    ctx.beginPath(); ctx.arc(PX+PW/2, PY+60, 40, Math.PI/6, Math.PI - Math.PI/6); ctx.stroke(); // Busur penalti
-    
-    // Area penalti & area gawang (Bawah)
-    ctx.strokeRect(PX+PW/2 - 120, PY+PH - 80, 240, 80); // Kotak penalti
-    ctx.strokeRect(PX+PW/2 - 50, PY+PH - 30, 100, 30);  // Kotak kiper
-    ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH - 60, 2, 0, Math.PI*2); ctx.fill(); // Titik penalti
-    ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH - 60, 40, Math.PI + Math.PI/6, Math.PI*2 - Math.PI/6); ctx.stroke(); // Busur penalti
-
-    // Sudut lapangan (Corner arcs)
+    ctx.strokeRect(PX+PW/2 - 120, PY, 240, 80); 
+    ctx.strokeRect(PX+PW/2 - 50, PY, 100, 30);  
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+60, 2, 0, Math.PI*2); ctx.fill(); 
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+60, 40, Math.PI/6, Math.PI - Math.PI/6); ctx.stroke();
+    ctx.strokeRect(PX+PW/2 - 120, PY+PH - 80, 240, 80);
+    ctx.strokeRect(PX+PW/2 - 50, PY+PH - 30, 100, 30); 
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH - 60, 2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(PX+PW/2, PY+PH - 60, 40, Math.PI + Math.PI/6, Math.PI*2 - Math.PI/6); ctx.stroke();
     ctx.beginPath(); ctx.arc(PX, PY, 10, 0, Math.PI/2); ctx.stroke();
     ctx.beginPath(); ctx.arc(PX+PW, PY, 10, Math.PI/2, Math.PI); ctx.stroke();
     ctx.beginPath(); ctx.arc(PX+PW, PY+PH, 10, Math.PI, 1.5*Math.PI); ctx.stroke();
     ctx.beginPath(); ctx.arc(PX, PY+PH, 10, 1.5*Math.PI, 2*Math.PI); ctx.stroke();
 
-    // RENDER ZONA (ZBANDS)
     if (overlays.zone) {
       let lastY = 0;
       ZBANDS.forEach(b => {
@@ -169,7 +142,6 @@ export default function App() {
       });
     }
 
-    // RENDER GARIS PASSING
     if (overlays.pass) {
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(255,255,255,0.15)';
@@ -187,18 +159,15 @@ export default function App() {
       ctx.stroke();
     }
     
-    // Enemy Shadow
     enemiesRef.current.forEach(ep => {
       ctx.beginPath(); ctx.arc(ep.cx, ep.cy, ICON_R_NORMAL, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(239, 68, 68, 0.4)'; // Transparent red
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.4)';
       ctx.fill();
       ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
       ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 4]); // Dashed line for shadow effect
+      ctx.setLineDash([4, 4]);
       ctx.stroke();
       ctx.setLineDash([]);
-      
-      // Draw role or position
       ctx.font = '800 11.5px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
       ctx.fillText(POS_LABEL[ep.posType] || ep.posType, ep.cx, ep.cy);
