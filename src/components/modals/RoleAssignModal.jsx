@@ -1,10 +1,8 @@
 import React from 'react';
 import { TC, POS_LABEL } from '../../data/tacticData';
 import { rolesForPlayer } from '../../utils/helpers';
-
 const RoleAssignModal = ({ selectedPlayer, setSelectedPlayer, pendingRole, setPendingRole, setAssignedRoles }) => {
   if (!selectedPlayer) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setSelectedPlayer(null); }}>
       <div className="modal">
@@ -46,5 +44,4 @@ const RoleAssignModal = ({ selectedPlayer, setSelectedPlayer, pendingRole, setPe
     </div>
   );
 };
-
 export default RoleAssignModal;

@@ -854,72 +854,10 @@ export const ROLE_MASTER = [
     "defendSP": "edge_box",
     "desc": "Playmaker ofensif yang dibebaskan dari tugas bertahan sama sekali agar bisa fokus mencari ruang kreatif sebagai motor serangan."
   }
-];
-
-export const FORMATIONS = {
-  '433': { name:'4-3-3', players:[
-    {id:0,posType:'GK',side:'center',x:.50,y:.91},
-    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
-    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
-    {id:5,posType:'DM',side:'center',x:.50,y:.63},
-    {id:6,posType:'CM',side:'left',x:.32,y:.52},{id:7,posType:'CM',side:'right',x:.68,y:.52},
-    {id:8,posType:'W',side:'left',x:.10,y:.29},{id:9,posType:'CF',side:'center',x:.50,y:.21},
-    {id:10,posType:'W',side:'right',x:.90,y:.29},
-  ]},
-  '442': { name:'4-4-2', players:[
-    {id:0,posType:'GK',side:'center',x:.50,y:.91},
-    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
-    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
-    {id:5,posType:'W',side:'left',x:.10,y:.57},{id:6,posType:'CM',side:'left',x:.37,y:.57},
-    {id:7,posType:'CM',side:'right',x:.63,y:.57},{id:8,posType:'W',side:'right',x:.90,y:.57},
-    {id:9,posType:'CF',side:'left',x:.37,y:.27},{id:10,posType:'CF',side:'right',x:.63,y:.27},
-  ]},
-  '4231': { name:'4-2-3-1', players:[
-    {id:0,posType:'GK',side:'center',x:.50,y:.91},
-    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
-    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
-    {id:5,posType:'DM',side:'left',x:.37,y:.64},{id:6,posType:'DM',side:'right',x:.63,y:.64},
-    {id:7,posType:'W',side:'left',x:.12,y:.44},{id:8,posType:'AM',side:'center',x:.50,y:.44},
-    {id:9,posType:'W',side:'right',x:.88,y:.44},{id:10,posType:'CF',side:'center',x:.50,y:.22},
-  ]},
-  '4132': { name:'4-1-3-2 (Diamond)', players:[
-    {id:0,posType:'GK',side:'center',x:.50,y:.91},
-    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},
-    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},
-    {id:5,posType:'DM',side:'center',x:.50,y:.66},
-    {id:6,posType:'CM',side:'left',x:.30,y:.52},{id:7,posType:'AM',side:'center',x:.50,y:.40},
-    {id:8,posType:'CM',side:'right',x:.70,y:.52},
-    {id:9,posType:'CF',side:'left',x:.38,y:.25},{id:10,posType:'CF',side:'right',x:.62,y:.25},
-  ]},
-  '352': { name:'3-5-2', players:[
-    {id:0,posType:'GK',side:'center',x:.50,y:.91},
-    {id:1,posType:'CB',side:'left',x:.27,y:.80},{id:2,posType:'CB',side:'center',x:.50,y:.82},
-    {id:3,posType:'CB',side:'right',x:.73,y:.80},
-    {id:4,posType:'WB',side:'left',x:.08,y:.62},{id:5,posType:'CM',side:'left',x:.32,y:.53},
-    {id:6,posType:'DM',side:'center',x:.50,y:.62},{id:7,posType:'CM',side:'right',x:.68,y:.53},
-    {id:8,posType:'WB',side:'right',x:.92,y:.62},
-    {id:9,posType:'CF',side:'left',x:.37,y:.27},{id:10,posType:'CF',side:'right',x:.63,y:.27},
-  ]},
-  '343': { name:'3-4-3', players:[
-    {id:0,posType:'GK',side:'center',x:.50,y:.91},
-    {id:1,posType:'CB',side:'left',x:.27,y:.80},{id:2,posType:'CB',side:'center',x:.50,y:.82},
-    {id:3,posType:'CB',side:'right',x:.73,y:.80},
-    {id:4,posType:'WB',side:'left',x:.08,y:.58},{id:5,posType:'CM',side:'left',x:.36,y:.53},
-    {id:6,posType:'CM',side:'right',x:.64,y:.53},{id:7,posType:'WB',side:'right',x:.92,y:.58},
-    {id:8,posType:'W',side:'left',x:.16,y:.28},{id:9,posType:'CF',side:'center',x:.50,y:.21},
-    {id:10,posType:'W',side:'right',x:.84,y:.28},
-  ]},
-  '541': { name:'5-4-1', players:[
-    {id:0,posType:'GK',side:'center',x:.50,y:.91},
-    {id:1,posType:'WB',side:'left',x:.08,y:.70},{id:2,posType:'CB',side:'left',x:.27,y:.80},
-    {id:3,posType:'CB',side:'center',x:.50,y:.82},{id:4,posType:'CB',side:'right',x:.73,y:.80},
-    {id:5,posType:'WB',side:'right',x:.92,y:.70},
-    {id:6,posType:'CM',side:'left',x:.12,y:.57},{id:7,posType:'DM',side:'left',x:.37,y:.64},
-    {id:8,posType:'DM',side:'right',x:.63,y:.64},{id:9,posType:'CM',side:'right',x:.88,y:.57},
+];export const FORMATIONS = {  '433': { name:'4-3-3', players:[    {id:0,posType:'GK',side:'center',x:.50,y:.91},    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},    {id:5,posType:'DM',side:'center',x:.50,y:.63},    {id:6,posType:'CM',side:'left',x:.32,y:.52},{id:7,posType:'CM',side:'right',x:.68,y:.52},    {id:8,posType:'W',side:'left',x:.10,y:.29},{id:9,posType:'CF',side:'center',x:.50,y:.21},    {id:10,posType:'W',side:'right',x:.90,y:.29},  ]},  '442': { name:'4-4-2', players:[    {id:0,posType:'GK',side:'center',x:.50,y:.91},    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},    {id:5,posType:'W',side:'left',x:.10,y:.57},{id:6,posType:'CM',side:'left',x:.37,y:.57},    {id:7,posType:'CM',side:'right',x:.63,y:.57},{id:8,posType:'W',side:'right',x:.90,y:.57},    {id:9,posType:'CF',side:'left',x:.37,y:.27},{id:10,posType:'CF',side:'right',x:.63,y:.27},  ]},  '4231': { name:'4-2-3-1', players:[    {id:0,posType:'GK',side:'center',x:.50,y:.91},    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},    {id:5,posType:'DM',side:'left',x:.37,y:.64},{id:6,posType:'DM',side:'right',x:.63,y:.64},    {id:7,posType:'W',side:'left',x:.12,y:.44},{id:8,posType:'AM',side:'center',x:.50,y:.44},    {id:9,posType:'W',side:'right',x:.88,y:.44},{id:10,posType:'CF',side:'center',x:.50,y:.22},  ]},  '4132': { name:'4-1-3-2 (Diamond)', players:[    {id:0,posType:'GK',side:'center',x:.50,y:.91},    {id:1,posType:'FB',side:'left',x:.13,y:.78},{id:2,posType:'CB',side:'left',x:.37,y:.79},    {id:3,posType:'CB',side:'right',x:.63,y:.79},{id:4,posType:'FB',side:'right',x:.87,y:.78},    {id:5,posType:'DM',side:'center',x:.50,y:.66},    {id:6,posType:'CM',side:'left',x:.30,y:.52},{id:7,posType:'AM',side:'center',x:.50,y:.40},    {id:8,posType:'CM',side:'right',x:.70,y:.52},    {id:9,posType:'CF',side:'left',x:.38,y:.25},{id:10,posType:'CF',side:'right',x:.62,y:.25},  ]},  '352': { name:'3-5-2', players:[    {id:0,posType:'GK',side:'center',x:.50,y:.91},    {id:1,posType:'CB',side:'left',x:.27,y:.80},{id:2,posType:'CB',side:'center',x:.50,y:.82},    {id:3,posType:'CB',side:'right',x:.73,y:.80},    {id:4,posType:'WB',side:'left',x:.08,y:.62},{id:5,posType:'CM',side:'left',x:.32,y:.53},    {id:6,posType:'DM',side:'center',x:.50,y:.62},{id:7,posType:'CM',side:'right',x:.68,y:.53},    {id:8,posType:'WB',side:'right',x:.92,y:.62},    {id:9,posType:'CF',side:'left',x:.37,y:.27},{id:10,posType:'CF',side:'right',x:.63,y:.27},  ]},  '343': { name:'3-4-3', players:[    {id:0,posType:'GK',side:'center',x:.50,y:.91},    {id:1,posType:'CB',side:'left',x:.27,y:.80},{id:2,posType:'CB',side:'center',x:.50,y:.82},    {id:3,posType:'CB',side:'right',x:.73,y:.80},    {id:4,posType:'WB',side:'left',x:.08,y:.58},{id:5,posType:'CM',side:'left',x:.36,y:.53},    {id:6,posType:'CM',side:'right',x:.64,y:.53},{id:7,posType:'WB',side:'right',x:.92,y:.58},    {id:8,posType:'W',side:'left',x:.16,y:.28},{id:9,posType:'CF',side:'center',x:.50,y:.21},    {id:10,posType:'W',side:'right',x:.84,y:.28},  ]},  '541': { name:'5-4-1', players:[    {id:0,posType:'GK',side:'center',x:.50,y:.91},    {id:1,posType:'WB',side:'left',x:.08,y:.70},{id:2,posType:'CB',side:'left',x:.27,y:.80},    {id:3,posType:'CB',side:'center',x:.50,y:.82},{id:4,posType:'CB',side:'right',x:.73,y:.80},    {id:5,posType:'WB',side:'right',x:.92,y:.70},    {id:6,posType:'CM',side:'left',x:.12,y:.57},{id:7,posType:'DM',side:'left',x:.37,y:.64},    {id:8,posType:'DM',side:'right',x:.63,y:.64},{id:9,posType:'CM',side:'right',x:.88,y:.57},
     {id:10,posType:'CF',side:'center',x:.50,y:.26},
   ]},
 };
-
 export const STYLE_PRESETS = {
   tiki_taka: {
     name: 'Tiki-Taka', emoji: '🔴🔵', formation: '433',
@@ -958,26 +896,9 @@ export const STYLE_PRESETS = {
     modifiers: { widthMult: 0.65, depthMult: 0.45, tempoMult: 1.30, pressBoost: -0.20 },
   },
 };
-
 export const TC = {GK:'#2563eb',CB:'#0891b2',FB:'#0ea5e9',WB:'#0284c7',DM:'#7c3aed',CM:'#6366f1',AM:'#9333ea',W:'#ea580c',CF:'#dc2626'};
 export const TB = {GK:'#1e40af',CB:'#0e7490',FB:'#0369a1',WB:'#075985',DM:'#4c1d95',CM:'#3730a3',AM:'#7e22ce',W:'#c2410c',CF:'#991b1b'};
-export const POS_LABEL = {GK:'GK',CB:'CB',FB:'FB',WB:'WB',DM:'DM',CM:'CM',AM:'AM',W:'W',CF:'CF'};
-
-export const ICON_R_NORMAL = 18;
-export const ICON_R_DRAG = 21;
-export const HIT_RADIUS = 24;
-export const WT = 0.28;
-
-export const ZBANDS = [
-  {m:.28,bg:'rgba(220,38,38,.07)',tc:'rgba(248,113,113,.5)',l:'CF · W (att)'},
-  {m:.44,bg:'rgba(234,88,12,.07)',tc:'rgba(251,146,60,.5)',l:'AM · W'},
-  {m:.58,bg:'rgba(99,102,241,.08)',tc:'rgba(165,180,252,.5)',l:'CM'},
-  {m:.72,bg:'rgba(124,58,237,.08)',tc:'rgba(196,181,253,.5)',l:'DM · WB'},
-  {m:.88,bg:'rgba(8,145,178,.08)',tc:'rgba(103,232,249,.5)',l:'CB · FB'},
-  {m:1,bg:'rgba(37,99,235,.12)',tc:'rgba(147,197,253,.5)',l:'GK'},
-];
-// --- AUTO GENERATED FROM DB ---
-
+export const POS_LABEL = {GK:'GK',CB:'CB',FB:'FB',WB:'WB',DM:'DM',CM:'CM',AM:'AM',W:'W',CF:'CF'};export const ICON_R_NORMAL = 18;export const ICON_R_DRAG = 21;export const HIT_RADIUS = 24;export const WT = 0.28;export const ZBANDS = [  {m:.28,bg:'rgba(220,38,38,.07)',tc:'rgba(248,113,113,.5)',l:'CF · W (att)'},  {m:.44,bg:'rgba(234,88,12,.07)',tc:'rgba(251,146,60,.5)',l:'AM · W'},  {m:.58,bg:'rgba(99,102,241,.08)',tc:'rgba(165,180,252,.5)',l:'CM'},  {m:.72,bg:'rgba(124,58,237,.08)',tc:'rgba(196,181,253,.5)',l:'DM · WB'},  {m:.88,bg:'rgba(8,145,178,.08)',tc:'rgba(103,232,249,.5)',l:'CB · FB'},  {m:1,bg:'rgba(37,99,235,.12)',tc:'rgba(147,197,253,.5)',l:'GK'},];
 export const ROLE_PHASE_MOVEMENT = [
   {
     "id": 1,
@@ -4220,7 +4141,6 @@ export const ROLE_PHASE_MOVEMENT = [
     "lose_ball_delay_sec": 0.2
   }
 ];
-
 export const ROLE_CONDITIONAL_RULES = [
   {
     "rule_id": "rule_fb_overlap_iw",
@@ -4373,7 +4293,6 @@ export const ROLE_CONDITIONAL_RULES = [
     "notes": "Target man menjemput bola dan memantulkan ke poacher"
   }
 ];
-
 export const ROLE_FORMATION_OVERRIDE = [
   {
     "override_id": "ovr_cwb_532_pos",

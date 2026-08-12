@@ -1,9 +1,7 @@
 import React from 'react';
 import { ROLE_MASTER, TC } from '../../data/tacticData';
-
 const RoleBrowserModal = ({ isBrowserOpen, setIsBrowserOpen }) => {
   if (!isBrowserOpen) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setIsBrowserOpen(false); }}>
       <div className="modal wide">
@@ -35,5 +33,4 @@ const RoleBrowserModal = ({ isBrowserOpen, setIsBrowserOpen }) => {
     </div>
   );
 };
-
 export default RoleBrowserModal;

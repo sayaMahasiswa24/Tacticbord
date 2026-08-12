@@ -1,8 +1,6 @@
 import React from 'react';
-
 const ResetConfirmModal = ({ isResetConfirmOpen, setIsResetConfirmOpen, doFullReset }) => {
   if (!isResetConfirmOpen) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setIsResetConfirmOpen(false); }}>
       <div className="modal">
@@ -16,5 +14,4 @@ const ResetConfirmModal = ({ isResetConfirmOpen, setIsResetConfirmOpen, doFullRe
     </div>
   );
 };
-
 export default ResetConfirmModal;

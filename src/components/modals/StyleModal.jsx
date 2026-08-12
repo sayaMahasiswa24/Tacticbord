@@ -1,9 +1,7 @@
 import React from 'react';
 import { FORMATIONS, STYLE_PRESETS } from '../../data/tacticData';
-
 const StyleModal = ({ isStyleModalOpen, setIsStyleModalOpen, applyStyle, activeStyleId }) => {
   if (!isStyleModalOpen) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setIsStyleModalOpen(false); }}>
       <div className="modal wide">
@@ -31,5 +29,4 @@ const StyleModal = ({ isStyleModalOpen, setIsStyleModalOpen, applyStyle, activeS
     </div>
   );
 };
-
 export default StyleModal;

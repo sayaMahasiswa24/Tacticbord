@@ -1,8 +1,6 @@
 import React from 'react';
-
 const LoadTacticModal = ({ isLoadOpen, setIsLoadOpen, loadTacticFromStorage, deleteSaveFromStorage }) => {
   if (!isLoadOpen) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setIsLoadOpen(false); }}>
       <div className="modal wide">
@@ -29,5 +27,4 @@ const LoadTacticModal = ({ isLoadOpen, setIsLoadOpen, loadTacticFromStorage, del
     </div>
   );
 };
-
 export default LoadTacticModal;

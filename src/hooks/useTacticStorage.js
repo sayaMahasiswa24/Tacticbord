@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { FORMATIONS } from '../data/tacticData';
-
 export const useTacticStorage = ({
   curFId, setCurFId,
   players, setPlayers,
@@ -14,7 +13,6 @@ export const useTacticStorage = ({
   const [isLoadOpen, setIsLoadOpen] = useState(false);
   const [saveName, setSaveName] = useState('');
   const [saveNote, setSaveNote] = useState('');
-
   const saveTacticToStorage = () => {
     if (!saveName.trim()) {
       showToast('Nama taktik tidak boleh kosong', '#ef4444');
@@ -39,30 +37,25 @@ export const useTacticStorage = ({
     setSaveNote('');
     showToast('Taktik berhasil disimpan', '#16a34a');
   };
-
   const loadTacticFromStorage = (idx) => {
     const saves = JSON.parse(localStorage.getItem('tacticbord_v2') || '[]');
     const save = saves[idx];
     if (!save) return;
-    
     stopSim();
     const baseFormation = FORMATIONS[save.formation] || { players: [] };
     const mergedPlayers = save.players.map(sp => {
       const bp = baseFormation.players.find(p => p.id === sp.id) || {};
       return { ...bp, ...sp };
     });
-
     setCurFId(save.formation);
     setPlayers(mergedPlayers);
     setEnemies(save.enemies || []);
     setAssignedRoles(save.assignedRoles || {});
     setActiveStyleId(save.activeStyleId || null);
     setOverlays(save.overlays || { zone: true, pass: false });
-    
     setIsLoadOpen(false);
     showToast('Taktik berhasil dimuat', '#16a34a');
   };
-
   const deleteSaveFromStorage = (e, idx) => {
     e.stopPropagation();
     const saves = JSON.parse(localStorage.getItem('tacticbord_v2') || '[]');
@@ -70,7 +63,6 @@ export const useTacticStorage = ({
     localStorage.setItem('tacticbord_v2', JSON.stringify(saves));
     showToast('Taktik dihapus', '#6b7280');
   };
-
   return {
     isSaveOpen, setIsSaveOpen,
     isLoadOpen, setIsLoadOpen,

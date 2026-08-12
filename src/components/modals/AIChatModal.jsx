@@ -1,8 +1,6 @@
 import React from 'react';
-
 const AIChatModal = ({ isAIChatOpen, setIsAIChatOpen, chatHistory, chatInput, setChatInput, chatBusy, sendChatMessage }) => {
   if (!isAIChatOpen) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setIsAIChatOpen(false); }}>
       <div className="modal chat-modal" onClick={(e) => e.stopPropagation()}>
@@ -28,5 +26,4 @@ const AIChatModal = ({ isAIChatOpen, setIsAIChatOpen, chatHistory, chatInput, se
     </div>
   );
 };
-
 export default AIChatModal;

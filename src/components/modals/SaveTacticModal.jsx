@@ -1,8 +1,6 @@
 import React from 'react';
-
 const SaveTacticModal = ({ isSaveOpen, setIsSaveOpen, saveName, setSaveName, saveNote, setSaveNote, saveTacticToStorage }) => {
   if (!isSaveOpen) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setIsSaveOpen(false); }}>
       <div className="modal">
@@ -20,5 +18,4 @@ const SaveTacticModal = ({ isSaveOpen, setIsSaveOpen, saveName, setSaveName, sav
     </div>
   );
 };
-
 export default SaveTacticModal;

@@ -7,7 +7,6 @@ import LoadTacticModal from './LoadTacticModal';
 import AIChatModal from './AIChatModal';
 import ResetConfirmModal from './ResetConfirmModal';
 import TutorialModal from './TutorialModal';
-
 const AllModals = ({
   selectedPlayer, setSelectedPlayer, pendingRole, setPendingRole, setAssignedRoles,
   isStyleModalOpen, setIsStyleModalOpen, applyStyle, activeStyleId,
@@ -73,5 +72,4 @@ const AllModals = ({
     </>
   );
 };
-
 export default AllModals;

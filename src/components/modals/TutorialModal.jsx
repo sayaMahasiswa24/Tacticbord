@@ -1,8 +1,6 @@
 import React from 'react';
-
 const TutorialModal = ({ isTutorialOpen, setIsTutorialOpen }) => {
   if (!isTutorialOpen) return null;
-
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setIsTutorialOpen(false); }}>
       <div className="modal wide">
@@ -41,5 +39,4 @@ const TutorialModal = ({ isTutorialOpen, setIsTutorialOpen }) => {
     </div>
   );
 };
-
 export default TutorialModal;

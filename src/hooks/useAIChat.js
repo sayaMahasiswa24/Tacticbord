@@ -1,18 +1,15 @@
 import { useState } from 'react';
-
 export const useAIChat = (curFId, assignedRoles, showToast) => {
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
   const [chatInput, setChatInput] = useState('');
   const [chatBusy, setChatBusy] = useState(false);
-
   const sendChatMessage = async () => {
     if (!chatInput.trim() || chatBusy) return;
     const msg = chatInput.trim();
     setChatInput('');
     setChatHistory(prev => [...prev, { role: 'user', content: msg }]);
     setChatBusy(true);
-
     try {
       const res = await fetch('http://localhost:8787/api/chat', {
         method: 'POST',
@@ -34,7 +31,6 @@ export const useAIChat = (curFId, assignedRoles, showToast) => {
       setChatBusy(false);
     }
   };
-
   return {
     isAIChatOpen,
     setIsAIChatOpen,

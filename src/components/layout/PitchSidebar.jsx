@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 const PitchSidebar = ({
   phase, triggerPhase,
   simSpd, setSimSpd,
@@ -7,19 +6,16 @@ const PitchSidebar = ({
   zoom, setZoom
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-
   const phases = [
     { id: 'possession',      label: 'In Poss',  emoji: '⚽', color: '#3b82f6', activeClass: 'sb-phase--poss'   },
     { id: 'transition_pos',  label: 'Counter',   emoji: '↗',  color: '#f59e0b', activeClass: 'sb-phase--tp'     },
     { id: 'transition_neg',  label: 'Press',     emoji: '🔄', color: '#8b5cf6', activeClass: 'sb-phase--tn'     },
     { id: 'defense',         label: 'Out Poss',  emoji: '🛡', color: '#ef4444', activeClass: 'sb-phase--def'    },
   ];
-
   const activePhase = phases.find(p => p.id === phase);
-
   return (
     <div className={`pitch-sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
-      {/* Toggle Button */}
+      {}
       <button
         className="sb-toggle"
         onClick={() => setIsExpanded(prev => !prev)}
@@ -27,8 +23,7 @@ const PitchSidebar = ({
       >
         <i className={`ti ${isExpanded ? 'ti-chevron-left' : 'ti-chevron-right'}`}></i>
       </button>
-
-      {/* ── Collapsed Mini Indicators ── */}
+      {}
       {!isExpanded && (
         <div className="sb-mini">
           <div
@@ -39,11 +34,10 @@ const PitchSidebar = ({
           <span className="sb-mini-zoom">{zoom.toFixed(1)}×</span>
         </div>
       )}
-
-      {/* ── Expanded Content ── */}
+      {}
       {isExpanded && (
         <div className="sb-content">
-          {/* Phase Section */}
+          {}
           <div className="sb-section">
             <div className="sb-section-label">Fase</div>
             <div className="sb-phase-group">
@@ -59,8 +53,7 @@ const PitchSidebar = ({
               ))}
             </div>
           </div>
-
-          {/* Speed Section */}
+          {}
           <div className="sb-section">
             <div className="sb-section-label">Speed</div>
             <div className="sb-speed-group">
@@ -75,8 +68,7 @@ const PitchSidebar = ({
               ))}
             </div>
           </div>
-
-          {/* Overlay Section */}
+          {}
           <div className="sb-section">
             <div className="sb-section-label">Overlay</div>
             <div className="sb-overlay-group">
@@ -96,8 +88,7 @@ const PitchSidebar = ({
               </button>
             </div>
           </div>
-
-          {/* Zoom Section */}
+          {}
           <div className="sb-section sb-zoom-section">
             <div className="sb-section-label">Zoom</div>
             <div className="sb-zoom-group">
@@ -123,7 +114,7 @@ const PitchSidebar = ({
                 <i className="ti ti-minus"></i>
               </button>
             </div>
-            {/* Zoom level indicator bar */}
+            {}
             <div className="sb-zoom-track">
               <div
                 className="sb-zoom-fill"
@@ -136,5 +127,4 @@ const PitchSidebar = ({
     </div>
   );
 };
-
 export default PitchSidebar;
