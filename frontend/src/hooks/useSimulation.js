@@ -70,6 +70,8 @@ export const useSimulation = (players, setPlayers, enemies, setEnemies, assigned
     players.forEach(p => {
       const r = getRole(assignedRoles[p.id]);
       const t = computePlayerTarget(p, r, ph, styleMod);
+      const startX = p.cx !== undefined ? p.cx : gx(p.x);
+      const startY = p.cy !== undefined ? p.cy : gy(p.y);
       pAnim[p.id] = { 
         sx: startX, sy: startY, 
         tx: gx(t.x), ty: gy(t.y), 
