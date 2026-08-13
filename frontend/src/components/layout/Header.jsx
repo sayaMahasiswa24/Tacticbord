@@ -46,13 +46,10 @@ const Header = ({
                     <div className="sm-item" onClick={() => { setIsBrowserOpen(true); setIsSettingsOpen(false); }}>
                         <i className="ti ti-books"></i>Role Database
                     </div>
-                    <div className="sm-item translate-item" onClick={(e) => e.stopPropagation()}>
-                        <i className="ti ti-language"></i>
-                        <div id="google_translate_element"></div>
-                    </div>
                 </div>
             </div>
         </header>
     );
 };
 
+export default Header;
