@@ -1,6 +1,7 @@
 import React from 'react';
 import { TC, POS_LABEL } from '../../data/tacticData';
 import { rolesForPlayer } from '../../utils/helpers';
+import { ROLE_EXAMPLES } from '../../data/examples';
 const RoleAssignModal = ({ selectedPlayer, setSelectedPlayer, pendingRole, setPendingRole, setAssignedRoles }) => {
   if (!selectedPlayer) return null;
   return (
@@ -22,9 +23,9 @@ const RoleAssignModal = ({ selectedPlayer, setSelectedPlayer, pendingRole, setPe
                 <div className="ro-n"><span style={{ background: TC[r.posType], color: '#fff', fontSize: 9, fontWeight: 800, padding: '1px 5px', borderRadius: 4 }}>{r.short}</span>{r.name}</div>
                 <div className="ro-d">{r.desc}</div>
                 <div className="ro-tags">
-                  <span className="ro-tag">{`width ${r.width}`}</span><span className="ro-tag">{`depth ${r.depth}`}</span>
-                  <span className="ro-tag">{r.pressing}</span>
-                  {r.overlap !== 'none' && <span className="ro-tag">{r.overlap}</span>}
+                  <span className="ro-tag" style={{ background: 'transparent', color: '#9ca3af', padding: 0 }}>
+                    💡 Contoh: {ROLE_EXAMPLES[r.id] || "-"}
+                  </span>
                 </div>
               </button>
             ))}
