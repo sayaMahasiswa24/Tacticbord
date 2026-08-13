@@ -27,7 +27,7 @@
 TacticBoard adalah aplikasi web yang memungkinkan pengguna untuk merancang, menyimulasikan, dan membagikan strategi olahraga secara digital. Dengan fokus pada sepak bola, aplikasi ini menyediakan fitur-fitur interaktif untuk membantu pelatih, pemain, dan penggemar sepak bola dalam menganalisis dan mengembangkan strategi permainan.
 
 ## 📸 Demo/Screenshots
-[Insert demo GIF or screenshots of the application]
+![alt text](<Screenshot 2026-08-13 074902.png>) ![alt text](<Screenshot 2026-08-13 075928.png>) ![alt text](<Screenshot 2026-08-13 075113.png>) ![alt text](<Screenshot 2026-08-13 075044.png>) ![alt text](<Screenshot 2026-08-13 075018.png>) ![alt text](<Screenshot 2026-08-13 074941.png>)
 
 ## ✨ Features
 - 🎯 **Interactive Strategy Board**: Desain dan simulasikan strategi permainan sepak bola secara interaktif
