@@ -1,112 +1,49 @@
-# 📋 TacticBoard
+# ⚽ TacticBoard
 
-Aplikasi **TacticBoard** berbasis website adalah papan strategi digital interaktif untuk merancang, menyimulasikan, dan membagikan formasi atau taktik olahraga (fokus pada sepak bola) secara real-time.
+TacticBoard adalah aplikasi papan strategi digital interaktif berbasis web yang dirancang khusus untuk pelatih, analis, dan penggemar sepak bola. Aplikasi ini memudahkan Anda untuk merancang, menyimulasikan, dan membagikan formasi serta taktik permainan secara real-time.
 
----
+## ✨ Fitur Utama
 
-## 🚀 Fitur Utama (Core Features)
+- **Atur Formasi Cepat**: Pilih berbagai formasi bawaan (4-3-3, 4-4-2, 3-5-2, dll) atau geser pemain secara bebas (Drag & Drop) ke posisi manapun.
+- **Simulasi Taktik**: Animasi pergerakan pemain untuk memvisualisasikan bagaimana taktik Anda akan berjalan (Bisa Play/Pause dengan pengaturan kecepatan).
+- **Asisten Taktik AI**: Dilengkapi asisten cerdas yang bisa memberi masukan dan rekomendasi tentang formasi yang Anda gunakan.
+- **Database Role**: Lihat dan pelajari berbagai peran spesifik setiap pemain.
+- **Coretan Taktik (Drawing Tools)**: Gambar panah, jalur lari, atau area menggunakan kursor/jari secara langsung di atas papan.
+- **Simpan & Muat Taktik (Save/Load)**: Simpan strategi brilian Anda agar bisa digunakan lagi di pertandingan berikutnya.
+- **Gaya Bermain Preset**: Terapkan langsung taktik modern seperti *Tiki-Taka*, *Gegenpressing*, atau *Park The Bus*.
 
-* **Drag-and-Drop Player**: Menggeser posisi pemain dan objek di atas lapangan secara instan.
-* **Drawing Tools**: Menggambar garis pergerakan, anak panah, dan zona taktik dengan berbagai warna.
-* **Preset Formasi & Gaya Bermain**: Pilihan formasi standar (misal: 4-3-3, 4-2-3-1) dan preset gaya bermain dengan lebih dari 45 peran (*role*) pemain spesifik.
-* **Animasi & Simulasi Taktik Dinamis**: Pergerakan pemain secara otomatis merespon berdasarkan 4 fase permainan (Possession, Transition +, Transition -, Defense) sesuai dengan role yang ditetapkan pada preset.
-* **AI Chatbot Asisten Pelatih**: Integrasi Chatbot cerdas bertenaga Groq API yang dirancang khusus untuk memberikan saran dan wawasan seputar taktik sepak bola.
-* **Ekspor & Berbagi**: Menyimpan papan taktik.
+## 🛠️ Teknologi yang Digunakan
 
----
+- **Frontend**: React.js 18 & Vite
+- **Styling**: CSS Asli (Vanilla CSS) agar lebih ringan dan kustom
+- **Deployment**: Mendukung Vercel & GitHub Pages
 
-## 🛠️ Tech Stack & Arsitektur
+## 🚀 Cara Menjalankan Secara Lokal
 
-### Teknologi Utama
-* **Frontend**: React.js (Vite), HTML5 Canvas, Vanilla CSS (Responsive Grid)
-* **Backend**: Node.js (Express) untuk proxy API Chatbot
+Untuk menjalankan proyek ini di komputer Anda, ikuti langkah berikut:
 
-### Struktur Folder Utama
-```text
-├── src/                  # Kode sumber Frontend (React)
-│   ├── components/       # Komponen UI (Toolbar, Lapangan, Modals)
-│   ├── hooks/            # Logika drawing canvas, simulasi pergerakan, dan drag-and-drop
-│   ├── data/             # Konfigurasi data statis (Formasi, Preset Role, dll)
-│   └── utils/            # Fungsi utilitas (Kalkulasi pergerakan pemain)
-├── backend/              # Kode sumber Backend (Node.js)
-│   ├── controllers/      # Logika API Chatbot
-│   └── routes/           # Endpoint API
-```
-
----
-
-## 📦 Prasyarat & Instalasi
-
-### Prasyarat
-* **Node.js** v18 atau versi terbaru
-* **npm** atau **yarn**
-* **Groq API Key** (Untuk fitur AI Chatbot)
-
-### Langkah Instalasi
-
-1. **Clone Repositori & Masuk ke Folder**
+1. **Pastikan Anda memiliki Node.js terinstal** (disarankan versi LTS).
+2. **Buka Terminal / Command Prompt**, lalu masuk ke folder `frontend`:
    ```bash
-   git clone https://github.com/sayaMahasiswa24/Tacticbord.git
-   cd Tacticbord
+   cd frontend
    ```
-
-2. **Instal Dependensi Frontend & Backend**
+3. **Instal seluruh dependensi**:
    ```bash
    npm install
-   cd backend && npm install
-   cd ..
    ```
-
-3. **Konfigurasi Variabel Lingkungan (.env)**
-   Buat file `.env` di folder `backend/` dan masukkan API Key Groq Anda:
-   ```env
-   PORT=5000
-   GROQ_API_KEY=api_key_groq_anda_di_sini
-   ```
-   *(Opsional) Sesuaikan base URL API pada frontend jika menggunakan port berbeda.*
-
-4. **Jalankan Aplikasi (Mode Pengembangan)**
-   Jalankan frontend:
+4. **Jalankan server lokal (Development)**:
    ```bash
    npm run dev
    ```
-   Di terminal baru, jalankan backend:
-   ```bash
-   cd backend
-   npm run dev
-   ```
-   Buka [http://localhost:5173](http://localhost:5173) (atau port Vite Anda) di browser.
+5. Buka `http://localhost:5173/` (atau *port* yang diberikan oleh Vite) di browser Anda.
+
+## 📦 Cara Build (Produksi)
+Skrip di folder terluar sudah dikonfigurasi untuk otomatis melakukan *build* ke Vercel atau layanan *hosting* serupa.
+```bash
+npm run build
+```
+*(Perintah ini akan menjalankan instalasi, mem-build aplikasi Vite, dan memindahkan folder `dist` secara otomatis ke luar).*
 
 ---
 
-## 💻 Cara Penggunaan (Usage Examples)
-
-### 1. Merancang Formasi & Gaya Bermain
-* Gunakan menu drop-down **Formasi** untuk menyusun posisi 11 pemain.
-* Klik tombol **Gaya Main** (ikon roda gigi) untuk memilih preset gaya bermain (misal: *Gegenpressing*, *Tiki-Taka*). Ini akan otomatis mengatur role untuk setiap pemain.
-
-### 2. Mensimulasikan Taktik Berdasarkan Fase
-* Pilih fase permainan di toolbar atas: **Possession**, **Transisi (+)**, **Transisi (-)**, atau **Defense**.
-* Pemain akan otomatis bergerak merespons formasi dan *role* mereka di fase tersebut.
-
-### 3. Menggambar Manual
-* Pilih alat **Spidol** di menu kanan/bawah untuk menggambar jalur berlari atau umpan.
-
-
-
----
-
-## 🗺️ Roadmap Pengembangan
-
-* [x] Fitur dasar drag-and-drop dan drawing canvas.
-* [x] Integrasi Preset Gaya Bermain & 45+ Role Pemain.
-* [x] Simulasi pergerakan pemain dinamis berdasarkan fase permainan.
-* [x] Layout UI yang responsif (memaksimalkan tampilan layar lebar/desktop).
-* [ ] **Fitur Berikutnya**: Kolaborasi real-time multi-coach via WebSockets.
-* [ ] **Fitur Berikutnya**: Menyimpan preset kustom pengguna.
-
----
-
-## 📄 Lisensi
-
-Proyek ini dilisensikan di bawah **MIT License** - lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.
+*Dibuat untuk memudahkan analisis taktis masa depan!*
