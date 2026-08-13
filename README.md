@@ -1,49 +1,90 @@
-# ⚽ TacticBoard
+# 🏆 TacticBoard - Interactive Digital Strategy Board for Sports
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) 
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white) 
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) 
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) 
+![npm](https://img.shields.io/badge/npm-CB3837?style=flat-square&logo=npm&logoColor=white) 
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white) 
+![License](https://img.shields.io/badge/License-ISC-blue?style=flat-square) 
+![Version](https://img.shields.io/badge/Version-1.0.0-green?style=flat-square) 
+![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)
 
-TacticBoard adalah aplikasi papan strategi digital interaktif berbasis web yang dirancang khusus untuk pelatih, analis, dan penggemar sepak bola. Aplikasi ini memudahkan Anda untuk merancang, menyimulasikan, dan membagikan formasi serta taktik permainan secara real-time.
+> Aplikasi TacticBoard berbasis website adalah papan strategi digital interaktif untuk merancang, menyimulasikan, dan membagikan formasi atau taktik olahraga (fokus pada sepak bola) secara real-time.
 
-## ✨ Fitur Utama
+## 📚 Table of Contents
+- [Description](#description)
+- [Demo/Screenshots](#demoscreenshots)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-- **Atur Formasi Cepat**: Pilih berbagai formasi bawaan (4-3-3, 4-4-2, 3-5-2, dll) atau geser pemain secara bebas (Drag & Drop) ke posisi manapun.
-- **Simulasi Taktik**: Animasi pergerakan pemain untuk memvisualisasikan bagaimana taktik Anda akan berjalan (Bisa Play/Pause dengan pengaturan kecepatan).
-- **Asisten Taktik AI**: Dilengkapi asisten cerdas yang bisa memberi masukan dan rekomendasi tentang formasi yang Anda gunakan.
-- **Database Role**: Lihat dan pelajari berbagai peran spesifik setiap pemain.
-- **Coretan Taktik (Drawing Tools)**: Gambar panah, jalur lari, atau area menggunakan kursor/jari secara langsung di atas papan.
-- **Simpan & Muat Taktik (Save/Load)**: Simpan strategi brilian Anda agar bisa digunakan lagi di pertandingan berikutnya.
-- **Gaya Bermain Preset**: Terapkan langsung taktik modern seperti *Tiki-Taka*, *Gegenpressing*, atau *Park The Bus*.
+## 📖 Description
+TacticBoard adalah aplikasi web yang memungkinkan pengguna untuk merancang, menyimulasikan, dan membagikan strategi olahraga secara digital. Dengan fokus pada sepak bola, aplikasi ini menyediakan fitur-fitur interaktif untuk membantu pelatih, pemain, dan penggemar sepak bola dalam menganalisis dan mengembangkan strategi permainan.
 
-## 🛠️ Teknologi yang Digunakan
+## 📸 Demo/Screenshots
+[Insert demo GIF or screenshots of the application]
 
-- **Frontend**: React.js 18 & Vite
-- **Styling**: CSS Asli (Vanilla CSS) agar lebih ringan dan kustom
-- **Deployment**: Mendukung Vercel & GitHub Pages
+## ✨ Features
+- 🎯 **Interactive Strategy Board**: Desain dan simulasikan strategi permainan sepak bola secara interaktif
+- ⚡ **Real-time Collaboration**: Bagikan dan kerjasama dengan orang lain secara real-time
+- 📊 **Data Analysis**: Analisis data permainan untuk meningkatkan strategi
+- 📈 **Customizable**: Sesuaikan aplikasi dengan kebutuhan dan preferensi Anda
 
-## 🚀 Cara Menjalankan Secara Lokal
+## 🛠️ Tech Stack
+- JavaScript
+- CSS3
+- HTML5
+- Vite
+- npm
+- Docker
 
-Untuk menjalankan proyek ini di komputer Anda, ikuti langkah berikut:
+## 🏗️ Project Structure
+- `tacticbord/`: Root directory
+- `backend/`: Kode backend aplikasi
+- `frontend/`: Kode frontend aplikasi
+- `.github/`: Konfigurasi GitHub
+- `docker-compose.yml`: Konfigurasi Docker Compose
+- `Dockerfile`: Dockerfile untuk aplikasi
+- `package.json`: Dependensi aplikasi
 
-1. **Pastikan Anda memiliki Node.js terinstal** (disarankan versi LTS).
-2. **Buka Terminal / Command Prompt**, lalu masuk ke folder `frontend`:
-   ```bash
-   cd frontend
-   ```
-3. **Instal seluruh dependensi**:
-   ```bash
-   npm install
-   ```
-4. **Jalankan server lokal (Development)**:
-   ```bash
-   npm run dev
-   ```
-5. Buka `http://localhost:5173/` (atau *port* yang diberikan oleh Vite) di browser Anda.
+## 📝 Prerequisites
+- Node.js
+- npm
+- Docker
 
-## 📦 Cara Build (Produksi)
-Skrip di folder terluar sudah dikonfigurasi untuk otomatis melakukan *build* ke Vercel atau layanan *hosting* serupa.
+## 📦 Installation
+### 1. Clone the repository:
+```bash
+git clone https://github.com/sayaMahasiswa24/Tacticbord.git
+```
+### 2. Install dependencies:
+```bash
+npm install
+```
+### 3. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+```
+### 4. Build the application:
 ```bash
 npm run build
 ```
-*(Perintah ini akan menjalankan instalasi, mem-build aplikasi Vite, dan memindahkan folder `dist` secara otomatis ke luar).*
 
----
+## 💻 Usage
+1. Start the application:
+```bash
+npm start
+```
+2. Access the application at [http://localhost:3000](http://localhost:3000)
 
-*Dibuat untuk memudahkan analisis taktis masa depan!*
+## 🤝 Contributing
+Contributions are welcome! Please submit a pull request with your changes.
+
+## 📄 License
+This project is licensed under the ISC license. See [LICENSE](LICENSE) for details.
