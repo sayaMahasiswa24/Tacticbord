@@ -12,13 +12,11 @@ import Header from './components/layout/Header';
 import BottomBar from './components/layout/BottomBar';
 import PitchCanvas from './components/pitch/PitchCanvas';
 import AllModals from './components/modals/AllModals';
-import { TranslationProvider, TranslationContext } from 'react-auto-google-translate';
 
 export default function App() {
   const CW = 460, CH = 580, PX = 18, PY = 14, PW = CW - PX * 2, PH = CH - PY * 2;
   const gx = useCallback((r) => PX + r * PW, [PW]);
   const gy = useCallback((r) => PY + r * PH, [PH]);
-  const { translate } = useContext(TranslationContext);
   const [isLandscape, setIsLandscape] = useState(() => window.matchMedia('(orientation: landscape)').matches);
   useEffect(() => {
     const mql = window.matchMedia('(orientation: landscape)');
