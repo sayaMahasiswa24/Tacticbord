@@ -20,7 +20,6 @@ Aplikasi **TacticBoard** berbasis website adalah papan strategi digital interakt
 ### Teknologi Utama
 * **Frontend**: React.js (Vite), HTML5 Canvas, Vanilla CSS (Responsive Grid)
 * **Backend**: Node.js (Express) untuk proxy API Chatbot
-* **AI Provider**: Groq API (Model: `openai/gpt-oss-120b`)
 
 ### Struktur Folder Utama
 ```text
@@ -93,9 +92,7 @@ Aplikasi **TacticBoard** berbasis website adalah papan strategi digital interakt
 ### 3. Menggambar Manual
 * Pilih alat **Spidol** di menu kanan/bawah untuk menggambar jalur berlari atau umpan.
 
-### 4. Berkonsultasi dengan AI
-* Buka panel **AI Chat** dari header.
-* Tanyakan strategi, analisis kelemahan formasi lawan, atau tips taktik sepak bola kepada asisten AI.
+
 
 ---
 
@@ -104,7 +101,6 @@ Aplikasi **TacticBoard** berbasis website adalah papan strategi digital interakt
 * [x] Fitur dasar drag-and-drop dan drawing canvas.
 * [x] Integrasi Preset Gaya Bermain & 45+ Role Pemain.
 * [x] Simulasi pergerakan pemain dinamis berdasarkan fase permainan.
-* [x] Integrasi AI Chatbot untuk asisten pelatih (Groq API).
 * [x] Layout UI yang responsif (memaksimalkan tampilan layar lebar/desktop).
 * [ ] **Fitur Berikutnya**: Kolaborasi real-time multi-coach via WebSockets.
 * [ ] **Fitur Berikutnya**: Menyimpan preset kustom pengguna.

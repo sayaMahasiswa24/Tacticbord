@@ -85,6 +85,11 @@ Fokus ke pembaruan antarmuka (UX) signifikan pada sisi *frontend*:
 - **Presisi Touch**: Implementasi fungsi `getPointerCoords` memungkinkan *drag-and-drop* pemain dan coretan marker tetap presisi 100% saat lapangan berada di posisi horizontal (menyesuaikan rotasi jari/mouse).
 - **Unifikasi Tata Letak (Layout)**: Menggantikan limitasi CSS grid pada mode Desktop menjadi alat desain *floating bottom-bar* seragam untuk menjamin layar taktik lebih lapang, baik di perangkat *mobile*, tablet sentris (seperti iPad Pro), maupun *desktop*.
 
+### Fase 13 — Restrukturisasi Proyek & Stabilisasi Simulasi
+Pembaruan terkini berfokus pada penyempurnaan struktur direktori dan perbaikan stabilitas fungsionalitas inti:
+- **Restrukturisasi Frontend**: Memisahkan semua kode yang berkaitan dengan antarmuka (React/Vite) ke dalam folder khusus `frontend/`. Hal ini memisahkan ranah *frontend* dengan struktur file lain (seperti *backend* atau konfigurasi infrastruktur) sehingga *repository* lebih terorganisir dan termodularisasi dengan jelas.
+- **Perbaikan Simulasi 4 Fase (*Bug Fix*)**: Menemukan dan memperbaiki kerusakan (*bug*) pada mesin simulasi di `useSimulation.js` di mana variabel awal pergerakan pemain (`startX` dan `startY`) belum terdefinisi. Dengan perbaikan ini, animasi dan perpindahan pemain antar-fase kini dapat berjalan mulus dan sepenuhnya stabil.
+
 ---
 
 ## 5. Fitur Utama
@@ -114,7 +119,8 @@ Chat AI yang membaca konteks papan taktik serta mendukung manajemen penyimpanan 
 - Papan taktik interaktif dengan dukungan *drag & drop*, mode spidol coret-coret, dan **presisi pada rotasi layar horizontal otomatis**.
 - Sidebar antarmuka berlapis *glassmorphism* yang *collapsible*.
 - 29 peran pemain dengan CRUD lengkap, 7 formasi, 6 preset gaya bermain.
-- Simulasi 4 fase permainan dan integrasi AI Assistant (5 tools).
+- Simulasi 4 fase permainan (kini 100% stabil tanpa *crash*) dan integrasi AI Assistant (5 tools).
+- **Arsitektur direktori rapi**, memisahkan secara fisik ranah pengerjaan di folder `frontend/` dan `backend/`.
 
 **Skema siap, data belum diisi:**
 - `role_phase_movement`, `role_conditional_rules`, `role_formation_override`, `player_squad`.
@@ -129,7 +135,6 @@ Chat AI yang membaca konteks papan taktik serta mendukung manajemen penyimpanan 
 
 | Prioritas | Item | Kebutuhan Teknis |
 |---|---|---|
-| Tinggi | Isi `role_phase_movement` & `role_conditional_rules` | Gunakan 12 prompt yang sudah disiapkan, seed ke database |
 | Menengah | Fitur login pengguna | Tabel `users`, autentikasi (JWT/session), kolom `user_id` di tabel personal |
 | Rendah | RAG dokumen taktik tidak terstruktur | Chunking + embedding + vector store, melengkapi (bukan menggantikan) tool-use yang sudah ada |
 
