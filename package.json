@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Aplikasi **TacticBoard** berbasis website adalah papan strategi digital interaktif untuk merancang, menyimulasikan, dan membagikan formasi atau taktik olahraga (fokus pada sepak bola) secara real-time.",
   "main": "sync_roles.js",
-  "scripts": {},
+  "scripts": {    "build": "npm --prefix frontend install && npm --prefix frontend run build"  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sayaMahasiswa24/Tacticbord.git"
