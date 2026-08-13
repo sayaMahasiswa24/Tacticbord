@@ -292,3 +292,7 @@ canvas#drawc.pen-active { pointer-events: auto; cursor: crosshair; }
   .pen-btn { width: 36px; height: 36px; font-size: 16px; justify-content: center; }
   .reset-btn { padding: 8px 12px; font-size: 12px; }
 }
+/* Google Translate Overrides */
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf { display: none !important; }
+.goog-te-banner-frame { display: none !important; }
+body { top: 0 !important; }
