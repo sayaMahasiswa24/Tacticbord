@@ -296,3 +296,10 @@ canvas#drawc.pen-active { pointer-events: auto; cursor: crosshair; }
 .VIpgJd-ZVi9od-aZ2wEe-wOHMyf { display: none !important; }
 .goog-te-banner-frame { display: none !important; }
 body { top: 0 !important; }
+
+/* Translate inside Hamburger */
+.translate-item { display: flex; align-items: center; justify-content: space-between; }
+.translate-item #google_translate_element { flex-grow: 1; margin-left: 10px; }
+.translate-item select.goog-te-combo { width: 100%; padding: 4px; border-radius: 4px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); }
+.goog-te-gadget { font-size: 0 !important; color: transparent !important; }
+.goog-te-gadget span { display: none; }
