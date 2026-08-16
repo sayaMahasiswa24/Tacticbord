@@ -73,7 +73,7 @@ export default function App() {
   const [isHoldingReset, setIsHoldingReset] = useState(false);
   const [resetHoldProgress, setResetHoldProgress] = useState(0);
   const { zoom, setZoom } = usePitchZoom(1);
-  const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, clearDrawings, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
+  const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, clearDrawings, undoDrawing, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
   const { dragRef, onDown: dragDown, onMove: dragMove, onUp: dragUp } = useDragAndDrop(
     players, setPlayers, assignedRoles, setAssignedRoles, setSelectedPlayer, setPendingRole,
     () => animRef?.current?.startLoop?.(),
@@ -239,6 +239,7 @@ export default function App() {
       <BottomBar
         drawTool={drawTool} setDrawTool={setDrawTool} drawColor={drawColor} setDrawColor={setDrawColor}
         clearDrawings={() => { clearDrawings(drawcRef.current); showToast('Coretan dihapus', '#6b7280'); }}
+        undoDrawing={() => { undoDrawing(drawcRef.current); }}
         isHoldingReset={isHoldingReset} startHoldReset={startHoldReset} cancelHoldReset={cancelHoldReset} resetHoldProgress={resetHoldProgress}
       />
       <div className={`toast ${toastData.show ? 'show' : ''}`}><div className="t-dot" style={{ background: toastData.col }}></div><span>{toastData.msg}</span></div>
