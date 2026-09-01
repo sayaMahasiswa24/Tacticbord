@@ -99,6 +99,19 @@ const RightSidebar = ({
     reader.readAsText(file);
   };
 
+  const handleDownloadTemplate = () => {
+    const header = "ID,NAMA,NOMER PUNGGUNG,POSISI,SQUAD/SUB,KAKI\n";
+    const sample = "1,Budi Santoso,10,CF,Utama,kanan\n2,Andi,4,CB,Utama,kiri\n3,Arif,12,FB,Cadangan,kanan\n";
+    const blob = new Blob([header + sample], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "template_pemain.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className={`right-sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
       <button
@@ -174,12 +187,24 @@ const RightSidebar = ({
               <div className="sb-section" style={{ border: 'none', padding: 0 }}>
                 <div className="sb-section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>Daftar Pemain ({roster.length})</span>
-                  <button 
-                    onClick={() => fileInputRef.current?.click()}
-                    style={{ background: 'var(--blue)', border: 'none', color: '#fff', fontSize: '10px', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                  >
-                    <i className="ti ti-file-import"></i> CSV
-                  </button>
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <button 
+                      type="button"
+                      onClick={handleDownloadTemplate}
+                      title="Unduh Template CSV"
+                      style={{ background: 'transparent', border: '1px solid var(--blue)', color: 'var(--blue)', fontSize: '10px', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      <i className="ti ti-file-download"></i> Template
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      title="Import CSV"
+                      style={{ background: 'var(--blue)', border: 'none', color: '#fff', fontSize: '10px', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      <i className="ti ti-file-import"></i> Import
+                    </button>
+                  </div>
                   <input 
                     type="file" 
                     accept=".csv" 

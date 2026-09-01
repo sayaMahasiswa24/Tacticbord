@@ -77,6 +77,50 @@ const PitchCanvas = ({
           </div>
         </div>
         <div className="hint-bar"><i className="ti ti-drag-drop"></i> Seret pion · Ketuk pilih peran</div>
+        
+        {scenario && scenario.layers.length > 0 && (
+          <div className="playback-controls" style={{
+            position: 'absolute',
+            bottom: '70px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(20,20,20,0.9)',
+            border: '1px solid #333',
+            borderRadius: '24px',
+            padding: '8px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            zIndex: 100,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+          }}>
+            <button onClick={scenario.prevPhase} style={{ background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '18px', opacity: scenario.currentLayerIndex === 0 ? 0.3 : 1 }} disabled={scenario.currentLayerIndex === 0}>
+              <i className="ti ti-player-skip-back"></i>
+            </button>
+            
+            {scenario.isPlaying && !scenario.isPaused ? (
+              <button onClick={scenario.pauseScenario} style={{ background: 'var(--blue)', border: 'none', color: '#fff', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>
+                <i className="ti ti-player-pause"></i>
+              </button>
+            ) : (
+              <button onClick={() => {
+                if (scenario.isPaused) scenario.resumeScenario();
+                else scenario.playScenario();
+              }} style={{ background: 'var(--blue)', border: 'none', color: '#fff', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>
+                <i className="ti ti-player-play"></i>
+              </button>
+            )}
+
+            <button onClick={scenario.nextPhase} style={{ background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '18px', opacity: scenario.currentLayerIndex >= scenario.layers.length - 1 ? 0.3 : 1 }} disabled={scenario.currentLayerIndex >= scenario.layers.length - 1}>
+              <i className="ti ti-player-skip-forward"></i>
+            </button>
+            
+            <div style={{ color: '#888', fontSize: '11px', fontWeight: 'bold', marginLeft: '4px', minWidth: '60px', textAlign: 'center' }}>
+              Fase {scenario.currentLayerIndex + 1} / {scenario.layers.length}
+            </div>
+          </div>
+        )}
+
         <div ref={trashRef} className={`trash-zone ${dragId !== null ? 'show' : ''} ${overTrash ? 'hover' : ''}`}><i className="ti ti-trash"></i></div>
       </div>
     </div>
