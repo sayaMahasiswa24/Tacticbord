@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PitchSidebar from '../layout/PitchSidebar';
 import RightSidebar from '../layout/RightSidebar';
 
@@ -44,6 +44,33 @@ const PitchCanvas = ({
     };
   }, [curFId, getPointerCoords, onDown, onMove, onUp, onDrawStart, onDrawMove, onDrawEnd, dragId, drawTool, mcRef, drawcRef]);
 
+  const wrapRef = useRef(null);
+  const [wrapSize, setWrapSize] = useState({ w: 460, h: 580 });
+
+  useEffect(() => {
+    if (!wrapRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      if (entries[0] && entries[0].contentRect.width > 0) {
+        setWrapSize({ w: entries[0].contentRect.width, h: entries[0].contentRect.height });
+      }
+    });
+    observer.observe(wrapRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const pitchRatio = isLandscape ? 580 / 460 : 460 / 580;
+  let baseW = wrapSize.w;
+  let baseH = wrapSize.h;
+  if (baseW > 0 && baseH > 0) {
+    if (baseW / baseH > pitchRatio) {
+      baseW = baseH * pitchRatio;
+    } else {
+      baseH = baseW / pitchRatio;
+    }
+  }
+  const finalW = Math.max(baseW * zoom, 10);
+  const finalH = Math.max(baseH * zoom, 10);
+
   return (
     <div className="main">
       <div className="pitch-col">
@@ -58,13 +85,13 @@ const PitchCanvas = ({
           scenario={scenario}
           setIsBrowserOpen={setIsBrowserOpen} setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen}
         />
-        <div className="pitch-wrap">
+        <div className="pitch-wrap" ref={wrapRef}>
           <div className="canvas-zoom-wrapper" style={{ 
-            aspectRatio: isLandscape ? '580 / 460' : '460 / 580',
-            width: `${zoom * 100}%`,
-            maxHeight: `${zoom * 100}%`,
+            width: `${finalW}px`,
+            height: `${finalH}px`,
             margin: 'auto',
-            flexShrink: 0
+            flexShrink: 0,
+            position: 'relative'
           }}>
             <canvas ref={mcRef} width={(isLandscape ? 580 : 460) * (window.devicePixelRatio || 1)} height={(isLandscape ? 460 : 580) * (window.devicePixelRatio || 1)} id="mc" 
               style={{ touchAction: drawTool !== 'select' ? 'none' : 'auto' }}
