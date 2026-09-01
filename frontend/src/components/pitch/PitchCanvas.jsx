@@ -61,10 +61,10 @@ const PitchCanvas = ({
         <div className="pitch-wrap">
           <div className="canvas-zoom-wrapper" style={{ 
             aspectRatio: isLandscape ? '580 / 460' : '460 / 580',
-            width: '10000px',
-            height: '10000px',
-            maxWidth: `${zoom * 100}%`,
-            maxHeight: `${zoom * 100}%`
+            width: `${zoom * 100}%`,
+            maxHeight: `${zoom * 100}%`,
+            margin: 'auto',
+            flexShrink: 0
           }}>
             <canvas ref={mcRef} width={(isLandscape ? 580 : 460) * (window.devicePixelRatio || 1)} height={(isLandscape ? 460 : 580) * (window.devicePixelRatio || 1)} id="mc" 
               style={{ touchAction: drawTool !== 'select' ? 'none' : 'auto' }}
