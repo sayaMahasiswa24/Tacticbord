@@ -14,7 +14,8 @@ const RoleAssignModal = ({ selectedPlayer, setSelectedPlayer, pendingRole, setPe
 
   if (!selectedPlayer) return null;
 
-  const availablePlayers = (roster || []).filter(p => p.position === selectedPlayer.posType);
+  const matchedPlayers = (roster || []).filter(p => p.position === selectedPlayer.posType);
+  const otherPlayers = (roster || []).filter(p => p.position !== selectedPlayer.posType);
 
   return (
     <div className="overlay open" onClick={(e) => { if (e.target === e.currentTarget) setSelectedPlayer(null); }}>
@@ -29,27 +30,7 @@ const RoleAssignModal = ({ selectedPlayer, setSelectedPlayer, pendingRole, setPe
         </div>
         <div className="mb">
           <div className="rg">
-            <div className="rl">Pemain dari Tim ({availablePlayers.length})</div>
-            {availablePlayers.length === 0 ? (
-                <div style={{ padding: '10px', color: '#888', fontSize: '13px' }}>Tidak ada pemain dengan posisi {selectedPlayer.posType} di roster.</div>
-            ) : (
-                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '10px' }}>
-                    {availablePlayers.map(p => (
-                        <button 
-                            key={p.id}
-                            className={`ro ${pendingPlayerId === p.id ? 'sel' : ''}`}
-                            style={{ flex: '0 0 auto', minWidth: '120px', padding: '8px' }}
-                            onClick={() => setPendingPlayerId(p.id === pendingPlayerId ? null : p.id)}
-                        >
-                            <div style={{ fontWeight: 'bold' }}>{p.name}</div>
-                            <div style={{ fontSize: '11px', color: '#888' }}>#{p.number} • {p.foot}</div>
-                        </button>
-                    ))}
-                </div>
-            )}
-          </div>
-          <div className="rg" style={{ marginTop: '16px' }}>
-            <div className="rl">{`Semua Role ${selectedPlayer.posType}`}</div>
+            <div className="rl">{`1. Pilih Peran (Role) ${selectedPlayer.posType}`}</div>
             {rolesForPlayer(selectedPlayer).map(r => (
               <button key={r.id} className={`ro ${pendingRole === r.id ? 'sel' : ''}`} onClick={() => setPendingRole(r.id)}>
                 <div className="ro-n"><span style={{ background: TC[r.posType], color: '#fff', fontSize: 9, fontWeight: 800, padding: '1px 5px', borderRadius: 4 }}>{r.short}</span>{r.name}</div>
@@ -62,6 +43,40 @@ const RoleAssignModal = ({ selectedPlayer, setSelectedPlayer, pendingRole, setPe
               </button>
             ))}
           </div>
+
+          {pendingRole && (
+            <div className="rg" style={{ marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>
+              <div className="rl">2. Pilih Pemain dari Tim ({roster?.length || 0})</div>
+              {!roster || roster.length === 0 ? (
+                  <div style={{ padding: '10px', color: '#888', fontSize: '13px' }}>Belum ada pemain di daftar tim.</div>
+              ) : (
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', paddingBottom: '10px' }}>
+                      {matchedPlayers.map(p => (
+                          <button 
+                              key={p.id}
+                              className={`ro ${pendingPlayerId === p.id ? 'sel' : ''}`}
+                              style={{ flex: '0 0 auto', minWidth: '120px', padding: '8px', border: '1px solid var(--blue)' }}
+                              onClick={() => setPendingPlayerId(p.id === pendingPlayerId ? null : p.id)}
+                          >
+                              <div style={{ fontWeight: 'bold' }}>{p.name}</div>
+                              <div style={{ fontSize: '11px', color: '#888' }}>#{p.number} • {p.position}</div>
+                          </button>
+                      ))}
+                      {otherPlayers.map(p => (
+                          <button 
+                              key={p.id}
+                              className={`ro ${pendingPlayerId === p.id ? 'sel' : ''}`}
+                              style={{ flex: '0 0 auto', minWidth: '120px', padding: '8px', opacity: 0.8 }}
+                              onClick={() => setPendingPlayerId(p.id === pendingPlayerId ? null : p.id)}
+                          >
+                              <div style={{ fontWeight: 'bold' }}>{p.name}</div>
+                              <div style={{ fontSize: '11px', color: '#888' }}>#{p.number} • {p.position}</div>
+                          </button>
+                      ))}
+                  </div>
+              )}
+            </div>
+          )}
         </div>
         <div className="mf">
           <button onClick={() => {

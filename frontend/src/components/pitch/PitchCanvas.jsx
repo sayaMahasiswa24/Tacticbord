@@ -12,7 +12,7 @@ const PitchCanvas = ({
   curFId,
   phase, triggerPhase, simSpd, setSimSpd,
   overlays, setOverlays,
-  roster, addPlayer, updatePlayer, deletePlayer,
+  roster, addPlayer, addPlayers, updatePlayer, deletePlayer,
   scenario,
   setIsBrowserOpen, setIsSaveOpen, setIsLoadOpen
 }) => {
@@ -54,7 +54,7 @@ const PitchCanvas = ({
           zoom={zoom} setZoom={setZoom}
         />
         <RightSidebar 
-          roster={roster} addPlayer={addPlayer} updatePlayer={updatePlayer} deletePlayer={deletePlayer}
+          roster={roster} addPlayer={addPlayer} addPlayers={addPlayers} updatePlayer={updatePlayer} deletePlayer={deletePlayer}
           scenario={scenario}
           setIsBrowserOpen={setIsBrowserOpen} setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen}
         />

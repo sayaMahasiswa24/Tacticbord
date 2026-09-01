@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const POSITIONS = ['CF', 'W', 'AM', 'CM', 'DM', 'WB', 'FB', 'CB', 'GK'];
 
 const RightSidebar = ({
-  roster, addPlayer, updatePlayer, deletePlayer,
+  roster, addPlayer, addPlayers, updatePlayer, deletePlayer,
   scenario,
   setIsBrowserOpen, setIsSaveOpen, setIsLoadOpen
 }) => {
@@ -29,6 +29,74 @@ const RightSidebar = ({
     });
     setName('');
     setNumber('');
+  };
+
+  const fileInputRef = useRef(null);
+
+  const handleImportCSV = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const text = evt.target.result;
+      const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+      
+      if (lines.length === 0) return;
+
+      // Check if first row is header
+      const firstRow = lines[0].toLowerCase();
+      let startIdx = 0;
+      if (firstRow.includes('id') || firstRow.includes('nama')) {
+        startIdx = 1;
+      }
+
+      const newPlayers = [];
+
+      for (let i = startIdx; i < lines.length; i++) {
+        const line = lines[i];
+        // Split by comma or semicolon
+        const cols = line.split(/[,;]/).map(c => c.trim());
+        
+        // Expected columns: ID, NAMA, NOMER PUNGGUNG, POSISI, SQUAD/SUB, KAKI
+        if (cols.length >= 2) { // At least needs a name
+          const nama = cols[1] || `Pemain ${i}`;
+          const nomer = cols[2] || '';
+          
+          let rawPos = (cols[3] || 'CF').toUpperCase();
+          // Auto mapping
+          if (['LB', 'RB'].includes(rawPos)) rawPos = 'FB';
+          else if (['LWB', 'RWB'].includes(rawPos)) rawPos = 'WB';
+          else if (['LW', 'RW'].includes(rawPos)) rawPos = 'W';
+          else if (rawPos === 'ST') rawPos = 'CF';
+          else if (rawPos === 'CAM') rawPos = 'AM';
+          else if (rawPos === 'CDM') rawPos = 'DM';
+          
+          if (!POSITIONS.includes(rawPos)) rawPos = 'CF'; // fallback
+
+          const squadVal = cols[4] || 'Utama';
+          const kakiVal = (cols[5] || 'kanan').toLowerCase();
+          const footVal = kakiVal.includes('kiri') ? 'kiri' : 'kanan';
+
+          newPlayers.push({
+            name: nama,
+            number: nomer,
+            position: rawPos,
+            squad: squadVal,
+            foot: footVal
+          });
+        }
+      }
+
+      if (newPlayers.length > 0) {
+        addPlayers(newPlayers);
+        // showToast could be called here if it was passed, but it's fine
+      }
+      
+      // Reset input
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+    reader.readAsText(file);
   };
 
   return (
@@ -104,7 +172,22 @@ const RightSidebar = ({
               </div>
 
               <div className="sb-section" style={{ border: 'none', padding: 0 }}>
-                <div className="sb-section-label">Daftar Pemain ({roster.length})</div>
+                <div className="sb-section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Daftar Pemain ({roster.length})</span>
+                  <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{ background: 'var(--blue)', border: 'none', color: '#fff', fontSize: '10px', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <i className="ti ti-file-import"></i> CSV
+                  </button>
+                  <input 
+                    type="file" 
+                    accept=".csv" 
+                    ref={fileInputRef} 
+                    style={{ display: 'none' }} 
+                    onChange={handleImportCSV}
+                  />
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '180px', overflowY: 'auto' }}>
                   {roster.map(p => (
                     <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 8px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', fontSize: '12px' }}>

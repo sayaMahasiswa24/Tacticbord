@@ -75,7 +75,7 @@ export default function App() {
   const [isHoldingReset, setIsHoldingReset] = useState(false);
   const [resetHoldProgress, setResetHoldProgress] = useState(0);
   const { zoom, setZoom } = usePitchZoom(1);
-  const { roster, addPlayer, updatePlayer, deletePlayer } = useTeamRoster();
+  const { roster, addPlayer, addPlayers, updatePlayer, deletePlayer } = useTeamRoster();
   const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, setDrawingPaths, clearDrawings, undoDrawing, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
   const scenario = useScenario(players, setPlayers, drawingPaths, setDrawingPaths, () => renderPitch());
   const { dragRef, onDown: dragDown, onMove: dragMove, onUp: dragUp } = useDragAndDrop(
@@ -240,7 +240,7 @@ export default function App() {
         curFId={curFId}
         phase={phase} triggerPhase={(ph) => simTrigger(ph, gx, gy)} simSpd={simSpd} setSimSpd={setSimSpd}
         overlays={overlays} setOverlays={setOverlays} setZoom={setZoom}
-        roster={roster} addPlayer={addPlayer} updatePlayer={updatePlayer} deletePlayer={deletePlayer}
+        roster={roster} addPlayer={addPlayer} addPlayers={addPlayers} updatePlayer={updatePlayer} deletePlayer={deletePlayer}
         scenario={scenario}
         setIsBrowserOpen={setIsBrowserOpen} setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen}
       />

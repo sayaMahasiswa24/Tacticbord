@@ -15,7 +15,17 @@ export const useTeamRoster = () => {
   }, [roster]);
 
   const addPlayer = (player) => {
-    setRoster(prev => [...prev, { ...player, id: Date.now().toString() }]);
+    setRoster(prev => [...prev, { ...player, id: Date.now().toString() + Math.random().toString(36).substr(2, 5) }]);
+  };
+
+  const addPlayers = (newPlayers) => {
+    setRoster(prev => {
+      const mapped = newPlayers.map(p => ({
+        ...p,
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 5)
+      }));
+      return [...prev, ...mapped];
+    });
   };
 
   const updatePlayer = (id, updatedFields) => {
@@ -26,5 +36,5 @@ export const useTeamRoster = () => {
     setRoster(prev => prev.filter(p => p.id !== id));
   };
 
-  return { roster, addPlayer, updatePlayer, deletePlayer };
+  return { roster, addPlayer, addPlayers, updatePlayer, deletePlayer };
 };
