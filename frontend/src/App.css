@@ -67,6 +67,21 @@ body { background: var(--bg); color: var(--txt); font-size: 14px; overflow: hidd
 .sb-mini-dot { width: 10px; height: 10px; border-radius: 50%; transition: background 0.3s; box-shadow: 0 0 8px currentColor; }
 .sb-mini-zoom { font-size: 10px; font-weight: 700; color: var(--txt3); font-family: 'JetBrains Mono', monospace; }
 
+/* ── RIGHT SIDEBAR ── */
+.right-sidebar {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  z-index: 60; display: flex; flex-direction: column; align-items: stretch;
+  background: rgba(24, 24, 27, 0.82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4); padding: 8px;
+  transition: width 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+}
+.right-sidebar.expanded { width: 280px; padding: 10px; max-height: calc(100svh - 40px); overflow-y: auto; }
+.right-sidebar.collapsed { width: 48px; padding: 8px 6px; }
+
+.right-sidebar .sb-toggle { margin-bottom: 8px; align-self: center; }
+
 /* Expanded content */
 .sb-content {
   display: flex; flex-direction: column; gap: 2px; width: 100%;
@@ -262,6 +277,8 @@ canvas#drawc.pen-active { pointer-events: auto; cursor: crosshair; }
   /* Sidebar adjustments for smaller tablets */
   .pitch-sidebar { left: 10px; }
   .pitch-sidebar.expanded { width: 170px; }
+  .right-sidebar { right: 10px; }
+  .right-sidebar.expanded { width: 280px; }
   .sb-phase-btn { padding: 8px 10px; font-size: 12px; }
 }
 
@@ -281,6 +298,11 @@ canvas#drawc.pen-active { pointer-events: auto; cursor: crosshair; }
   .pitch-sidebar { left: 6px; border-radius: 16px; padding: 6px; }
   .pitch-sidebar.expanded { width: 155px; padding: 8px; }
   .pitch-sidebar.collapsed { width: 40px; padding: 6px 4px; }
+  
+  .right-sidebar { right: 6px; border-radius: 16px; padding: 6px; }
+  .right-sidebar.expanded { width: 250px; padding: 8px; }
+  .right-sidebar.collapsed { width: 40px; padding: 6px 4px; }
+
   .sb-toggle { width: 28px; height: 28px; font-size: 13px; }
   .sb-phase-btn { padding: 6px 8px; font-size: 11px; }
   .sb-section-label { font-size: 9px; margin-bottom: 6px; }

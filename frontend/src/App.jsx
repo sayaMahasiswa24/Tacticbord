@@ -8,6 +8,8 @@ import { useDragAndDrop } from './hooks/useDragAndDrop';
 import { useDrawing } from './hooks/useDrawing';
 import { useAIChat } from './hooks/useAIChat';
 import { useTacticStorage } from './hooks/useTacticStorage';
+import { useTeamRoster } from './hooks/useTeamRoster';
+import { useScenario } from './hooks/useScenario';
 import Header from './components/layout/Header';
 import BottomBar from './components/layout/BottomBar';
 import PitchCanvas from './components/pitch/PitchCanvas';
@@ -73,7 +75,9 @@ export default function App() {
   const [isHoldingReset, setIsHoldingReset] = useState(false);
   const [resetHoldProgress, setResetHoldProgress] = useState(0);
   const { zoom, setZoom } = usePitchZoom(1);
-  const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, clearDrawings, undoDrawing, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
+  const { roster, addPlayer, updatePlayer, deletePlayer } = useTeamRoster();
+  const { drawTool, setDrawTool, drawColor, setDrawColor, drawingPaths, setDrawingPaths, clearDrawings, undoDrawing, handleDrawStart, handleDrawMove, handleDrawEnd, redrawDrawings } = useDrawing();
+  const scenario = useScenario(players, setPlayers, drawingPaths, setDrawingPaths, () => renderPitch());
   const { dragRef, onDown: dragDown, onMove: dragMove, onUp: dragUp } = useDragAndDrop(
     players, setPlayers, assignedRoles, setAssignedRoles, setSelectedPlayer, setPendingRole,
     () => animRef?.current?.startLoop?.(),
@@ -173,7 +177,8 @@ export default function App() {
         ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.8; ctx.setLineDash([5, 3]); ctx.stroke(); ctx.setLineDash([]);
       }
       ctx.font = '800 11.5px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = roleId ? '#ffffff' : 'rgba(255,255,255,.7)'; ctx.fillText(POS_LABEL[p.posType] || p.posType, p.cx, p.cy);
+      ctx.fillStyle = roleId ? '#ffffff' : 'rgba(255,255,255,.7)'; 
+      ctx.fillText(p.rosterPlayerName || POS_LABEL[p.posType] || p.posType, p.cx, p.cy);
     });
     ctx.restore();
   }, [players, enemies, assignedRoles, overlays, dragRef, isLandscape]);
@@ -224,8 +229,8 @@ export default function App() {
       <Header
         curFId={curFId} changeFormation={changeFormation} activeStyleId={activeStyleId} setIsStyleModalOpen={setIsStyleModalOpen}
         clearStyle={() => { setActiveStyleId(null); showToast('Gaya bermain dilepas', '#6b7280'); }}
-        setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen} isSettingsOpen={isSettingsOpen} setIsSettingsOpen={setIsSettingsOpen}
-        setIsAIChatOpen={setIsAIChatOpen} setIsBrowserOpen={setIsBrowserOpen}
+        isSettingsOpen={isSettingsOpen} setIsSettingsOpen={setIsSettingsOpen}
+        setIsAIChatOpen={setIsAIChatOpen}
       />
       <PitchCanvas
         zoom={zoom} mcRef={mcRef} drawcRef={drawcRef} trashRef={trashRef}
@@ -235,6 +240,9 @@ export default function App() {
         curFId={curFId}
         phase={phase} triggerPhase={(ph) => simTrigger(ph, gx, gy)} simSpd={simSpd} setSimSpd={setSimSpd}
         overlays={overlays} setOverlays={setOverlays} setZoom={setZoom}
+        roster={roster} addPlayer={addPlayer} updatePlayer={updatePlayer} deletePlayer={deletePlayer}
+        scenario={scenario}
+        setIsBrowserOpen={setIsBrowserOpen} setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen}
       />
       <BottomBar
         drawTool={drawTool} setDrawTool={setDrawTool} drawColor={drawColor} setDrawColor={setDrawColor}
@@ -252,6 +260,7 @@ export default function App() {
         isLoadOpen={isLoadOpen} setIsLoadOpen={setIsLoadOpen} loadTacticFromStorage={loadTacticFromStorage} deleteSaveFromStorage={deleteSaveFromStorage}
         isAIChatOpen={isAIChatOpen} setIsAIChatOpen={setIsAIChatOpen} chatHistory={chatHistory} chatInput={chatInput} setChatInput={setChatInput} chatBusy={chatBusy} sendChatMessage={sendChatMessage}
         isResetConfirmOpen={isResetConfirmOpen} setIsResetConfirmOpen={setIsResetConfirmOpen} doFullReset={doFullReset}
+        roster={roster} players={players} setPlayers={setPlayers}
       />
     </div>
   );

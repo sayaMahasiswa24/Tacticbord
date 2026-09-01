@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/sayaMahasiswa24/Tacticbord#readme",
   "devDependencies": {
-    "@types/node": "^26.2.0"
+    "@types/node": "^26.2.0",
+    "code-to-figma": "^0.4.3"
   }
 }

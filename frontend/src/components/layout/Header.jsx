@@ -3,8 +3,7 @@ import { STYLE_PRESETS } from '../../data/tacticData';
 
 const Header = ({
     curFId, changeFormation, activeStyleId, setIsStyleModalOpen, clearStyle,
-    setIsSaveOpen, setIsLoadOpen, isSettingsOpen, setIsSettingsOpen,
-    setIsAIChatOpen, setIsBrowserOpen
+    isSettingsOpen, setIsSettingsOpen, setIsAIChatOpen
 }) => {
     return (
         <header className="header">
@@ -13,8 +12,6 @@ const Header = ({
                 <div className="logo-text">TacticBoard</div>
             </div>
             <div className="header-mid">
-                <button className="hbtn" onClick={() => setIsSaveOpen(true)}><i className="ti ti-device-floppy"></i></button>
-                <button className="hbtn" onClick={() => setIsLoadOpen(true)}><i className="ti ti-folder-open"></i></button>
                 <select value={curFId} onChange={(e) => changeFormation(e.target.value)} className="fsel">
                     <option value="433">4-3-3</option><option value="442">4-4-2</option>
                     <option value="4231">4-2-3-1</option><option value="4132">4-1-3-2 Diamond</option>
@@ -42,9 +39,6 @@ const Header = ({
                 <div className={`settings-menu ${isSettingsOpen ? 'open' : ''}`}>
                     <div className="sm-item" onClick={() => { setIsAIChatOpen(true); setIsSettingsOpen(false); }}>
                         <i className="ti ti-message-chatbot"></i>Asisten Taktik AI
-                    </div>
-                    <div className="sm-item" onClick={() => { setIsBrowserOpen(true); setIsSettingsOpen(false); }}>
-                        <i className="ti ti-books"></i>Role Database
                     </div>
                 </div>
             </div>

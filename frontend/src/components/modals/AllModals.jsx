@@ -9,6 +9,7 @@ import ResetConfirmModal from './ResetConfirmModal';
 import TutorialModal from './TutorialModal';
 const AllModals = ({
   selectedPlayer, setSelectedPlayer, pendingRole, setPendingRole, setAssignedRoles,
+  roster, players, setPlayers,
   isStyleModalOpen, setIsStyleModalOpen, applyStyle, activeStyleId,
   isBrowserOpen, setIsBrowserOpen,
   isSaveOpen, setIsSaveOpen, saveName, setSaveName, saveNote, setSaveNote, saveTacticToStorage,
@@ -25,6 +26,9 @@ const AllModals = ({
         pendingRole={pendingRole}
         setPendingRole={setPendingRole}
         setAssignedRoles={setAssignedRoles}
+        roster={roster}
+        players={players}
+        setPlayers={setPlayers}
       />
       <StyleModal
         isStyleModalOpen={isStyleModalOpen}
