@@ -602,19 +602,10 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
   width: 100%;
-  max-width: 900px;
-  max-height: calc(100dvh - 240px);
-  aspect-ratio: 460/580;
-  margin: auto;
+  height: 100%;
   display: block;
   background: #131824;
   touch-action: none;
-}
-
-@media (orientation: landscape) {
-  .pitch-wrap {
-    aspect-ratio: 580/460;
-  }
 }
 
 .pitch-wrap::-webkit-scrollbar {
@@ -1250,10 +1241,6 @@ canvas#drawc.pen-active {
 
   .pitch-col {
     padding: 4px 4px calc(80px + env(safe-area-inset-bottom));
-  }
-
-  .pitch-wrap {
-    max-height: calc(100dvh - 160px);
   }
 
   .pitch-sidebar {
