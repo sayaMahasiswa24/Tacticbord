@@ -59,7 +59,13 @@ const PitchCanvas = ({
           setIsBrowserOpen={setIsBrowserOpen} setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen}
         />
         <div className="pitch-wrap">
-          <div className="canvas-zoom-wrapper" style={{ width: `${zoom * 100}%`, height: `${zoom * 100}%` }}>
+          <div className="canvas-zoom-wrapper" style={{ 
+            aspectRatio: isLandscape ? '580 / 460' : '460 / 580',
+            width: '10000px',
+            height: '10000px',
+            maxWidth: `${zoom * 100}%`,
+            maxHeight: `${zoom * 100}%`
+          }}>
             <canvas ref={mcRef} width={isLandscape ? 580 : 460} height={isLandscape ? 460 : 580} id="mc" 
               style={{ touchAction: drawTool !== 'select' ? 'none' : 'auto' }}
               onMouseDown={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); if(onDown(x, y)) e.preventDefault(); }}
