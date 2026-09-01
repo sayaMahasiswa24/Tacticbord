@@ -173,9 +173,11 @@ export const useDrawing = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const isLandscape = canvas.width > canvas.height;
+    const dpr = window.devicePixelRatio || 1;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
+    ctx.scale(dpr, dpr);
 
     if (isLandscape) {
       ctx.translate(580 / 2, 460 / 2);
@@ -238,8 +240,10 @@ export const useDrawing = () => {
       if (canvas) {
         const ctx = canvas.getContext('2d');
         const isLandscape = canvas.width > canvas.height;
+        const dpr = window.devicePixelRatio || 1;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
+        ctx.scale(dpr, dpr);
         if (isLandscape) {
           ctx.translate(580 / 2, 460 / 2);
           ctx.rotate(-Math.PI / 2);

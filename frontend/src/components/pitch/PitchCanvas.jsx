@@ -66,13 +66,13 @@ const PitchCanvas = ({
             maxWidth: `${zoom * 100}%`,
             maxHeight: `${zoom * 100}%`
           }}>
-            <canvas ref={mcRef} width={isLandscape ? 580 : 460} height={isLandscape ? 460 : 580} id="mc" 
+            <canvas ref={mcRef} width={(isLandscape ? 580 : 460) * (window.devicePixelRatio || 1)} height={(isLandscape ? 460 : 580) * (window.devicePixelRatio || 1)} id="mc" 
               style={{ touchAction: drawTool !== 'select' ? 'none' : 'auto' }}
               onMouseDown={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); if(onDown(x, y)) e.preventDefault(); }}
               onMouseMove={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); onMove(x, y, e.clientX, e.clientY); }}
               onMouseUp={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); onUp(x, y, e.clientX, e.clientY); }}
             />
-            <canvas ref={drawcRef} width={isLandscape ? 580 : 460} height={isLandscape ? 460 : 580} id="drawc" 
+            <canvas ref={drawcRef} width={(isLandscape ? 580 : 460) * (window.devicePixelRatio || 1)} height={(isLandscape ? 460 : 580) * (window.devicePixelRatio || 1)} id="drawc" 
               className={drawTool !== 'select' ? 'pen-active' : ''} 
               style={{ touchAction: drawTool !== 'select' ? 'none' : 'auto', pointerEvents: drawTool === 'select' ? 'none' : 'auto' }} 
               onMouseDown={(e) => { const { x, y } = getPointerCoords(e.clientX, e.clientY); onDrawStart(x, y); }}
