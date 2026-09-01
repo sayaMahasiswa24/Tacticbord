@@ -13,6 +13,7 @@ const PitchCanvas = ({
   phase, triggerPhase, simSpd, setSimSpd,
   overlays, setOverlays,
   roster, addPlayer, updatePlayer, deletePlayer,
+  scenario,
   setIsBrowserOpen, setIsSaveOpen, setIsLoadOpen
 }) => {
   useEffect(() => {
@@ -54,6 +55,7 @@ const PitchCanvas = ({
         />
         <RightSidebar 
           roster={roster} addPlayer={addPlayer} updatePlayer={updatePlayer} deletePlayer={deletePlayer}
+          scenario={scenario}
           setIsBrowserOpen={setIsBrowserOpen} setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen}
         />
         <div className="pitch-wrap">

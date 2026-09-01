@@ -7,7 +7,7 @@ export const useTacticStorage = ({
   assignedRoles, setAssignedRoles,
   activeStyleId, setActiveStyleId,
   overlays, setOverlays,
-  stopSim, showToast
+  stopSim, showToast, scenario
 }) => {
   const [isSaveOpen, setIsSaveOpen] = useState(false);
   const [isLoadOpen, setIsLoadOpen] = useState(false);
@@ -28,7 +28,8 @@ export const useTacticStorage = ({
       enemies,
       assignedRoles,
       activeStyleId,
-      overlays
+      overlays,
+      scenarioLayers: scenario ? scenario.layers : []
     };
     saves.unshift(newSave);
     localStorage.setItem('tacticbord_v2', JSON.stringify(saves));
@@ -53,6 +54,13 @@ export const useTacticStorage = ({
     setAssignedRoles(save.assignedRoles || {});
     setActiveStyleId(save.activeStyleId || null);
     setOverlays(save.overlays || { zone: true, pass: false });
+    if (scenario && save.scenarioLayers) {
+      scenario.setLayers(save.scenarioLayers);
+      scenario.setCurrentLayerIndex(save.scenarioLayers.length > 0 ? save.scenarioLayers.length - 1 : 0);
+    } else if (scenario) {
+      scenario.setLayers([]);
+      scenario.setCurrentLayerIndex(0);
+    }
     setIsLoadOpen(false);
     showToast('Taktik berhasil dimuat', '#16a34a');
   };

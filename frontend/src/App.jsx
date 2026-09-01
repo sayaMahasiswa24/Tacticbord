@@ -191,7 +191,7 @@ export default function App() {
     saveTacticToStorage, loadTacticFromStorage, deleteSaveFromStorage
   } = useTacticStorage({
     curFId, setCurFId, players, setPlayers, enemies, setEnemies, assignedRoles, setAssignedRoles,
-    activeStyleId, setActiveStyleId, overlays, setOverlays, stopSim, showToast
+    activeStyleId, setActiveStyleId, overlays, setOverlays, stopSim, showToast, scenario
   });
   const onDown = (mx, my) => dragDown(mx, my, () => { if (animRef.current) animRef.current.running = false; });
   const onMove = (mx, my, cx, cy) => dragMove(mx, my, cx, cy, trashRef.current?.getBoundingClientRect());
