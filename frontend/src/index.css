@@ -15,18 +15,12 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px; /* Base for mobile */
+}
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+@media (min-width: 1024px) {
+  :root {
+    font-size: 18px; /* Scale up for desktop */
   }
 }
 
@@ -52,6 +46,15 @@
 
 body {
   margin: 0;
+  font: 1rem/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -74,23 +77,29 @@ h2 {
 }
 
 h1 {
-  font-size: 56px;
+  font-size: 2.25rem; /* 36px at 16px base */
   letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+  margin: 20px 0;
+}
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 3.11rem; /* ~56px at 18px base */
+    margin: 32px 0;
   }
 }
+
 h2 {
-  font-size: 24px;
+  font-size: 1.25rem; /* 20px at 16px base */
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+}
+@media (min-width: 1024px) {
+  h2 {
+    font-size: 1.33rem; /* ~24px at 18px base */
   }
 }
+
 p {
   margin: 0;
 }
@@ -104,7 +113,7 @@ code,
 }
 
 code {
-  font-size: 15px;
+  font-size: 0.9375rem; /* 15px at 16px base */
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);

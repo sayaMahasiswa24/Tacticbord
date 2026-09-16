@@ -21,6 +21,24 @@ const BottomBar = ({
     { hex: '#4ade80', label: 'Warna hijau' },
   ];
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Tacticbord',
+          text: 'Lihat formasi dan taktik ini di Tacticbord!',
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      alert('Tautan disalin ke clipboard!');
+    }
+  };
+
   return (
     <div className="bottombar">
       <div className="bb-group">
@@ -61,6 +79,10 @@ const BottomBar = ({
         <button className="pen-btn" onClick={clearDrawings} aria-label="Hapus coretan" title="Hapus Semua Coretan">
           <i className="ti ti-eraser"></i>
           <span className="btn-txt">Hapus Semua</span>
+        </button>
+        <button className="pen-btn" onClick={handleShare} aria-label="Bagikan" title="Bagikan">
+          <i className="ti ti-share"></i>
+          <span className="btn-txt">Bagikan</span>
         </button>
       </div>
       <button className={`reset-btn ${isHoldingReset ? 'holding' : ''}`}
