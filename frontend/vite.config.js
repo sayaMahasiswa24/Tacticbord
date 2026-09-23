@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons.svg', 'logo.png'],
       manifest: {
-        name: 'Tacticbord',
-        short_name: 'Tacticbord',
-        description: 'Tacticbord React Application',
+        name: 'Tacticboard',
+        short_name: 'Tacticboard',
+        description: 'Tacticborard Football',
         theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',
