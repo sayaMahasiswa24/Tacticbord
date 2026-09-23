@@ -5,7 +5,7 @@ const PitchSidebar = ({
   overlays, setOverlays,
   zoom, setZoom
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const phases = [
     { id: 'possession',      label: 'In Poss',  emoji: '⚽', color: '#3b82f6', activeClass: 'sb-phase--poss'   },
     { id: 'transition_pos',  label: 'Counter',   emoji: '↗',  color: '#f59e0b', activeClass: 'sb-phase--tp'     },

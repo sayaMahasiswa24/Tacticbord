@@ -173,7 +173,8 @@ export const useDrawing = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const isLandscape = canvas.width > canvas.height;
-    const dpr = window.devicePixelRatio || 1;
+    const targetW = isLandscape ? 580 : 460;
+    const dpr = canvas.width / targetW;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
@@ -240,7 +241,8 @@ export const useDrawing = () => {
       if (canvas) {
         const ctx = canvas.getContext('2d');
         const isLandscape = canvas.width > canvas.height;
-        const dpr = window.devicePixelRatio || 1;
+        const targetW = isLandscape ? 580 : 460;
+        const dpr = canvas.width / targetW;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
         ctx.scale(dpr, dpr);

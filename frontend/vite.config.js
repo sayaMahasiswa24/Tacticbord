@@ -13,7 +13,7 @@ export default defineConfig({
       manifest: {
         name: 'Tacticboard',
         short_name: 'Tacticboard',
-        description: 'Tacticborard Football',
+        description: 'Tacticboard Football',
         theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',

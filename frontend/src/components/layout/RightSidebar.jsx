@@ -7,7 +7,7 @@ const RightSidebar = ({
   scenario,
   setIsBrowserOpen, setIsSaveOpen, setIsLoadOpen
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('roster'); // roster, record
 
   // Form states

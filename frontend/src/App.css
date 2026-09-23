@@ -205,6 +205,17 @@ body {
 }
 
 /* ── PITCH SIDEBAR (Collapsible) ── */
+
+/* Animasi masuk: sidebar muncul setelah pitch selesai render */
+@keyframes sidebarEnterLeft {
+  from { opacity: 0; transform: translateY(-50%) translateX(-16px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+@keyframes sidebarEnterRight {
+  from { opacity: 0; transform: translateY(-50%) translateX(16px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
 .pitch-sidebar {
   position: absolute;
   left: 12px;
@@ -221,8 +232,14 @@ body {
   border-radius: 22px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   padding: 8px;
-  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Transisi lebar, padding, dan opacity saat expand/collapse */
+  transition:
+    width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
   overflow: hidden;
+  /* Animasi pertama kali muncul: delay 0.3s agar pitch render lebih dulu */
+  animation: sidebarEnterLeft 0.4s cubic-bezier(0.2, 0, 0, 1) 0.3s both;
 }
 
 .pitch-sidebar.expanded {
@@ -299,8 +316,14 @@ body {
   border-radius: 22px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   padding: 8px;
-  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Transisi lebar, padding, dan opacity saat expand/collapse */
+  transition:
+    width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
   overflow: hidden;
+  /* Animasi pertama kali muncul: delay 0.3s agar pitch render lebih dulu */
+  animation: sidebarEnterRight 0.4s cubic-bezier(0.2, 0, 0, 1) 0.3s both;
 }
 
 .right-sidebar.expanded {
@@ -604,7 +627,8 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
-  overflow: auto;
+  align-items: center;
+  justify-content: center;
   background: #131824;
   touch-action: none;
 }
@@ -786,13 +810,21 @@ canvas#drawc.pen-active {
   z-index: 20;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
   flex-wrap: nowrap;
-  overflow-x: auto;
 }
 
 .bb-group {
   display: flex;
   align-items: center;
   gap: 4px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bb-group::-webkit-scrollbar {
+  display: none;
 }
 
 .bb-label {
@@ -832,6 +864,64 @@ canvas#drawc.pen-active {
   background: rgba(251, 191, 36, 0.15);
   color: #fbbf24;
   box-shadow: 0 0 12px rgba(251, 191, 36, 0.15);
+}
+
+/* ── Color Picker Popover ── */
+.color-picker-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.color-trigger-btn {
+  position: relative;
+}
+
+.color-trigger-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.color-trigger-btn:hover .color-trigger-dot,
+.color-trigger-btn.on .color-trigger-dot {
+  transform: scale(1.15);
+  border-color: #fff;
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+.color-picker-popover {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(24, 24, 27, 0.95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  z-index: 120;
+  animation: popoverFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .color-swatch {
@@ -1358,25 +1448,25 @@ canvas#drawc.pen-active {
   bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   left: calc(8px + env(safe-area-inset-left, 0px));
   right: calc(8px + env(safe-area-inset-right, 0px));
-  padding: 8px;
+  padding: 6px 8px;
   gap: 6px;
   flex-wrap: nowrap;
-  overflow-x: auto;
-  justify-content: space-around;
 }
 
 .pen-btn {
-  width: 44px;
-  height: 44px;
-  font-size: 20px;
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
   justify-content: center;
   flex-shrink: 0;
 }
 
 .reset-btn {
-  padding: 10px 16px;
-  font-size: 13px;
-  min-height: 44px;
+  padding: 6px 14px;
+  font-size: 12px;
+  min-height: 38px;
+  height: 38px;
+  border-radius: 19px;
   flex-shrink: 0;
 }
 

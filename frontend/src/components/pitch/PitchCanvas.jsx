@@ -23,28 +23,25 @@ const PitchCanvas = ({
   overlays, setOverlays,
   roster, addPlayer, addPlayers, updatePlayer, deletePlayer,
   scenario,
-  setIsBrowserOpen, setIsSaveOpen, setIsLoadOpen
+  setIsBrowserOpen, setIsSaveOpen, setIsLoadOpen,
+  renderPitch, redrawDrawings
 }) => {
 
-  // ── Dimensi kanvas fisik (piksel), diperbarui saat orientasi/dpr berubah ──
-  const [canvasDims, setCanvasDims] = useState(() => {
-    const dpr = getSafeDPR();
-    return { w: CANVAS_W * dpr, h: CANVAS_H * dpr };
-  });
+  // ── Dimensi kanvas fisik (piksel) berdasarkan orientasi & DPR aman ─────────
+  const dpr = getSafeDPR();
+  const logicalW = isLandscape ? CANVAS_H : CANVAS_W;
+  const logicalH = isLandscape ? CANVAS_W : CANVAS_H;
+  const canvasW = Math.round(logicalW * dpr);
+  const canvasH = Math.round(logicalH * dpr);
 
+  // Pantau perubahan dpr (misal laptop pindah ke monitor eksternal)
+  const [, setDprTick] = useState(0);
   useEffect(() => {
-    const update = () => {
-      const dpr = getSafeDPR();
-      const w = isLandscape ? CANVAS_H : CANVAS_W;
-      const h = isLandscape ? CANVAS_W : CANVAS_H;
-      setCanvasDims({ w: Math.round(w * dpr), h: Math.round(h * dpr) });
-    };
-    update();
-    // Pantau perubahan dpr (misal laptop pindah ke monitor eksternal)
+    const update = () => setDprTick(t => t + 1);
     const mql = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
     mql.addEventListener('change', update);
     return () => mql.removeEventListener('change', update);
-  }, [isLandscape]);
+  }, []);
 
   // ── Touch event listeners (passive:false agar bisa preventDefault) ──────
   useEffect(() => {
@@ -103,17 +100,24 @@ const PitchCanvas = ({
     };
   }, [curFId, getPointerCoords, onDown, onMove, onUp, onDrawStart, onDrawMove, onDrawEnd, dragId, drawTool, mcRef, drawcRef]);
 
-  // ── Fit-to-container: lapangan selalu proporsional ──────────────────────
+  // ── Fit-to-container: lapangan selalu proporsional di semua device ─────────
   const wrapRef = useRef(null);
-  const [wrapSize, setWrapSize] = useState({ w: CANVAS_W, h: CANVAS_H });
+  const [wrapSize, setWrapSize] = useState({ w: 0, h: 0 });
 
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.width > 0 && r.height > 0) {
+      setWrapSize({ w: r.width, h: r.height });
+    }
     const observer = new ResizeObserver((entries) => {
       const rect = entries[0]?.contentRect;
       if (rect && rect.width > 0 && rect.height > 0) {
-        setWrapSize({ w: rect.width, h: rect.height });
+        setWrapSize(prev => {
+          if (Math.abs(prev.w - rect.width) < 0.5 && Math.abs(prev.h - rect.height) < 0.5) return prev;
+          return { w: rect.width, h: rect.height };
+        });
       }
     });
     observer.observe(el);
@@ -122,8 +126,11 @@ const PitchCanvas = ({
 
   // Rasio lebar/tinggi lapangan: portrait = 460/580, landscape = 580/460
   const pitchRatio = isLandscape ? CANVAS_H / CANVAS_W : CANVAS_W / CANVAS_H;
-  let baseW = wrapSize.w;
-  let baseH = wrapSize.h;
+  // Padding aman 8px agar tidak pernah terpotong / memicu scrollbar saat zoom 1.0
+  const availW = Math.max((wrapSize.w || CANVAS_W) - 8, 10);
+  const availH = Math.max((wrapSize.h || CANVAS_H) - 8, 10);
+  let baseW = availW;
+  let baseH = availH;
   if (baseW > 0 && baseH > 0) {
     if (baseW / baseH > pitchRatio) {
       baseW = baseH * pitchRatio; // dibatasi oleh tinggi
@@ -131,8 +138,18 @@ const PitchCanvas = ({
       baseH = baseW / pitchRatio; // dibatasi oleh lebar
     }
   }
-  const finalW = Math.max(baseW * zoom, 10);
-  const finalH = Math.max(baseH * zoom, 10);
+  const finalW = Math.floor(Math.max(baseW * zoom, 10));
+  const finalH = Math.floor(Math.max(baseH * zoom, 10));
+
+  // Pastikan pitch & coretan selalu di-render ulang saat dimensi atau rotasi berubah
+  useEffect(() => {
+    if (mcRef.current) {
+      renderPitch?.();
+    }
+    if (drawcRef.current) {
+      redrawDrawings?.(drawcRef.current);
+    }
+  }, [canvasW, canvasH, finalW, finalH, isLandscape, renderPitch, redrawDrawings]);
 
   // touch-action diextract agar tidak di-evaluasi berulang di JSX
   const drawingTouchAction = drawTool !== 'select' ? 'none' : 'auto';
@@ -156,7 +173,11 @@ const PitchCanvas = ({
         />
 
         {/* ── Lapangan + kanvas gambar ── */}
-        <div className="pitch-wrap" ref={wrapRef}>
+        <div
+          className="pitch-wrap"
+          ref={wrapRef}
+          style={{ overflow: zoom > 1.02 ? 'auto' : 'hidden' }}
+        >
           <div
             className="canvas-zoom-wrapper"
             style={{ 
@@ -171,8 +192,8 @@ const PitchCanvas = ({
             <canvas
               ref={mcRef}
               id="mc"
-              width={canvasDims.w}
-              height={canvasDims.h}
+              width={canvasW}
+              height={canvasH}
               style={{ touchAction: drawingTouchAction }}
               onMouseDown={(e) => {
                 const { x, y } = getPointerCoords(e.clientX, e.clientY);
@@ -191,8 +212,8 @@ const PitchCanvas = ({
             <canvas
               ref={drawcRef}
               id="drawc"
-              width={canvasDims.w}
-              height={canvasDims.h}
+              width={canvasW}
+              height={canvasH}
               className={drawTool !== 'select' ? 'pen-active' : ''}
               style={{
                 touchAction: drawingTouchAction,

@@ -87,21 +87,18 @@ export default function App() {
   const renderPitch = useCallback(() => {
     const canvas = mcRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
+    const targetW = isLandscape ? 580 : 460;
+    const dpr = canvas.width / targetW;
     const dragPid = dragRef?.current?.id;
     const overTrash = dragRef?.current?.overTrash;
     const dragging = dragRef?.current?.dragging;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.scale(dpr, dpr);
     if (isLandscape) {
-      ctx.clearRect(0, 0, 580 * dpr, 460 * dpr);
-      ctx.save();
-      ctx.scale(dpr, dpr);
       ctx.translate(580 / 2, 460 / 2);
       ctx.rotate(-Math.PI / 2);
       ctx.translate(-460 / 2, -580 / 2);
-    } else {
-      ctx.clearRect(0, 0, 460 * dpr, 580 * dpr);
-      ctx.save();
-      ctx.scale(dpr, dpr);
     }
     ctx.fillStyle = '#1a5c2e'; ctx.fillRect(0, 0, CW, CH);
     for (let i = 0; i < 6; i++) { ctx.fillStyle = i % 2 ? '#1a5c2e' : '#1e6834'; ctx.fillRect(PX, PY + i * PH / 6, PW, PH / 6); }
@@ -246,6 +243,8 @@ export default function App() {
         roster={roster} addPlayer={addPlayer} addPlayers={addPlayers} updatePlayer={updatePlayer} deletePlayer={deletePlayer}
         scenario={scenario}
         setIsBrowserOpen={setIsBrowserOpen} setIsSaveOpen={setIsSaveOpen} setIsLoadOpen={setIsLoadOpen}
+        renderPitch={renderPitch}
+        redrawDrawings={redrawDrawings}
       />
       <BottomBar
         drawTool={drawTool} setDrawTool={setDrawTool} drawColor={drawColor} setDrawColor={setDrawColor}
