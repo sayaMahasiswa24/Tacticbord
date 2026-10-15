@@ -1,34 +1,30 @@
 services:
-  backend:
-    build: ./backend
-    container_name: tacticbord-backend
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tacticbord-app
     ports:
-      - "${PORT:-8787}:8787"
+      - "${PORT:-8000}:80"
     environment:
-      - PORT=8787
-      - CORS_ORIGIN=${CORS_ORIGIN:-*}
-      - DATA_DIR=/app/data
+      - APP_NAME="Football Tactical Board"
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=http://localhost:${PORT:-8000}
+      - DB_CONNECTION=sqlite
+      - DB_DATABASE=/var/www/html/database/database.sqlite
+      - AI_ASSISTANT_ENABLED=false
     volumes:
-      - tacticbord-data:/app/data
+      - tacticbord-db:/var/www/html/database
+      - tacticbord-storage:/var/www/html/storage
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:8787/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 10s
-
-  frontend:
-    build:
-      context: .
-      args:
-        VITE_BACKEND_URL: ${VITE_BACKEND_URL:-http://localhost:8787}
-    container_name: tacticbord-frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
-    restart: unless-stopped
+      start_period: 20s
 
 volumes:
-  tacticbord-data:
+  tacticbord-db:
+  tacticbord-storage:
