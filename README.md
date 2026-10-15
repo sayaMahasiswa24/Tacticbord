@@ -81,24 +81,40 @@ Visit **`http://127.0.0.1:8000`** in your browser.
 
 ---
 
-## 🐳 Docker Deployment
+---
 
-The application includes a production-grade multi-stage `Dockerfile` and `docker-compose.yml` that packages PHP 8.2-FPM, Nginx, built Vite assets, and SQLite into a single container.
+## ⚡ Vercel Serverless Deployment (SQLite Bundled di `/tmp`)
 
-### Deploy with Docker Compose:
-```bash
-# Build and start container in detached mode
-docker compose up --build -d
+The application is pre-configured for zero-setup serverless deployment on **Vercel Functions** using `vercel-community/php` (`vercel-php@0.7.2`).
+
+### 1. Architectural Strategy
+- **SQLite Bundled:** The pre-seeded database file (`database/database.sqlite`) is tracked in Git and packaged via `includeFiles` in `vercel.json`.
+- **Auto-Copy to `/tmp`:** On serverless cold starts, `AppServiceProvider` automatically copies the database into `/tmp/database.sqlite` (with write permissions) and sets `PRAGMA journal_mode = MEMORY;` to avoid ephemeral lock/WAL crashes.
+- **Client-Side Zero-Loss Persistence:** Custom user tactics are stored in `localStorage` via `resources/js/utils/localTacticsStorage.js` with instant JSON export/import and Web Share API support.
+
+### 2. Steps to Deploy on Vercel
+1. Push your repository to GitHub.
+2. In the **Vercel Dashboard**:
+   - Import your GitHub repository.
+   - Set **Framework Preset** to `Other` (or leave default).
+   - Set **Build Command** to `npm run build` (or `npm run vercel-build`).
+   - Set **Output Directory** to `public`.
+3. In **Settings > Environment Variables**, add:
+   - `APP_KEY`: Generate locally with `php artisan key:generate --show` (e.g. `base64:...`).
+   - `AI_ASSISTANT_ENABLED`: `false`
+4. Deploy!
+
+### 3. Verification & Observability
+Check deployment and runtime health instantly by visiting:
 ```
-Access the application at **`http://localhost:8000`** (or specify `PORT=80` in `.env`).
-
-### Persistent Data:
-- The SQLite database is mounted to a named Docker volume (`tacticbord-db`), ensuring that all saved tactics and WAL logs persist across container restarts and updates.
-
-To stop the container:
-```bash
-docker compose down
+https://your-vercel-domain.vercel.app/api/health
 ```
+This standalone endpoint verifies:
+- PHP version & `pdo_sqlite` extension
+- Bundled SQLite database presence and size
+- `/tmp/database.sqlite` copy status and table row counts (`formations`)
+- Compiled Vite manifest presence in `public/build/manifest.json`
+- `APP_KEY` presence in environment variables
 
 ---
 

@@ -4,6 +4,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
+        "vercel-build": "npm run build",
+        "prepare-sqlite": "touch database/database.sqlite && php artisan migrate:fresh --seed --force",
         "lint": "oxlint resources/js",
         "test": "vitest"
     },

@@ -147,4 +147,29 @@ class TacticalBoardTest extends TestCase
         $response = $this->get('/tactics/999999');
         $response->assertStatus(404);
     }
+
+    public function test_it_returns_healthy_diagnostics_on_health_endpoint(): void
+    {
+        $response = $this->getJson('/api/health');
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'status',
+            'timestamp',
+            'environment' => ['php_version', 'framework', 'is_vercel', 'pdo_sqlite_loaded'],
+            'checks' => [
+                'bundled_sqlite',
+                'sqlite_storage',
+                'vite_manifest',
+                'app_key',
+                'features' => ['ai_assistant_enabled'],
+            ],
+        ]);
+        $response->assertJson([
+            'checks' => [
+                'features' => [
+                    'ai_assistant_enabled' => false,
+                ],
+            ],
+        ]);
+    }
 }

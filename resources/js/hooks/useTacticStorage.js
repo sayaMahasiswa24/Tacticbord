@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { router } from '@inertiajs/react';
 import { FORMATIONS } from '../data/tacticData';
+import { getLocalTactics, saveLocalTactic, deleteLocalTactic, exportTacticJSON, shareTactic } from '../utils/localTacticsStorage';
 
 const DEFAULT_SERVER_TACTICS = [];
 
@@ -30,7 +31,7 @@ export const useTacticStorage = ({
     lastTacticsKeyRef.current = serialized;
 
     try {
-      const localSaves = JSON.parse(localStorage.getItem('tacticbord_v2') || '[]');
+      const localSaves = getLocalTactics();
       const serverMap = new Set((serverTactics || []).map(s => s.id));
       const combined = [
         ...(serverTactics || []),
@@ -60,18 +61,8 @@ export const useTacticStorage = ({
       scenarioLayers: scenario ? scenario.layers : []
     };
 
-    // Save locally for offline fallback
-    try {
-      const localSaves = JSON.parse(localStorage.getItem('tacticbord_v2') || '[]');
-      localSaves.unshift({
-        ...payload,
-        name: payload.title,
-        savedAt: Date.now()
-      });
-      localStorage.setItem('tacticbord_v2', JSON.stringify(localSaves));
-    } catch (e) {
-      console.warn('LocalStorage save error:', e);
-    }
+    // Save locally for instant persistence and zero-loss on serverless Vercel
+    saveLocalTactic(payload);
 
     // Persist to Laravel SQLite via Inertia router
     try {
@@ -149,14 +140,36 @@ export const useTacticStorage = ({
     }
 
     // Also remove from local storage
-    try {
-      const localSaves = JSON.parse(localStorage.getItem('tacticbord_v2') || '[]');
-      const updated = localSaves.filter((_, i) => i !== idx);
-      localStorage.setItem('tacticbord_v2', JSON.stringify(updated));
-    } catch {}
+    deleteLocalTactic(idx);
 
     setAllSaves(prev => prev.filter((_, i) => i !== idx));
     showToast('Taktik dihapus', '#6b7280');
+  };
+
+  const exportCurrentTactic = () => {
+    const payload = {
+      title: saveName.trim() || 'Taktik Saya',
+      formation: curFId,
+      players: players.map(p => ({ id: p.id, posType: p.posType, cx: p.cx, cy: p.cy, number: p.number, x: p.x, y: p.y })),
+      enemies,
+      assignedRoles,
+      activeStyleId,
+      overlays,
+      scenarioLayers: scenario ? scenario.layers : []
+    };
+    exportTacticJSON(payload);
+    showToast('Taktik diekspor ke file JSON', '#16a34a');
+  };
+
+  const shareCurrentTactic = async () => {
+    const payload = {
+      title: saveName.trim() || 'Taktik Saya',
+      formation: curFId,
+    };
+    const res = await shareTactic(payload);
+    if (res.method === 'clipboard') {
+      showToast('Tautan taktik disalin ke clipboard', '#16a34a');
+    }
   };
 
   return {
@@ -167,6 +180,8 @@ export const useTacticStorage = ({
     allSaves,
     saveTacticToStorage,
     loadTacticFromStorage,
-    deleteSaveFromStorage
+    deleteSaveFromStorage,
+    exportCurrentTactic,
+    shareCurrentTactic
   };
 };
