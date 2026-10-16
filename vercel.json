@@ -1,24 +1,19 @@
 {
   "version": 2,
-  "framework": null,
+  "outputDirectory": "public",
   "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.2",
-      "includeFiles": "database/database.sqlite"
-    },
-    "api/health.php": {
-      "runtime": "vercel-php@0.7.2",
-      "includeFiles": "database/database.sqlite"
+    "api/*.php": {
+      "runtime": "vercel-php@0.7.4"
     }
   },
   "routes": [
     {
       "src": "/build/(.*)",
-      "dest": "/public/build/$1"
+      "dest": "/build/$1"
     },
     {
-      "src": "/(sw\\.js|manifest\\.webmanifest|favicon\\.ico|favicon\\.svg|logo\\.png|robots\\.txt)",
-      "dest": "/public/$1"
+      "src": "/(favicon\\.ico|favicon\\.svg|icons\\.svg|logo\\.png|robots\\.txt|\\.htaccess)",
+      "dest": "/$1"
     },
     {
       "src": "/api/health",
