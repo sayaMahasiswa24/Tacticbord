@@ -3,13 +3,27 @@
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {
-      "runtime": "vercel-php@0.7.4"
+      "runtime": "vercel-php@0.7.4",
+      "includeFiles": "database/database.sqlite"
     },
     "api/health.php": {
-      "runtime": "vercel-php@0.7.4"
+      "runtime": "vercel-php@0.7.4",
+      "includeFiles": "database/database.sqlite"
     }
   },
   "routes": [
+    {
+      "src": "/sw.js",
+      "dest": "/build/sw.js"
+    },
+    {
+      "src": "/registerSW.js",
+      "dest": "/build/registerSW.js"
+    },
+    {
+      "src": "/manifest.webmanifest",
+      "dest": "/build/manifest.webmanifest"
+    },
     {
       "src": "/build/(.*)",
       "dest": "/build/$1"
