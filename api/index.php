@@ -1,6 +1,6 @@
 <?php
 
-$tmpDirs = ['/tmp/views', '/tmp/cache', '/tmp/sessions'];
+$tmpDirs = ['/tmp/tacticbord/views', '/tmp/tacticbord/cache', '/tmp/tacticbord/sessions'];
 foreach ($tmpDirs as $dir) {
     if (!is_dir($dir)) {
         @mkdir($dir, 0755, true);
