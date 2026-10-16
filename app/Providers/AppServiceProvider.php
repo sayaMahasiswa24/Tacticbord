@@ -5,16 +5,13 @@ namespace App\Providers;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        // Jika berjalan di lingkungan Serverless Vercel (atau filesystem read-only)
         if (env('VERCEL') || (env('APP_ENV') === 'production' && is_dir('/tmp'))) {
             $bundledDb = database_path('database.sqlite');
             $tmpDb = '/tmp/database.sqlite';
@@ -26,12 +23,13 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // Gunakan journal_mode = MEMORY di Vercel agar tidak membuat file -wal/-shm ekstra di /tmp
+        // Paksa semua URL aset (@vite, route, dll) menggunakan HTTPS di Vercel
+        if (env('VERCEL') || env('APP_ENV') === 'production') {
+            URL::forceScheme('https');
+        }
+
         if (config('database.default') === 'sqlite') {
             $isVercel = env('VERCEL') || (env('APP_ENV') === 'production' && is_dir('/tmp'));
             $mode = $isVercel ? 'MEMORY' : 'WAL';
@@ -40,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                     DB::statement("PRAGMA journal_mode = {$mode};");
                 }
             } catch (\Throwable $e) {
-                // Ignore during testing / mock environments
+                // Ignore during testing
             }
         }
     }
