@@ -1,1 +1,209 @@
-import { ROLE_MASTER, ROLE_PHASE_MOVEMENT, WT } from '../data/tacticData';export function getRole(roleId) {  return ROLE_MASTER.find(r => r.id === roleId) || null;}export function rolesForPlayer(player) {  const posType = player.posType;  return ROLE_MASTER.filter(r => {    if (posType === 'FB') {      return r.posType === 'FB' || r.posType === 'WB';    }    if (posType === 'W') {      if (r.posType !== 'W') return false;      if (player.y > 0.5) {        if (['raumdeuter', 'wide_target_forward', 'inside_forward'].includes(r.id)) {          return false;        }      }      return true;    }    return r.posType === posType;  });}export function lighten(h) {  const r = parseInt(h.slice(1,3),16), g = parseInt(h.slice(3,5),16), b = parseInt(h.slice(5,7),16);  return `rgb(${Math.min(255,r+40)},${Math.min(255,g+40)},${Math.min(255,b+40)})`;}export function ease(t, fn) {  t = Math.max(0, Math.min(1, t));  if(fn === 'linear') return t;  if(fn === 'ease-out') return 1 - Math.pow(1-t, 2);  return t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;}export function detectPosType(rx, ry, curPosType) {  if(curPosType === 'GK') return { posType:'GK', side:'center' };  const L = rx < WT, R = rx > (1-WT);  const side = L ? 'left' : R ? 'right' : 'center';  if(ry < 0.28) return { posType: (L||R) ? 'W' : 'CF', side };  if(ry < 0.44) return { posType: (L||R) ? 'W' : 'AM', side };  if(ry < 0.58) return { posType: 'CM', side };  if(ry < 0.72) return { posType: (L||R) ? 'WB' : 'DM', side };  if(ry < 0.88) return { posType: (L||R) ? 'FB' : 'CB', side };  return { posType:'CB', side:'center' };}export function widthToX(width, side) {  if(side === 'left')  return 0.50 - width * 0.45;  if(side === 'right') return 0.50 + width * 0.45;  return 0.50;}export function depthToY(depth) {  return 0.90 - depth * 0.85;}export function computePlayerTarget(player, role, phase, styleModifier) {  if (!role || player.posType === 'GK') {    let y = 0.91;    if (role) {      const gkPhaseData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);      if (gkPhaseData) {        y = gkPhaseData.vertical_bias;      } else {        if (role.id === 'sweeper_keeper') y = phase === 'defense' ? 0.86 : 0.80;        if (role.id === 'ball_playing_gk') y = phase === 'possession' ? 0.82 : 0.89;      }    }    if (phase === 'transition_neg') y = 0.90;    if (styleModifier) y = 0.90 - (0.90 - y) * (styleModifier.depthMult ?? 1);    let duration = 0.5, delay = 0, easing = 'ease-in-out';    if (role) {      const pData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);      if (pData) {         duration = pData.move_duration_sec;         delay = pData.start_delay_sec;         easing = pData.easing;      }    }    return { x: 0.50, y, delay, duration, easing };  }  const side = player.side;  let x, y, delay = 0.15, duration = 0.85, easing = 'ease-in-out';  let width = role.width;  let depth = role.depth;  const phaseData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);  if (phaseData) {    y = (player.y * 0.15) + (phaseData.vertical_bias * 0.85);    let targetX;    if (side === 'left') {      targetX = phaseData.lateral_bias;    } else if (side === 'right') {      targetX = 1.0 - phaseData.lateral_bias;    } else {      targetX = 0.5;     }    x = (player.x * 0.35) + (targetX * 0.65);    delay = phaseData.start_delay_sec;    duration = phaseData.move_duration_sec;    easing = phaseData.easing;  } else {    if(phase === 'possession') {      if(role.dropsDeep) {        depth = Math.max(0.15, depth - 0.30);        delay = 0.30; duration = 0.95; easing = 'ease-in-out';      }      if(role.overlap === 'overlap') {        width = Math.min(1, width + 0.08);        delay = 0.25; duration = 1.05; easing = 'ease-out';      }      if(role.overlap === 'underlap') {        width = Math.max(0, width - 0.15);        delay = 0.25; duration = 0.95; easing = 'ease-in-out';      }      if(role.attackingRun && !role.dropsDeep) {        depth = Math.min(1, depth + 0.05);      }    } else if(phase === 'transition_pos') {      if(role.attackingRun) {        depth = Math.min(1, depth + 0.12);        delay = 0.05; duration = 0.45; easing = 'linear';      } else if(role.pressing === 'hold') {        delay = 0; duration = 0.3; easing = 'linear';      } else {        delay = 0.15; duration = 0.55; easing = 'ease-out';      }      if(role.overlap === 'overlap') { width = Math.min(1, width + 0.05); }    } else if(phase === 'transition_neg') {      if(role.pressing === 'immediate') {        depth = Math.min(1, depth + 0.05);        delay = 0; duration = 0.35; easing = 'linear';      } else if(role.pressing === 'delayed') {        depth = Math.max(0, depth - 0.05);        delay = 0.15; duration = 0.55; easing = 'linear';      } else {        delay = 0; duration = 0.3; easing = 'linear';      }      if(styleModifier?.pressBoost) {        depth = Math.max(0, Math.min(1, depth + styleModifier.pressBoost));      }    } else if(phase === 'defense') {      width = width * 0.55;      depth = Math.max(0, depth - 0.45);      delay = 0.1; duration = 0.9; easing = 'ease-in-out';      if(role.fillsSpace) {        depth = Math.max(0, depth - 0.05);      }    }    x = widthToX(Math.max(0, Math.min(1, width)), side);    y = depthToY(Math.max(0, Math.min(1, depth)));  }  if(styleModifier) {    if (styleModifier.widthMult) {      x = 0.50 + (x - 0.50) * styleModifier.widthMult;    }    if (styleModifier.depthMult) {      y = 0.90 - (0.90 - y) * styleModifier.depthMult;    }    duration = duration * (styleModifier.tempoMult ?? 1);    delay = delay * (styleModifier.tempoMult ?? 1);  }  return { x, y, delay, duration, easing };}
+import { ROLE_MASTER, ROLE_PHASE_MOVEMENT, WT } from '../data/tacticData';
+export function getRole(roleId) {
+  return ROLE_MASTER.find(r => r.id === roleId) || null;
+}
+export function rolesForPlayer(player) {
+  const posType = player.posType;
+  return ROLE_MASTER.filter(r => {
+    if (posType === 'FB') {
+      return r.posType === 'FB' || r.posType === 'WB';
+    }
+    if (posType === 'W') {
+      if (r.posType !== 'W') return false;
+      if (player.y > 0.5) {
+        if (['raumdeuter', 'wide_target_forward', 'inside_forward'].includes(r.id)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return r.posType === posType;
+  });
+}
+export function lighten(h) {
+  const r = parseInt(h.slice(1,3),16), g = parseInt(h.slice(3,5),16), b = parseInt(h.slice(5,7),16);
+  return `rgb(${Math.min(255,r+40)},${Math.min(255,g+40)},${Math.min(255,b+40)})`;
+}
+export function ease(t, fn) {
+  t = Math.max(0, Math.min(1, t));
+  if(fn === 'linear') return t;
+  if(fn === 'ease-out') return 1 - Math.pow(1-t, 2);
+  return t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+}
+export function detectPosType(rx, ry, curPosType) {
+  if(curPosType === 'GK') return { posType:'GK', side:'center' };
+  const L = rx < WT, R = rx > (1-WT);
+  const side = L ? 'left' : R ? 'right' : 'center';
+  if(ry < 0.28) return { posType: (L||R) ? 'W' : 'CF', side };
+  if(ry < 0.44) return { posType: (L||R) ? 'W' : 'AM', side };
+  if(ry < 0.58) return { posType: 'CM', side };
+  if(ry < 0.72) return { posType: (L||R) ? 'WB' : 'DM', side };
+  if(ry < 0.88) return { posType: (L||R) ? 'FB' : 'CB', side };
+  return { posType:'CB', side:'center' };
+}
+export function widthToX(width, side) {
+  if(side === 'left')  return 0.50 - width * 0.45;
+  if(side === 'right') return 0.50 + width * 0.45;
+  return 0.50;
+}
+export function depthToY(depth) {
+  return 0.90 - depth * 0.85;
+}
+
+/**
+ * Resolve a single waypoint's (lateral_bias, vertical_bias) to canvas-normalized (x, y)
+ * accounting for player side (left/right/center).
+ */
+function resolveWaypointXY(wp, side) {
+  let x;
+  if (side === 'left') {
+    x = wp.lateral_bias;
+  } else if (side === 'right') {
+    x = 1.0 - wp.lateral_bias;
+  } else {
+    x = 0.5;
+  }
+  return { x, y: wp.vertical_bias };
+}
+
+/**
+ * Compute the full multi-waypoint path for a player in a given phase.
+ * Returns an array of { x, y, easing, ratio } where ratio is the fraction of
+ * total animation time this segment takes (all ratios sum to 1.0).
+ * Returns null when no waypoints array exists (falls back to single-point legacy path).
+ */
+export function computeWaypointPath(player, phaseData, styleModifier) {
+  if (!phaseData || !phaseData.waypoints || phaseData.waypoints.length === 0) return null;
+  const side = player.side;
+  let totalRatio = 0;
+  const segments = phaseData.waypoints.map(wp => {
+    const { x, y } = resolveWaypointXY(wp, side);
+    totalRatio += (wp.ratio || 1);
+    return { x, y, easing: wp.easing || 'ease-in-out', ratio: wp.ratio || 1 };
+  });
+  // Normalise ratios so they sum to 1.0
+  return segments.map(s => ({ ...s, ratio: s.ratio / totalRatio }));
+}
+
+export function computePlayerTarget(player, role, phase, styleModifier) {
+  if (!role || player.posType === 'GK') {
+    let y = 0.91;
+    if (role) {
+      const gkPhaseData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);
+      if (gkPhaseData) {
+        y = gkPhaseData.vertical_bias;
+      } else {
+        if (role.id === 'sweeper_keeper') y = phase === 'defense' ? 0.86 : 0.80;
+        if (role.id === 'ball_playing_gk') y = phase === 'possession' ? 0.82 : 0.89;
+      }
+    }
+    if (phase === 'transition_neg') y = 0.90;
+    if (styleModifier) y = 0.90 - (0.90 - y) * (styleModifier.depthMult ?? 1);
+    let duration = 0.5, delay = 0, easing = 'ease-in-out';
+    if (role) {
+      const pData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);
+      if (pData) {
+         duration = pData.move_duration_sec;
+         delay = pData.start_delay_sec;
+         easing = pData.easing;
+      }
+    }
+    return { x: 0.50, y, delay, duration, easing, waypoints: null };
+  }
+  const side = player.side;
+  let x, y, delay = 0.15, duration = 0.85, easing = 'ease-in-out';
+  let width = role.width;
+  let depth = role.depth;
+  const phaseData = ROLE_PHASE_MOVEMENT?.find(x => x.role_id === role.id && x.phase === phase);
+
+  // Try to build a multi-waypoint path first
+  let waypoints = null;
+  if (phaseData) {
+    waypoints = computeWaypointPath(player, phaseData, styleModifier);
+  }
+
+  if (phaseData) {
+    y = (player.y * 0.15) + (phaseData.vertical_bias * 0.85);
+    let targetX;
+    if (side === 'left') {
+      targetX = phaseData.lateral_bias;
+    } else if (side === 'right') {
+      targetX = 1.0 - phaseData.lateral_bias;
+    } else {
+      targetX = 0.5; 
+    }
+    x = (player.x * 0.35) + (targetX * 0.65);
+    delay = phaseData.start_delay_sec;
+    duration = phaseData.move_duration_sec;
+    easing = phaseData.easing;
+  } else {
+    if(phase === 'possession') {
+      if(role.dropsDeep) {
+        depth = Math.max(0.15, depth - 0.30);
+        delay = 0.30; duration = 0.95; easing = 'ease-in-out';
+      }
+      if(role.overlap === 'overlap') {
+        width = Math.min(1, width + 0.08);
+        delay = 0.25; duration = 1.05; easing = 'ease-out';
+      }
+      if(role.overlap === 'underlap') {
+        width = Math.max(0, width - 0.15);
+        delay = 0.25; duration = 0.95; easing = 'ease-in-out';
+      }
+      if(role.attackingRun && !role.dropsDeep) {
+        depth = Math.min(1, depth + 0.05);
+      }
+    } else if(phase === 'transition_pos') {
+      if(role.attackingRun) {
+        depth = Math.min(1, depth + 0.12);
+        delay = 0.05; duration = 0.45; easing = 'linear';
+      } else if(role.pressing === 'hold') {
+        delay = 0; duration = 0.3; easing = 'linear';
+      } else {
+        delay = 0.15; duration = 0.55; easing = 'ease-out';
+      }
+      if(role.overlap === 'overlap') { width = Math.min(1, width + 0.05); }
+    } else if(phase === 'transition_neg') {
+      if(role.pressing === 'immediate') {
+        depth = Math.min(1, depth + 0.05);
+        delay = 0; duration = 0.35; easing = 'linear';
+      } else if(role.pressing === 'delayed') {
+        depth = Math.max(0, depth - 0.05);
+        delay = 0.15; duration = 0.55; easing = 'linear';
+      } else {
+        delay = 0; duration = 0.3; easing = 'linear';
+      }
+      if(styleModifier?.pressBoost) {
+        depth = Math.max(0, Math.min(1, depth + styleModifier.pressBoost));
+      }
+    } else if(phase === 'defense') {
+      width = width * 0.55;
+      depth = Math.max(0, depth - 0.45);
+      delay = 0.1; duration = 0.9; easing = 'ease-in-out';
+      if(role.fillsSpace) {
+        depth = Math.max(0, depth - 0.05);
+      }
+    }
+    x = widthToX(Math.max(0, Math.min(1, width)), side);
+    y = depthToY(Math.max(0, Math.min(1, depth)));
+  }
+  if(styleModifier) {
+    if (styleModifier.widthMult) {
+      x = 0.50 + (x - 0.50) * styleModifier.widthMult;
+    }
+    if (styleModifier.depthMult) {
+      y = 0.90 - (0.90 - y) * styleModifier.depthMult;
+      // Scale waypoints depth too
+      if (waypoints) {
+        waypoints = waypoints.map(wp => ({
+          ...wp,
+          y: 0.90 - (0.90 - wp.y) * styleModifier.depthMult,
+          x: styleModifier.widthMult ? 0.50 + (wp.x - 0.50) * styleModifier.widthMult : wp.x,
+        }));
+      }
+    }
+    duration = duration * (styleModifier.tempoMult ?? 1);
+    delay = delay * (styleModifier.tempoMult ?? 1);
+  }
+  return { x, y, delay, duration, easing, waypoints };
+}

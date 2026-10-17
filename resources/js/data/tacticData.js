@@ -1060,7 +1060,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "jog",
     "golden_window_behavior": "support_press",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.50, "vertical_bias": 0.65, "easing": "ease-in",  "ratio": 0.40 },
+      { "lateral_bias": 0.50, "vertical_bias": 0.45, "easing": "ease-out", "ratio": 0.60 }
+    ]
   },
   {
     "id": 10,
@@ -1204,7 +1208,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "jog",
     "golden_window_behavior": "support_press",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.42, "vertical_bias": 0.62, "easing": "ease-in",     "ratio": 0.40 },
+      { "lateral_bias": 0.40, "vertical_bias": 0.45, "easing": "ease-out",    "ratio": 0.60 }
+    ]
   },
   {
     "id": 18,
@@ -1222,7 +1230,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "sprint",
     "golden_window_behavior": "vertical_run",
     "win_ball_delay_sec": 0.1,
-    "lose_ball_delay_sec": 0.5
+    "lose_ball_delay_sec": 0.5,
+    "waypoints": [
+      { "lateral_bias": 0.38, "vertical_bias": 0.60, "easing": "ease-in",  "ratio": 0.35 },
+      { "lateral_bias": 0.35, "vertical_bias": 0.50, "easing": "ease-out", "ratio": 0.65 }
+    ]
   },
   {
     "id": 19,
@@ -1276,7 +1288,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "jog",
     "golden_window_behavior": "hold_shape",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.38, "vertical_bias": 0.72, "easing": "ease-in",  "ratio": 0.45 },
+      { "lateral_bias": 0.40, "vertical_bias": 0.60, "easing": "ease-out", "ratio": 0.55 }
+    ]
   },
   {
     "id": 22,
@@ -1564,7 +1580,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "sprint",
     "golden_window_behavior": "vertical_run",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.26, "vertical_bias": 0.48, "easing": "ease-in",  "ratio": 0.40 },
+      { "lateral_bias": 0.20, "vertical_bias": 0.35, "easing": "ease-out", "ratio": 0.60 }
+    ]
   },
   {
     "id": 38,
@@ -1924,7 +1944,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "jog",
     "golden_window_behavior": "hold_shape",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.50, "vertical_bias": 0.75, "easing": "ease-in",  "ratio": 0.45 },
+      { "lateral_bias": 0.50, "vertical_bias": 0.65, "easing": "ease-out", "ratio": 0.55 }
+    ]
   },
   {
     "id": 58,
@@ -2068,7 +2092,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "sprint",
     "golden_window_behavior": "vertical_run",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.22, "vertical_bias": 0.50, "easing": "ease-in",     "ratio": 0.35 },
+      { "lateral_bias": 0.20, "vertical_bias": 0.25, "easing": "ease-out",    "ratio": 0.65 }
+    ]
   },
   {
     "id": 66,
@@ -2500,7 +2528,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "jog",
     "golden_window_behavior": "support_press",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.50, "vertical_bias": 0.22, "easing": "ease-in",  "ratio": 0.30 },
+      { "lateral_bias": 0.50, "vertical_bias": 0.35, "easing": "ease-out", "ratio": 0.70 }
+    ]
   },
   {
     "id": 90,
@@ -2644,7 +2676,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "sprint",
     "golden_window_behavior": "vertical_run",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.28, "vertical_bias": 0.35, "easing": "ease-in",     "ratio": 0.40 },
+      { "lateral_bias": 0.25, "vertical_bias": 0.20, "easing": "ease-out",    "ratio": 0.60 }
+    ]
   },
   {
     "id": 98,
@@ -2716,7 +2752,11 @@ export const ROLE_PHASE_MOVEMENT = [
     "transition_movement": "sprint",
     "golden_window_behavior": "vertical_run",
     "win_ball_delay_sec": 0.2,
-    "lose_ball_delay_sec": 0.2
+    "lose_ball_delay_sec": 0.2,
+    "waypoints": [
+      { "lateral_bias": 0.32, "vertical_bias": 0.28, "easing": "ease-in",  "ratio": 0.45 },
+      { "lateral_bias": 0.25, "vertical_bias": 0.20, "easing": "ease-out", "ratio": 0.55 }
+    ]
   },
   {
     "id": 102,

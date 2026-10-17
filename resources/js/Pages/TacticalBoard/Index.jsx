@@ -201,6 +201,65 @@ export default function Index({
       ctx.stroke();
     }
 
+    // ── Tactical Run Trajectory Vectors ─────────────────────────────────────
+    // Draw dashed run vectors for each player when a simulation phase is active
+    const activeTraj = trajRef.current;
+    if (activeTraj && Object.keys(activeTraj).length > 0) {
+      players.forEach(p => {
+        const traj = activeTraj[p.id];
+        if (!traj || !traj.waypoints || traj.waypoints.length === 0) return;
+
+        const col = TC[p.posType] || '#88aaff';
+        // Draw dashed path through all waypoints
+        ctx.save();
+        ctx.setLineDash([5, 5]);
+        ctx.lineWidth = 1.8;
+        ctx.strokeStyle = col + 'aa';
+        ctx.globalAlpha = 0.72;
+        ctx.beginPath();
+        ctx.moveTo(traj.startX, traj.startY);
+        traj.waypoints.forEach(wp => ctx.lineTo(wp.x, wp.y));
+        ctx.stroke();
+
+        // Draw waypoint dots (intermediate stops)
+        if (!traj.simple && traj.waypoints.length > 1) {
+          traj.waypoints.slice(0, -1).forEach(wp => {
+            ctx.setLineDash([]);
+            ctx.fillStyle = col + 'cc';
+            ctx.beginPath();
+            ctx.arc(wp.x, wp.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        }
+
+        // Arrowhead at the final destination
+        const lastWp = traj.waypoints[traj.waypoints.length - 1];
+        const prevPt = traj.waypoints.length > 1
+          ? traj.waypoints[traj.waypoints.length - 2]
+          : { x: traj.startX, y: traj.startY };
+        const angle = Math.atan2(lastWp.y - prevPt.y, lastWp.x - prevPt.x);
+        const headLen = 9;
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 0.85;
+        ctx.strokeStyle = col;
+        ctx.fillStyle = col;
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(lastWp.x, lastWp.y);
+        ctx.lineTo(
+          lastWp.x - headLen * Math.cos(angle - Math.PI / 6),
+          lastWp.y - headLen * Math.sin(angle - Math.PI / 6)
+        );
+        ctx.moveTo(lastWp.x, lastWp.y);
+        ctx.lineTo(
+          lastWp.x - headLen * Math.cos(angle + Math.PI / 6),
+          lastWp.y - headLen * Math.sin(angle + Math.PI / 6)
+        );
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+
     // Opponent/Enemy Players
     enemiesRef.current.forEach(ep => {
       ctx.beginPath(); ctx.arc(ep.cx, ep.cy, ICON_R_NORMAL, 0, Math.PI * 2);
@@ -235,11 +294,16 @@ export default function Index({
       ctx.fillText(p.rosterPlayerName || POS_LABEL[p.posType] || p.posType, p.cx, p.cy);
     });
     ctx.restore();
+  // trajRef is a ref so no need to include in dependency array — it's always current
   }, [players, enemies, assignedRoles, overlays, dragRef, isLandscape]);
 
-  const { phase, triggerPhase: simTrigger, stopSim, startLoop, animRef } = useSimulation(
+  const { phase, triggerPhase: simTrigger, stopSim, startLoop, animRef, trajectories } = useSimulation(
     players, setPlayers, enemies, setEnemies, assignedRoles, activeStyleId, simSpd, renderPitch, curFId, setAssignedRoles
   );
+
+  // Keep a ref so renderPitch always reads the latest trajectories without stale closure
+  const trajRef = useRef({});
+  useEffect(() => { trajRef.current = trajectories; }, [trajectories]);
 
   const {
     isAIChatOpen, setIsAIChatOpen, chatHistory, chatInput, setChatInput, chatBusy, sendChatMessage
