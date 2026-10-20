@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 import { STYLE_PRESETS } from '../../data/tacticData';
 
 const Header = ({
@@ -7,10 +8,10 @@ const Header = ({
 }) => {
     return (
         <header className="header">
-            <div className="logo">
+            <Link href="/" className="logo" title="Kembali ke Beranda" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <img src="/logo.png" alt="TacticBoard" style={{ height: '40px', objectFit: 'contain' }} />
                 <div className="logo-text">TacticBoard</div>
-            </div>
+            </Link>
             <div className="header-mid">
                 <select value={curFId} onChange={(e) => changeFormation(e.target.value)} className="fsel">
                     <option value="433">4-3-3</option><option value="442">4-4-2</option>

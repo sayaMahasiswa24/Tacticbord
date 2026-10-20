@@ -20,9 +20,20 @@ class TacticalBoardTest extends TestCase
         $this->seed(TacticalSeeder::class);
     }
 
-    public function test_it_renders_tactical_board_with_formations_and_ai_flag_off(): void
+    public function test_it_renders_landing_page(): void
     {
         $response = $this->get('/');
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Landing/Index')
+        );
+    }
+
+    public function test_it_renders_tactical_board_with_formations_and_ai_flag_off(): void
+    {
+        $response = $this->get('/board');
 
         $response->assertStatus(200);
 
