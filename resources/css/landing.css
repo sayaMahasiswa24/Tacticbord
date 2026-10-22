@@ -372,17 +372,25 @@ body:has(.landing-wrapper) {
   box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
   position: relative;
   transition: border-color 0.3s ease;
+  max-width: 100%;
 }
 
 .landing-mockup-wrapper:hover {
   border-color: rgba(46, 130, 82, 0.5);
 }
 
+.landing-mockup-wrapper a:first-child {
+  display: block;
+  overflow: hidden;
+}
+
 .landing-mockup-img {
   width: 100%;
   height: auto;
+  max-height: 520px;
   display: block;
   object-fit: cover;
+  object-position: center top;
 }
 
 .landing-mockup-overlay-badge {
