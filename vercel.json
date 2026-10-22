@@ -25,6 +25,14 @@
       "dest": "/build/manifest.webmanifest"
     },
     {
+      "src": "/workbox-(.*)",
+      "dest": "/build/workbox-$1"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/build/assets/$1"
+    },
+    {
       "src": "/build/(.*)",
       "dest": "/build/$1"
     },
