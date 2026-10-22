@@ -164,7 +164,7 @@ export default function LandingIndex() {
                     <div className="landing-mockup-wrapper">
                         <Link href="/board" title="Klik untuk membuka papan taktik interaktif">
                             <img
-                                src="/mockup-showcase.png"
+                                src="mockup-showcase.png"
                                 alt="Showcase"
                                 className="landing-mockup-img"
                                 loading="lazy"
