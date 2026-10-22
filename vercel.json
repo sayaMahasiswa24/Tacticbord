@@ -29,7 +29,7 @@
       "dest": "/build/$1"
     },
     {
-      "src": "/(favicon\\.ico|favicon\\.svg|icons\\.svg|logo\\.png|robots\\.txt|\\.htaccess)",
+      "src": "/(favicon\\.ico|favicon\\.svg|icons\\.svg|logo\\.png|mockup-showcase\\.png|robots\\.txt|\\.htaccess)",
       "dest": "/$1"
     },
     {
