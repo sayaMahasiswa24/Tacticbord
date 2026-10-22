@@ -165,7 +165,7 @@ export default function LandingIndex() {
                         <Link href="/board" title="Klik untuk membuka papan taktik interaktif">
                             <img
                                 src="/mockup-showcase.png"
-                                alt="TacticBoard Interactive Football Tactical Workspace"
+                                alt="Showcase"
                                 className="landing-mockup-img"
                                 loading="lazy"
                             />
