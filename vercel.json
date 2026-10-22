@@ -37,9 +37,6 @@
       "dest": "/build/$1"
     },
     {
-      "handle": "filesystem"
-    },
-    {
       "src": "/(favicon\\.ico|favicon\\.svg|icons\\.svg|logo\\.png|mockup-showcase\\.png|robots\\.txt|\\.htaccess)",
       "dest": "/$1"
     },
