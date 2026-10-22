@@ -29,11 +29,10 @@
       "dest": "/build/$1"
     },
     {
-      "src": "/mockup-showcase.png",
-      "dest": "/mockup-showcase.png"
+      "handle": "filesystem"
     },
     {
-      "src": "/(favicon\\.ico|favicon\\.svg|icons\\.svg|logo\\.png|robots\\.txt|\\.htaccess)",
+      "src": "/(favicon\\.ico|favicon\\.svg|icons\\.svg|logo\\.png|mockup-showcase\\.png|robots\\.txt|\\.htaccess)",
       "dest": "/$1"
     },
     {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
+import mockupShowcase from '@/assets/mockup-showcase.png';
 
 export default function LandingIndex() {
     return (
@@ -164,7 +165,7 @@ export default function LandingIndex() {
                     <div className="landing-mockup-wrapper">
                         <Link href="/board" title="Klik untuk membuka papan taktik interaktif">
                             <img
-                                src="mockup-showcase.png"
+                                src={mockupShowcase}
                                 alt="Showcase"
                                 className="landing-mockup-img"
                                 loading="lazy"
