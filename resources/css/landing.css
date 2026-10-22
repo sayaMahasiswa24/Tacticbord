@@ -150,7 +150,7 @@ body:has(.landing-wrapper) {
   font-weight: 800;
   line-height: 1.08;
   color: #ffffff;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.001em;
   margin-bottom: 20px;
 }
 
@@ -623,6 +623,7 @@ body:has(.landing-wrapper) {
   .landing-features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .landing-menu {
     gap: 20px;
   }
@@ -632,26 +633,33 @@ body:has(.landing-wrapper) {
   .landing-menu {
     display: none;
   }
+
   .landing-features-grid {
     grid-template-columns: 1fr;
   }
+
   .landing-steps-grid {
     grid-template-columns: 1fr;
   }
+
   .landing-audience-list {
     flex-wrap: wrap;
     justify-content: center;
     gap: 16px 24px;
   }
+
   .landing-audience-divider {
     display: none;
   }
+
   .landing-hero-badges {
     flex-direction: column;
   }
+
   .landing-cta-card {
     padding: 36px 24px;
   }
+
   .landing-footer-top {
     flex-direction: column;
     align-items: flex-start;
