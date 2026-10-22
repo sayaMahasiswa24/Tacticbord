@@ -387,7 +387,6 @@ body:has(.landing-wrapper) {
 .landing-mockup-img {
   width: 100%;
   height: auto;
-  max-height: 520px;
   display: block;
   object-fit: cover;
   object-position: center top;
