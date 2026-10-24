@@ -1,0 +1,33 @@
+{
+  "name": "TacticBoard - Papan Taktik Sepak Bola Modern",
+  "short_name": "TacticBoard",
+  "description": "Papan taktik sepak bola interaktif modern dengan simulasi visual, strategi pemain, dan coretan taktik offline.",
+  "start_url": "/board",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1117",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Buka Papan Taktik",
+      "url": "/board",
+      "description": "Buka papan taktik sepak bola langsung secara offline"
+    }
+  ]
+}

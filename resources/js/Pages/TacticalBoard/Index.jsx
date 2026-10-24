@@ -14,6 +14,8 @@ import Header from '../../components/layout/Header';
 import BottomBar from '../../components/layout/BottomBar';
 import PitchCanvas from '../../components/pitch/PitchCanvas';
 import AllModals from '../../components/modals/AllModals';
+import { usePWAInstall } from '../../hooks/usePWAInstall';
+import PWAInstallModal from '../../components/modals/PWAInstallModal';
 
 const EMPTY_OBJECT = {};
 const EMPTY_ARRAY = [];
@@ -103,6 +105,21 @@ export default function Index({
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     toastTimerRef.current = setTimeout(() => setToastData(prev => ({ ...prev, show: false })), 2600);
   }, []);
+
+  const { isInstallable, isInstalled, isIOS, isOnline, showInstallGuide, setShowInstallGuide, promptInstall } = usePWAInstall();
+
+  // Notify user when connection status changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleOff = () => showToast('Anda sedang offline (taktik tetap tersimpan lokal)', '#f59e0b');
+    const handleOn = () => showToast('Koneksi internet kembali aktif', '#16a34a');
+    window.addEventListener('offline', handleOff);
+    window.addEventListener('online', handleOn);
+    return () => {
+      window.removeEventListener('offline', handleOff);
+      window.removeEventListener('online', handleOn);
+    };
+  }, [showToast]);
 
   const [isHoldingReset, setIsHoldingReset] = useState(false);
   const [resetHoldProgress, setResetHoldProgress] = useState(0);
@@ -377,6 +394,9 @@ export default function Index({
         isSettingsOpen={isSettingsOpen} setIsSettingsOpen={setIsSettingsOpen}
         setIsAIChatOpen={setIsAIChatOpen}
         aiAssistantEnabled={aiAssistantEnabled}
+        onInstallClick={promptInstall}
+        isInstalled={isInstalled}
+        isOnline={isOnline}
       />
       <PitchCanvas
         zoom={zoom} mcRef={mcRef} drawcRef={drawcRef} trashRef={trashRef}
@@ -424,6 +444,14 @@ export default function Index({
         doFullReset={doFullReset}
         roster={roster} players={players} setPlayers={setPlayers}
         aiAssistantEnabled={aiAssistantEnabled}
+      />
+      <PWAInstallModal
+        isOpen={showInstallGuide}
+        onClose={() => setShowInstallGuide(false)}
+        isInstalled={isInstalled}
+        isIOS={isIOS}
+        isInstallable={isInstallable}
+        onInstall={promptInstall}
       />
     </div>
   );

@@ -1,8 +1,11 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import mockupShowcase from '@/assets/mockup-showcase.png';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
+import PWAInstallModal from '@/components/modals/PWAInstallModal';
 
 export default function LandingIndex() {
+    const { isInstallable, isInstalled, isIOS, showInstallGuide, setShowInstallGuide, promptInstall } = usePWAInstall();
     return (
         <div className="landing-wrapper">
             <Head title="Think Tactics. Build Your Game. - Papan Taktik Sepak Bola Modern" />
@@ -22,9 +25,21 @@ export default function LandingIndex() {
                         <a href="#about" className="landing-menu-link">buy app</a>
                     </nav>
 
-                    <Link href="/board" className="landing-btn-primary" id="btn-open-trial-top">
-                        Open trial tactical board
-                    </Link>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <button
+                            onClick={promptInstall}
+                            className="landing-btn-install-nav"
+                            id="btn-install-app-nav"
+                            title="Unduh / Pasang TacticBoard agar bisa dibuka offline"
+                        >
+                            <i className={isInstalled ? "ti ti-device-mobile-check" : "ti ti-download"}></i>
+                            <span>{isInstalled ? "Aplikasi Terpasang" : "Unduh / Install App"}</span>
+                        </button>
+
+                        <Link href="/board" className="landing-btn-primary" id="btn-open-trial-top">
+                            Open trial tactical board
+                        </Link>
+                    </div>
                 </div>
             </header>
 
@@ -50,6 +65,15 @@ export default function LandingIndex() {
                             <span>Start building tactics</span>
                             <span style={{ fontSize: '18px' }}>↗</span>
                         </Link>
+
+                        <button
+                            onClick={promptInstall}
+                            className="landing-hero-btn-install"
+                            id="btn-install-hero"
+                        >
+                            <i className={isInstalled ? "ti ti-device-mobile-check" : "ti ti-download"}></i>
+                            <span>{isInstalled ? "Aplikasi Sudah Terpasang" : "Unduh / Pasang Offline"}</span>
+                        </button>
 
                         <a href="#features" className="landing-hero-btn-secondary" id="btn-explore-workspace">
                             <span>Explore the workspace</span>
@@ -220,20 +244,33 @@ export default function LandingIndex() {
             {/* ── PWA & OFFLINE SECTION ── */}
             <section className="landing-pwa-section" id="offline-pwa">
                 <div className="landing-pwa-inner landing-container">
+                    <div className="landing-pill-tag" style={{ marginBottom: '16px' }}>
+                        <span>OFFLINE READY • PROGRESSIVE WEB APP</span>
+                    </div>
                     <h2 className="landing-section-title">
                         Your tactics, ready<br />
                         when inspiration hits.
                     </h2>
                     <p className="landing-section-desc">
-                        The experience is planned as an installable Progressive Web App, with responsive layouts
-                        and a foundation for offline-friendly access. Offline storage and sync depend on the final
-                        web implementation.
+                        TacticBoard dapat dipasang langsung ke perangkat Anda (Windows, Mac, Android, iOS) tanpa perlu instalasi rumit.
+                        Setelah dipasang, semua formasi, simulasi gerakan, dan coretan taktik dapat dibuka dan digunakan secara <strong>100% offline tanpa kuota internet</strong>.
                     </p>
+
+                    <div style={{ margin: '24px 0' }}>
+                        <button
+                            onClick={promptInstall}
+                            className="landing-pwa-btn-cta"
+                            id="btn-install-pwa-section"
+                        >
+                            <i className={isInstalled ? "ti ti-device-mobile-check" : "ti ti-download"} style={{ fontSize: '1.25rem' }}></i>
+                            <span>{isInstalled ? "✓ Aplikasi Sudah Terpasang di Perangkat" : "Unduh & Pasang Sekarang (Offline Ready)"}</span>
+                        </button>
+                    </div>
 
                     <ul className="landing-pwa-checklist">
                         <li className="landing-pwa-check-item">
                             <span className="landing-check-icon">✓</span>
-                            <span>Install from a supported browser</span>
+                            <span>Install from a supported browser (Chrome, Edge, Safari, Opera)</span>
                         </li>
                         <li className="landing-pwa-check-item">
                             <span className="landing-check-icon">✓</span>
@@ -241,7 +278,7 @@ export default function LandingIndex() {
                         </li>
                         <li className="landing-pwa-check-item">
                             <span className="landing-check-icon">✓</span>
-                            <span>Offline support planned for saved work</span>
+                            <span>Offline support planned for saved work (100% offline ready di lapangan)</span>
                         </li>
                     </ul>
                 </div>
@@ -286,7 +323,7 @@ export default function LandingIndex() {
                             <li><a href="#hero" className="landing-footer-link">Product</a></li>
                             <li><a href="#features" className="landing-footer-link">Features</a></li>
                             <li><Link href="/board" className="landing-footer-link">Tactical Board</Link></li>
-                            <li><a href="#offline-pwa" className="landing-footer-link">PWA</a></li>
+                            <li><button onClick={promptInstall} className="landing-footer-link" style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer' }}>Unduh App (Offline)</button></li>
                         </ul>
                     </div>
 
@@ -295,6 +332,15 @@ export default function LandingIndex() {
                     </div>
                 </div>
             </footer>
+
+            <PWAInstallModal
+                isOpen={showInstallGuide}
+                onClose={() => setShowInstallGuide(false)}
+                isInstalled={isInstalled}
+                isIOS={isIOS}
+                isInstallable={isInstallable}
+                onInstall={promptInstall}
+            />
         </div>
     );
 }
