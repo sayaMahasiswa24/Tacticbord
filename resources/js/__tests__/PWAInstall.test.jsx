@@ -76,6 +76,22 @@ describe('PWA Offline & Install Functionality', () => {
     expect(onInstallClick).toHaveBeenCalled();
   });
 
+  it('does not render install button in Header when isInstalled is true', () => {
+    const onInstallClick = vi.fn();
+    render(
+      <Header
+        curFId="433"
+        changeFormation={() => {}}
+        onInstallClick={onInstallClick}
+        isInstalled={true}
+        isOnline={true}
+      />
+    );
+
+    expect(screen.queryByRole('button', { name: /Terpasang/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Unduh App/i })).not.toBeInTheDocument();
+  });
+
   it('shows offline badge in Header when isOnline is false', () => {
     render(
       <Header

@@ -58,19 +58,19 @@ const Header = ({
                     </div>
                 )}
 
-                {/* PWA Install / Download Button */}
-                {onInstallClick && (
+                {/* PWA Install / Download Button (hanya tampil jika belum terinstall) */}
+                {onInstallClick && !isInstalled && (
                     <button
                         className="hbtn install-pwa-btn"
                         onClick={onInstallClick}
-                        title={isInstalled ? "TacticBoard terpasang di perangkat" : "Unduh / Pasang TacticBoard agar bisa dibuka offline"}
+                        title="Unduh / Pasang TacticBoard agar bisa dibuka offline"
                         style={{
                             display: 'flex',
                             alignItems: 'center',
                             gap: '6px',
-                            background: isInstalled ? 'rgba(34, 197, 94, 0.12)' : 'rgba(14, 165, 233, 0.12)',
-                            border: isInstalled ? '1px solid rgba(34, 197, 94, 0.25)' : '1px solid rgba(14, 165, 233, 0.25)',
-                            color: isInstalled ? '#4ade80' : '#38bdf8',
+                            background: 'rgba(14, 165, 233, 0.12)',
+                            border: '1px solid rgba(14, 165, 233, 0.25)',
+                            color: '#38bdf8',
                             padding: '5px 10px',
                             borderRadius: '8px',
                             fontSize: '0.82rem',
@@ -78,8 +78,8 @@ const Header = ({
                             cursor: 'pointer'
                         }}
                     >
-                        <i className={isInstalled ? "ti ti-device-mobile-check" : "ti ti-download"}></i>
-                        <span className="install-pwa-label">{isInstalled ? "Terpasang" : "Unduh App"}</span>
+                        <i className="ti ti-download"></i>
+                        <span className="install-pwa-label">Unduh App</span>
                     </button>
                 )}
 
